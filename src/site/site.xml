@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project>
+	<publishDate position="navigation-bottom" format="yyyy-dd-MM" />
+	<body>
+		<!--
+		${project.name}
+			<item name="{ModulName}" href="index.html" mce_href="index.html"/>
+		-->
+		<breadcrumbs>
+			<item name="Home" href="index.html" />
+			<item name="AjaxTags" href="ajaxtags/index.html" />
+			<item name="AjaxTags DEMO" href="ajaxtags-demo/index.html" />
+		</breadcrumbs>
+		<menu ref="reports" />
+		<!-- <menu ref="reports"/> -->
+		<menu name="Overview">
+			<item name="Home" href="index.html" />
+			<item name="Quick Start" href="quickstart.html" />
+			<item name="Advanced Usage" href="advanced.html" />
+			<item name="Tag Reference" href="usage.html" />
+			<item name="Roadmap" href="roadmap.html" />
+			<item name="Installation" href="install.html" />
+			<item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=140499" />
+			<item name="SourceForge Project Page" href="http://sourceforge.net/projects/ajaxtags/" />
+			<item name="Forums"
+				href="http://sourceforge.net/forum/forum.php?forum_id=471271" />
+			<item name="FAQ" href="faq.html" />
+		</menu>
+
+		<menu name="People Using AjaxTags">
+			<item name="ART" href="http://art.sourceforge.net" />
+		</menu>
+	</body>
+</project>
