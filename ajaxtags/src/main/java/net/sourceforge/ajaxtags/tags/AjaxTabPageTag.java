@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,7 +21,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * Tag handler for individual page within a AJAX tabbed panel.
- *
+ * 
  * @author Darren Spurgeon
  * @version $Revision: 86 $ $Date: 2007/06/20 20:55:56 $ $Author: jenskapitza $
  */

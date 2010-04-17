@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,10 +17,9 @@
 package net.sourceforge.ajaxtags.helpers;
 
 /**
- * HTML JavaScript element.
- *
+ * HTML JavaScript element. This will help building javascript.
+ * 
  * @author Jens Kapitza
- * @version $Revision$ $Date$ $Author$
  */
 public final class JavaScript extends AbstractHTMLElement {
 
@@ -33,7 +32,7 @@ public final class JavaScript extends AbstractHTMLElement {
 
     /**
      * Constructor.
-     *
+     * 
      * @param script
      *            initial script content
      */

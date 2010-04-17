@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,7 +20,7 @@ import javax.servlet.jsp.JspException;
 
 /**
  * Tag handler for the HTML Content AJAX tag.
- *
+ * 
  * @author Darren Spurgeon
  * @version $Revision: 86 $ $Date: 2007/07/08 18:18:52 $ $Author: jenskapitza $
  */

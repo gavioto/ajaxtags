@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Test for AjaxAreaTag.
- *
+ * 
  * @author Victor Homyakov
  */
 public class AjaxAreaTagTest extends AbstractTagTest<AjaxAreaTag> {
@@ -59,7 +59,7 @@ public class AjaxAreaTagTest extends AbstractTagTest<AjaxAreaTag> {
 
     /**
      * Test method for tag content generation in response to usual HTTP request.
-     *
+     * 
      * @throws JspException
      *             on errors
      * @throws IOException
@@ -103,7 +103,7 @@ public class AjaxAreaTagTest extends AbstractTagTest<AjaxAreaTag> {
 
     /**
      * Test method for tag content generation in response to AJAX request.
-     *
+     * 
      * @throws JspException
      *             on errors
      * @throws IOException
@@ -172,7 +172,7 @@ public class AjaxAreaTagTest extends AbstractTagTest<AjaxAreaTag> {
 
     /**
      * Test method for {@link AjaxAreaTag#processContent(String)}.
-     *
+     * 
      * @throws JspException
      *             on errors
      * @throws SAXException
