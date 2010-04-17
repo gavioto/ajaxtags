@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,7 +20,7 @@ import javax.servlet.jsp.JspException;
 
 /**
  * Builds the JavaScript required to submit form and retrieve response via AJAX.
- *
+ * 
  * @author Victor Homyakov
  */
 public class AjaxSubmitTag extends BaseAjaxTag {

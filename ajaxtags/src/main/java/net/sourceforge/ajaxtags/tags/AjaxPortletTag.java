@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,7 +22,7 @@ import net.sourceforge.ajaxtags.helpers.DIVElement;
 
 /**
  * Tag handler for the portlet AJAX tag.
- *
+ * 
  * @author Darren Spurgeon
  * @author Jens Kapitza
  * @version $Revision: 86 $ $Date: 2007/06/28 21:50:35 $ $Author: jenskapitza $

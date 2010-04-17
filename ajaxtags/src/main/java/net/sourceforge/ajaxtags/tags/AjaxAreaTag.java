@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,8 +16,6 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
-import static org.apache.commons.lang.StringUtils.trimToNull;
-
 import java.io.IOException;
 
 import javax.servlet.jsp.JspException;
@@ -27,19 +25,22 @@ import net.sourceforge.ajaxtags.helpers.DIVElement;
 /**
  * Wraps any area on the page (with a DIV element) so that actions within that area refresh/load
  * inside the defined DIV region rather than inside the whole browser window.
- *
+ * 
  * @author Darren Spurgeon
  * @author Jens Kapitza
- * @version $Revision: 86 $ $Date: 2007/06/20 20:55:56 $ $Author: jenskapitza $
  */
 public class AjaxAreaTag extends AjaxAnchorsTag {
 
+    /**
+     * The header we are seraching to detect the ajax call. This should match the id of this tag.
+     */
     public static final String TARGET_HEADER = "x-request-target";
 
     private static final long serialVersionUID = -7940387487602588115L;
 
-    private String styleClass;
-
+    /**
+     * flag if we should &lt;a&gt; tags be rewritte to use ajaxlinks
+     */
     private boolean ajaxAnchors;
 
     /**
@@ -49,21 +50,6 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
     @Override
     public final boolean isAjaxRequest() {
         return super.isAjaxRequest() && isHttpRequestHeader(TARGET_HEADER, getId());
-    }
-
-    /**
-     * @return Returns the styleClass.
-     */
-    public final String getStyleClass() {
-        return this.styleClass;
-    }
-
-    /**
-     * @param styleClass
-     *            The styleClass to set.
-     */
-    public final void setStyleClass(final String styleClass) {
-        this.styleClass = trimToNull(styleClass);
     }
 
     /**
@@ -83,7 +69,7 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
 
     /**
      * Clear page content before start of tag if we are processing AJAX request.
-     *
+     * 
      * @throws JspException
      *             when HTTP response cannot be reset (has already had its status code and headers
      *             written)
@@ -101,7 +87,7 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
 
     /**
      * Write body. Skip the rest of the page if we are processing AJAX request.
-     *
+     * 
      * @return SKIP_PAGE for AJAX request, EVAL_PAGE for usual request
      * @throws JspException
      *             on errors
@@ -123,12 +109,11 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
     @Override
     public void releaseTag() {
         this.ajaxAnchors = false;
-        this.styleClass = null; // NOPMD
     }
 
     /**
      * Process content.
-     *
+     * 
      * @param content
      * @return processed content
      * @throws JspException

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,18 +34,20 @@ import org.xml.sax.SAXException;
 /**
  * Rewrites HTML anchor tags (&lt;A&gt;), replacing the href attribute with an onclick event so that
  * retrieved content is loaded inside a region on the page.
- *
+ * 
  * @author Darren Spurgeon
  * @author Jens Kapitza
- * @version $Revision: 86 $ $Date: 2007/07/22 16:29:16 $ $Author: jenskapitza $
  */
 public class AjaxAnchorsTag extends BaseAjaxBodyTag {
 
     private static final long serialVersionUID = -1732745741282114289L;
 
-    private static final String WARP0 = "<div>";
-    private static final String WARP1 = "</div>";
-
+    /**
+     * rewrite the body and make use of ajax. rewriting all &lt;a&gt; links to use javascript calls
+     * to prototype.
+     * 
+     * @return EVAL_PAGE
+     */
     @Override
     public int doEndTag() throws JspException {
         out(ajaxAnchors(getBody(), getTarget(), getSourceClass()));
@@ -54,7 +56,7 @@ public class AjaxAnchorsTag extends BaseAjaxBodyTag {
 
     /**
      * Rewrite anchors.
-     *
+     * 
      * @param html
      *            XHTML source
      * @param target
@@ -97,7 +99,7 @@ public class AjaxAnchorsTag extends BaseAjaxBodyTag {
     /**
      * Rewrite link. Change (or create) "onclick" attribute, set "href" attribute to
      * "javascript://nop/".
-     *
+     * 
      * @param link
      *            node of document with link
      * @param target
@@ -119,7 +121,7 @@ public class AjaxAnchorsTag extends BaseAjaxBodyTag {
 
     /**
      * Parse XHTML document from given string.
-     *
+     * 
      * @param html
      *            string with XHTML content
      * @return parsed document or null
@@ -131,6 +133,10 @@ public class AjaxAnchorsTag extends BaseAjaxBodyTag {
         if (xhtml == null) {
             return null;
         }
+        // warp dirty hack to use internal HTML parser.
+        final String WARP0 = "<div>";
+        final String WARP1 = "</div>";
+
         return XMLUtils.getXMLDocument(WARP0 + xhtml + WARP1);
     }
 }

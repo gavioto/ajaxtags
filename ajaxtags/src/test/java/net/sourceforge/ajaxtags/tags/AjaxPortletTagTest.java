@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Test for AjaxPortletTag.
- *
+ * 
  * @author Victor Homyakov
  */
 public class AjaxPortletTagTest extends AbstractTagTest<AjaxPortletTag> {
@@ -51,7 +51,7 @@ public class AjaxPortletTagTest extends AbstractTagTest<AjaxPortletTag> {
 
     /**
      * Test method for tag content generation in response to usual HTTP request.
-     *
+     * 
      * @throws JspException
      *             on tag errors
      * @throws IOException

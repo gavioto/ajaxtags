@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,7 +22,7 @@ import net.sourceforge.ajaxtags.xml.AjaxXmlBuilder.PropertyReader;
 
 /**
  * A Car entity with make and model properties.
- *
+ * 
  * @author Darren Spurgeon
  * @author Jens Kapitza
  */
@@ -41,7 +41,7 @@ public class Car implements Serializable, PropertyReader {
 
     /**
      * Constructor for Car.
-     *
+     * 
      * @param make
      * @param model
      */

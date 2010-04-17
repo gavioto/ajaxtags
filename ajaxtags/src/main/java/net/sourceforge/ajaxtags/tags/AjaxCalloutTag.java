@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,7 +21,7 @@ import javax.servlet.jsp.tagext.Tag;
 
 /**
  * Tag handler for the callout AJAX tag.
- *
+ * 
  * @author Darren Spurgeon
  * @version $Revision: 86 $ $Date: 2007/08/05 14:11:00 $ $Author: jenskapitza $
  */

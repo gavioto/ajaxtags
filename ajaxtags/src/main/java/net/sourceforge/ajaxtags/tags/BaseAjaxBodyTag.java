@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,10 +27,10 @@ import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import net.sourceforge.ajaxtags.helpers.JavaScript;
-import net.sourceforge.ajaxtags.servlets.AjaxActionHelper;
+import net.sourceforge.ajaxtags.servlets.AjaxActionHelper.HMTLAjaxHeader;
 
 /**
- *
+ * 
  * @author Jens Kapitza
  * @version $Revision: 86 $ $Date: 2007/06/20 20:55:56 $ $Author: jenskapitza $
  */
@@ -51,6 +51,8 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
      * True if the body should be ignored.
      */
     private boolean skipBody;
+
+    private String styleClass;
 
     private String source;
     private String target;
@@ -83,7 +85,7 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
 
     /**
      * Detect if the client does an AJAX call or not.
-     *
+     * 
      * @return true only if the client send the header with XMLHttpRequest
      */
     protected boolean isAjaxRequest() {
@@ -109,7 +111,12 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
     public final int doStartTag() throws JspException {
         initParameters(); // EVAL_BODY need to be flushed if it is nested!
         // we should set the no cache headers!
-        AjaxActionHelper.addNoCacheHeaders(getHttpServletResponse());
+
+        // enable the ajaxheaders
+        for (HMTLAjaxHeader header : HMTLAjaxHeader.values()) {
+            header.enable(getHttpServletResponse());
+        }
+
         return skipBody ? SKIP_BODY : EVAL_BODY_BUFFERED;
     }
 
@@ -132,6 +139,9 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
         this.source = null; // NOPMD
         this.sourceClass = null; // NOPMD
         this.eventType = null; // NOPMD
+        
+        this.styleClass = null;
+        
         releaseTag();
     }
 
@@ -176,8 +186,23 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
     }
 
     /**
+     * @return Returns the styleClass.
+     */
+    public final String getStyleClass() {
+        return this.styleClass;
+    }
+
+    /**
+     * @param styleClass
+     *            The styleClass to set.
+     */
+    public final void setStyleClass(final String styleClass) {
+        this.styleClass = trimToNull(styleClass);
+    }
+
+    /**
      * Build JavaScript assignment string.
-     *
+     * 
      * @return String with assignment to variable "var x = " or field "object.field = "
      */
     public final String getJSVariable() {
@@ -196,7 +221,7 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
     /**
      * Return JavaScript class for JavaScript class corresponding to this tag (e.g.
      * "AjaxJspTag.Submit" for AjaxSubmitTag Java tag).
-     *
+     * 
      * @return String with JavaScript class suffix
      */
     protected String getJsClass() {
@@ -206,7 +231,7 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
 
     /**
      * Options for JavaScript generation.
-     *
+     * 
      * @return default options
      */
     protected OptionsBuilder getOptions() {
@@ -215,7 +240,7 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
 
     /**
      * Generate JavaScript for tag.
-     *
+     * 
      * @return JavaScript
      */
     public JavaScript buildScript() {
@@ -326,7 +351,7 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
 
     /**
      * Helper to define new AJAX updater for onclick attribute.
-     *
+     * 
      * @param target
      *            the target to request
      * @param href

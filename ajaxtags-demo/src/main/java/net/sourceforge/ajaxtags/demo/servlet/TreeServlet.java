@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 AjaxTags-Team
+ * Copyright 2009-2010 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,7 +29,7 @@ import net.sourceforge.ajaxtags.xml.AjaxTreeXmlBuilder;
 
 /**
  * An example servlet that responds to an ajax:tree tag action.
- *
+ * 
  * @author Musachy Barroso
  * @version $Revision: 28 $ $Date: 2008-11-25 21:27:48 +0100 (Di, 25. Nov 2008) $
  */
