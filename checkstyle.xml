@@ -2,6 +2,7 @@
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="Checker">
     <property name="severity" value="warning"/>
+    <module name="FileTabCharacter"/>
     <module name="TreeWalker">
         <module name="AbstractClassName"/>
         <module name="AnonInnerLength"/>
@@ -32,20 +33,21 @@
             <property name="tokens" value="INSTANCE_INIT, STATIC_INIT, METHOD_DEF, CTOR_DEF"/>
         </module>
         <module name="ExplicitInitialization"/>
-
+<!--
         <module name="FileLength"/>
+-->
         <module name="FinalLocalVariable"/>
         <module name="FinalParameters">
             <property name="severity" value="info"/>
             <property name="tokens" value="METHOD_DEF, CTOR_DEF"/>
         </module>
 
-        <module name="GenericIllegalRegexp">
+        <module name="Regexp">
             <property name="severity" value="error"/>
             <property name="format" value="System\.out\.println\("/>
             <property name="message" value="Avoid System.out.println(), use log.debug()"/>
         </module>
-        <module name="GenericIllegalRegexp">
+        <module name="Regexp">
             <property name="severity" value="error"/>
             <property name="format" value="\.printStackTrace\(\)"/>
             <property name="message" value="Avoid exception.printStackTrace()"/>
@@ -126,7 +128,6 @@
         <module name="SuperClone"/>
         <module name="SuperFinalize"/>
 
-        <module name="TabCharacter"/>
         <module name="ThrowsCount">
             <property name="max" value="5"/>
         </module>

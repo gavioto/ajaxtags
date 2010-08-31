@@ -204,7 +204,7 @@
 						<css>JAVADOC_STYLE</css>
 					</mapping>
 					<properties>
-						<year>2009-2010</year>
+						<year>2007-2010</year>
 					</properties>
 				</configuration>
 				<executions>
@@ -281,13 +281,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<configuration>
-					<targetJdk>1.6</targetJdk>
+					<targetJdk>1.5</targetJdk>
 					<sourceEncoding>UTF-8</sourceEncoding>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
