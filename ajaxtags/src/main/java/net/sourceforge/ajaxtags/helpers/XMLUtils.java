@@ -120,8 +120,8 @@ public final class XMLUtils {
      *             if expression cannot be evaluated
      */
     public static Object evaluateXPathExpression(final String expression,
-            final Node node, final QName returnValue)
-            throws XPathExpressionException {
+        final Node node, final QName returnValue)
+        throws XPathExpressionException {
         return getNewXPath().evaluate(expression, node,
                 returnValue == null ? XPathConstants.NODE : returnValue);
     }
@@ -142,7 +142,7 @@ public final class XMLUtils {
      *             configuration requested
      */
     private static DocumentBuilder getNewDocumentBuilder()
-            throws ParserConfigurationException {
+        throws ParserConfigurationException {
         return DOC_FACTORY.get().newDocumentBuilder();
     }
 
@@ -159,9 +159,11 @@ public final class XMLUtils {
         try {
             return getNewDocumentBuilder().parse(
                     new InputSource(new StringReader(xml)));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new SAXException(e);
-        } catch (ParserConfigurationException e) {
+        }
+        catch (ParserConfigurationException e) {
             throw new SAXException(e);
         }
     }
@@ -204,7 +206,7 @@ public final class XMLUtils {
      *             transform document
      */
     public static String toString(final Document document)
-            throws TransformerException {
+        throws TransformerException {
         final StringWriter stringWriter = new StringWriter();
         final StreamResult streamResult = new StreamResult(stringWriter);
         final Transformer transformer = TRANSFORMER_FACTORY.get()

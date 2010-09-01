@@ -16,9 +16,10 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
-import static org.apache.commons.lang.StringUtils.trimToNull;
 
 import javax.servlet.jsp.JspException;
+
+import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
  * Tag handler for the autocomplete AJAX tag.

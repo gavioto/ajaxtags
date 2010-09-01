@@ -16,12 +16,13 @@
  */
 package net.sourceforge.ajaxtags.helpers;
 
-import static org.apache.commons.lang.StringUtils.trimToNull;
 
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.Map.Entry;
+
+import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
  * This class should help to write HTML-Tags we will have a simple append operation and a easy use
@@ -213,7 +214,7 @@ public abstract class AbstractHTMLElement implements CharSequence, Appendable {
         s.append(getName());
         cleanAttributes();
         for (Entry<Object, String> e : getAttributes().entrySet()) {
-            String value = trimToNull(e.getValue());
+            final String value = trimToNull(e.getValue());
             if (value != null) {
                 // if we do have a ENUM Object we try to get it in a lower case
                 // type. toString should ensure the value is valid as key in HTML

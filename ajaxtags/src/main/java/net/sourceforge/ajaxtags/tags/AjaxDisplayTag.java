@@ -16,7 +16,6 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
-import static org.apache.commons.lang.StringUtils.trimToNull;
 
 import javax.servlet.jsp.JspException;
 import javax.xml.transform.TransformerException;
@@ -29,6 +28,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
  * Wraps a DisplayTag (http://displaytag.org) table, enabling AJAX capabilities. In the process,
@@ -104,7 +105,7 @@ public class AjaxDisplayTag extends AjaxAreaTag {
 
     private void rewriteAnchors0(final Document document) {
         final NodeList links = document.getElementsByTagName("a");
-        for (int i = 0; i < links.getLength(); i++) {
+        for (int i = 0; i < links.getLength(); i+=1) {
             final Node link = links.item(i);
             final Node parent = link.getParentNode();
 
@@ -146,9 +147,11 @@ public class AjaxDisplayTag extends AjaxAreaTag {
             final Document doc = getDocument(content);
             rewriteAnchors0(doc);
             return XMLUtils.toString(doc);
-        } catch (SAXException e) {
+        }
+        catch (SAXException e) {
             throw new JspException(e);
-        } catch (TransformerException e) {
+        }
+        catch (TransformerException e) {
             throw new JspException(e);
         }
     }

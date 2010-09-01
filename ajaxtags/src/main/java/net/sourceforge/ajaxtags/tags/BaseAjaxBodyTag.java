@@ -16,8 +16,6 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
-import static org.apache.commons.lang.StringUtils.trimToNull;
-
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,8 +24,11 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+
 import net.sourceforge.ajaxtags.helpers.JavaScript;
 import net.sourceforge.ajaxtags.servlets.AjaxActionHelper.HTMLAjaxHeader;
+
+import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
  *
@@ -101,7 +102,8 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
     protected void out(final CharSequence csec) throws JspException {
         try {
             pageContext.getOut().append(csec);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new JspException(e);
         }
     }
@@ -401,6 +403,9 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
      */
     protected String getBody() {
         final BodyContent body = this.getBodyContent();
-        return body == null ? null : body.getString();
+        if (body != null){
+            return body.getString();
+        }
+        return null;
     }
 }

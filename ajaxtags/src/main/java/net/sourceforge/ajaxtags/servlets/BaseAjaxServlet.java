@@ -60,7 +60,7 @@ public abstract class BaseAjaxServlet extends GenericServlet implements BaseAjax
      */
     @Override
     public final void service(final ServletRequest request, final ServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         final String xml = AjaxActionHelper.invoke(this, (HttpServletRequest) request,
                 (HttpServletResponse) response);
 

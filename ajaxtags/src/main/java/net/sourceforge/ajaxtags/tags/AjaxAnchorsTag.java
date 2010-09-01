@@ -16,7 +16,6 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
-import static org.apache.commons.lang.StringUtils.trimToNull;
 
 import javax.servlet.jsp.JspException;
 import javax.xml.transform.TransformerException;
@@ -30,6 +29,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
  * Rewrites HTML anchor tags (&lt;A&gt;), replacing the href attribute with an onclick event so that
@@ -72,15 +73,18 @@ public class AjaxAnchorsTag extends BaseAjaxBodyTag {
      *             on errors
      */
     public String ajaxAnchors(final String html, final String target, final String clazz)
-            throws JspException {
+        throws JspException {
         try {
             return rewriteAnchors(getDocument(html), target, clazz);
-        } catch (XPathExpressionException e) {
+        }
+        catch (XPathExpressionException e) {
             throw new JspException("rewrite links failed (wrong XPath expression)\n" + html, e);
-        } catch (TransformerException e) {
+        } 
+        catch (TransformerException e) {
             throw new JspException(
                     "rewrite links failed (cannot transform XHTML to text)\n" + html, e);
-        } catch (SAXException e) {
+        } 
+        catch (SAXException e) {
             throw new JspException("rewrite links failed (is the content valid XHTML?)\n" + html, e);
         }
     }
@@ -90,7 +94,7 @@ public class AjaxAnchorsTag extends BaseAjaxBodyTag {
         final NodeList links = XMLUtils
                 .evaluateXPathExpression(getAnchorXPath(className), document);
         // document.getElementsByTagName("a");
-        for (int i = 0; i < links.getLength(); i++) {
+        for (int i = 0; i < links.getLength(); i+=1) {
             rewriteLink(links.item(i), target);
         }
         return XMLUtils.toString(document);

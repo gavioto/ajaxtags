@@ -79,7 +79,8 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
         if (isAjaxRequest()) {
             try {
                 pageContext.getOut().clearBuffer();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new JspException(e);
             }
         }
