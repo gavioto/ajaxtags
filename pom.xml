@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.ajaxtags</groupId>
 	<artifactId>ajaxtags-doc</artifactId>
-	<version>1.5.4-SNAPSHOT</version>
+	<version>1.5.4</version>
 	<name>AjaxTags JavaScript-JSP Library</name>
 	<packaging>pom</packaging>
 	<inceptionYear>2005</inceptionYear>
