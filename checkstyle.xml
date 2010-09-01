@@ -4,7 +4,7 @@
     <property name="severity" value="warning"/>
     <module name="FileTabCharacter"/>
     <module name="TreeWalker">
-        <module name="AbstractClassName"/>
+       <!-- <module name="AbstractClassName"/> -->
         <module name="AnonInnerLength"/>
         <module name="ArrayTrailingComma">
             <property name="severity" value="info"/>
@@ -46,11 +46,13 @@
             <property name="severity" value="error"/>
             <property name="format" value="System\.out\.println\("/>
             <property name="message" value="Avoid System.out.println(), use log.debug()"/>
+ 	    <property name="illegalPattern" value="true"/>
         </module>
         <module name="Regexp">
             <property name="severity" value="error"/>
             <property name="format" value="\.printStackTrace\(\)"/>
             <property name="message" value="Avoid exception.printStackTrace()"/>
+ 	    <property name="illegalPattern" value="true"/>
         </module>
 
         <module name="HideUtilityClassConstructor"/>

@@ -16,11 +16,12 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
-import static org.apache.commons.lang.StringUtils.trimToNull;
 
 import javax.servlet.jsp.JspException;
 
 import net.sourceforge.ajaxtags.helpers.DIVElement;
+
+import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
  * Tag handler for the toggle (on/off, true/false) AJAX tag.

@@ -118,7 +118,8 @@ public final class AjaxActionHelper {
         try {
             request.setCharacterEncoding(action.getXMLEncoding());
             // we will use UTF-8
-        } catch (UnsupportedEncodingException e) {
+        }
+        catch (UnsupportedEncodingException e) {
             throw new ServletException(e);
         }
         // Set content to XML
@@ -131,7 +132,8 @@ public final class AjaxActionHelper {
 
         try {
             return action.getXmlContent(request, response);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new ServletException(e);
         }
     }
