@@ -886,7 +886,7 @@ AjaxJspTag.Tree = Class.create(AjaxJspTag.Base, {
         }, options || {});
     },
     execute: function (e) {
-        var o = this.options, t = $(o.target);
+        var o = this.options, t = $("div_" + o.target);
         if (o.target) {
             var imgElem = $("span_" + o.target);
             if (imgElem) {
