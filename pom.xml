@@ -15,6 +15,14 @@
 		<module>ajaxtags-demo</module>
 	</modules>
 	<url>http://ajaxtags.sourceforge.net/</url>
+  <distributionManagement>
+    <repository>
+      <id>repository</id>
+      <name>MyCo Internal repository</name>
+      <url>file:///home/jens/.m2/repository</url>
+    </repository>
+  </distributionManagement>
+
 	<issueManagement>
 		<system>SourceForge Tracker</system>
 		<url>http://sourceforge.net/tracker/?group_id=140499</url>
@@ -136,6 +144,18 @@
                 <path>/ajaxtags</path>
         </configuration>
  			</plugin>
+ <plugin>
+    <artifactId>maven-release-plugin</artifactId>
+    <version>2.0</version>
+    <configuration>
+      <!--
+        During release:perform, enable the "release" profile
+       -->
+      <releaseProfiles>release</releaseProfiles>
+      <goals>deploy site:site assembly:assembly</goals>
+    </configuration>
+  </plugin>
+
 <!--
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
