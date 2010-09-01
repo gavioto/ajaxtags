@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>net.sourceforge.ajaxtags</groupId>
 			<artifactId>ajaxtags</artifactId>
-			<version>${parent.version}</version>
+			<version>1.5.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
