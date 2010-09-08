@@ -21,7 +21,7 @@
 					<descriptors>
 						<descriptor>src/main/assembly/bin.xml</descriptor>
 					</descriptors>
-					<finalName>ajaxtags-resources-${parent.version}</finalName>
+					<finalName>ajaxtags-resources-${project.version}</finalName>
 				</configuration>
 			</plugin>
 		</plugins>
