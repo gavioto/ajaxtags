@@ -35,9 +35,6 @@ import static org.apache.commons.lang.StringUtils.trimToNull;
 /**
  * Rewrites HTML anchor tags (&lt;A&gt;), replacing the href attribute with an onclick event so that
  * retrieved content is loaded inside a region on the page.
- *
- * @author Darren Spurgeon
- * @author Jens Kapitza
  */
 public class AjaxAnchorsTag extends BaseAjaxBodyTag {
 

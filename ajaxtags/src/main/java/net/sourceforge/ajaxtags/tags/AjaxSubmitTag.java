@@ -20,7 +20,6 @@ import javax.servlet.jsp.JspException;
 
 /**
  * Builds the JavaScript required to submit form and retrieve response via AJAX.
- *
  * @author Victor Homyakov
  */
 public class AjaxSubmitTag extends BaseAjaxTag {

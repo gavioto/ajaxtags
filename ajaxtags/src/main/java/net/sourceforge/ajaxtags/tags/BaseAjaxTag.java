@@ -20,9 +20,6 @@ import javax.servlet.jsp.JspException;
 
 /**
  * This class does not support body content.
- * 
- * @author Jens Kapitza
- * @version $Revision$ $Date$ $Author$
  */
 public abstract class BaseAjaxTag extends BaseAjaxBodyTag {
 

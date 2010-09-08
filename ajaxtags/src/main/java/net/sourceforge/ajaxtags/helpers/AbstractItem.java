@@ -24,10 +24,7 @@ import java.util.TreeMap;
 
 /**
  * A generic item class, basically representing a name-value pair.
- * 
- * @author Darren L. Spurgeon
- * @author Jens Kapitza
- */
+s */
 public abstract class AbstractItem {
 
     /**

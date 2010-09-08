@@ -27,7 +27,6 @@ import javax.servlet.jsp.tagext.BodyContent;
  * Fake BodyContent to test tags.
  *
  * @author В.Хомяков
- * @version $Revision$ $Date$ $Author$
  */
 public class FakeBodyContent extends BodyContent {
 
