@@ -31,9 +31,7 @@ import net.sourceforge.ajaxtags.servlets.AjaxActionHelper.HTMLAjaxHeader;
 import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
- *
- * @author Jens Kapitza
- * @version $Revision: 86 $ $Date: 2007/06/20 20:55:56 $ $Author: jenskapitza $
+ * This is a base class that will help to make a development of any tag really easy
  */
 public abstract class BaseAjaxBodyTag extends BodyTagSupport {
 

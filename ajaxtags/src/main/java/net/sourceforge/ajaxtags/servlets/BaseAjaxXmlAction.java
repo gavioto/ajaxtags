@@ -24,8 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Simple Action which can be invoked by AjaxActionHelper.
- * 
- * @author Jens Kapitza
  */
 public interface BaseAjaxXmlAction {
 

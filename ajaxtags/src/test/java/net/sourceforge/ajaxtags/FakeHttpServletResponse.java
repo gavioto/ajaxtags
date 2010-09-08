@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
  * Fake HttpServletResponse to test tags.
  *
  * @author В.Хомяков
- * @version $Revision$ $Date$ $Author$
  */
 public class FakeHttpServletResponse implements HttpServletResponse {
 

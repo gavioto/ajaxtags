@@ -20,17 +20,12 @@ import java.util.Map;
 
 /**
  * Extend Item to easily have a tree item with more options.
- * 
- * @author Musachy Barroso
- * @author Jens Kapitza
  */
 public class TreeItem extends AbstractItem {
 
     /**
      * All known tree-elements for the parser. <br/>
      * This is just a subset of what we can do.
-     * 
-     * @author Jens Kapitza
      */
     public static enum TreeAttribute {
 

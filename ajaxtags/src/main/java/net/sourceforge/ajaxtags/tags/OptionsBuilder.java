@@ -28,10 +28,6 @@ import org.apache.commons.lang.StringUtils;
  * Helper class to assist in building options passed to JavaScript method. This class makes no
  * guarantees as to the order of the options; in particular, it does not guarantee that the order
  * will remain constant over time.
- *
- * @author Darren Spurgeon
- * @author Jens Kapitza
- * @version $Revision: 86 $ $Date: 2007/06/20 20:55:56 $ $Author: jenskapitza $
  */
 public final class OptionsBuilder {
 

@@ -22,9 +22,6 @@ import net.sourceforge.ajaxtags.helpers.DIVElement;
 
 /**
  * Tag handler for AJAX tabbed panel.
- *
- * @author Jens Kapitza
- * @version $Revision: 86 $ $Date: 2007/06/20 20:55:56 $ $Author: jenskapitza $
  */
 public class AjaxTabPanelTag extends BaseAjaxBodyTag {
 

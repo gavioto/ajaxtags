@@ -21,9 +21,6 @@ import java.util.List;
 
 /**
  * Helper class to build valid XML as a base for all XML builders.
- * 
- * @author Jens Kapitza
- * @version $Revision: 86 $ $Date: 2007/07/22 16:58:28 $ $Author: jenskapitza $
  * @param <V>
  *            type of list elements (Item, TreeItem)
  */

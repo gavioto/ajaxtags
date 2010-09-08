@@ -17,9 +17,7 @@
 package net.sourceforge.ajaxtags.helpers;
 
 /**
- * HTML JavaScript element. This will help building javascript.
- * 
- * @author Jens Kapitza
+ * HTML JavaScript element. This will help building JavaScript.
  */
 public final class JavaScript extends AbstractHTMLElement {
 
