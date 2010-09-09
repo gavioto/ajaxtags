@@ -27,15 +27,11 @@ import static org.apache.commons.lang.StringUtils.trimToNull;
 /**
  * This class should help to write HTML-Tags we will have a simple append operation and a easy use
  * in connection with strings.
- *
- * @author jenskapitza
  */
 public abstract class AbstractHTMLElement implements CharSequence, Appendable {
 
     /**
-     * A simple enum holding some HTML-Attributes we are using.
-     *
-     * @author Jens Kapitza
+     * A simple enumeration holding some HTML-Attributes we are using.
      */
     public static enum HTMLAttribute {
         /**
@@ -67,7 +63,7 @@ public abstract class AbstractHTMLElement implements CharSequence, Appendable {
      * Create a HTML element.
      *
      * @param name
-     *            name of start and endtag
+     *            name of start and end tag
      * @param id
      *            id of element
      * @param body
@@ -202,8 +198,7 @@ public abstract class AbstractHTMLElement implements CharSequence, Appendable {
     /**
      * Cleaning the attributes. This method does nothing by default.
      */
-    protected void cleanAttributes() { // NOPMD
-    }
+    protected void cleanAttributes() {}
 
     /**
      * @return the string representation of this HTML element

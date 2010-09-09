@@ -43,8 +43,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Some helper functions for XML.
- *
- * @author jenskapitza
  */
 public final class XMLUtils {
 

@@ -28,16 +28,11 @@ import org.apache.commons.lang.NotImplementedException;
 /**
  * This is a helper class to avoid caching problems and duplicated code. Later we will write an
  * action class to make the use in struts much easier.
- *
- * @author Jens Kapitza
  */
 public final class AjaxActionHelper {
 
     /**
      * Some HTML-Header which can be easily enabled.
-     *
-     * @author Jens Kapitza
-     *
      */
     public static enum HTMLAjaxHeader {
         /**
@@ -60,7 +55,7 @@ public final class AjaxActionHelper {
         private String headerValue;
 
         /**
-         * Create the Headerpair. This is a easy usage holding static header information.
+         * Create the header pair. This is a easy usage holding static header information.
          *
          * @param name
          *            the header name.

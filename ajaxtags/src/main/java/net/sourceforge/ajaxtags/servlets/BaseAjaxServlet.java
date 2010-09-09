@@ -29,8 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * An abstract class from which each servlet extends. This class wraps the XML creation (delegated
  * to the child servlet class) and submission back through the HTTP response.
- * 
- * @author Jens Kapitza
  */
 public abstract class BaseAjaxServlet extends GenericServlet implements BaseAjaxXmlAction {
 
