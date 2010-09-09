@@ -3,54 +3,54 @@
 	<publishDate position="navigation-bottom" format="yyyy-dd-MM" />
 	<body>
 		<links>
-			<item name="Home" href="/index.html" />
+			<item name="Home" href="http://ajaxtags.sourceforge.net/index.html" />
 			<item name="Download" href="http://sourceforge.net/projects/ajaxtags/files/" />
 			<item name="Forums" href="http://sourceforge.net/projects/ajaxtags/forums/forum/809911" />
 			<item name="SourceForge Project Page" href="http://sourceforge.net/projects/ajaxtags/" />
 		</links>
 
 		<menu name="Overview">
-			<item name="Home" href="/index.html" />
-			<item name="Quick Start" href="/quickstart.html" />
-			<item name="Advanced Usage" href="/advanced.html" />
-			<item name="Tag Reference" href="/usage.html" />
-			<item name="Roadmap" href="/roadmap.html" />
-			<item name="Installation" href="/install.html" />
-			<item name="FAQ" href="/faq.html" />
-			<item name="Dependencies" href="/dependencies.html" />
+			<item name="Home" href="http://ajaxtags.sourceforge.net/index.html" />
+			<item name="Quick Start" href="http://ajaxtags.sourceforge.net/quickstart.html" />
+			<item name="Advanced Usage" href="http://ajaxtags.sourceforge.net/advanced.html" />
+			<item name="Tag Reference" href="http://ajaxtags.sourceforge.net/usage.html" />
+			<item name="Roadmap" href="http://ajaxtags.sourceforge.net/roadmap.html" />
+			<item name="Installation" href="http://ajaxtags.sourceforge.net/install.html" />
+			<item name="FAQ" href="http://ajaxtags.sourceforge.net/faq.html" />
+			<item name="Dependencies" href="http://ajaxtags.sourceforge.net/dependencies.html" />
 			<item name="Dependencies AjaxTags" 
-				href="/ajaxtags/dependencies.html" />
+				href="http://ajaxtags.sourceforge.net/ajaxtags/dependencies.html" />
 			<item name="Dependency Convergence" 
-				href="/dependency-convergence.html" />
+				href="http://ajaxtags.sourceforge.net/dependency-convergence.html" />
 			<item name="Dependency Convergence AjaxTags" 
-				href="/ajaxtags/dependency-convergence.html" />
+				href="http://ajaxtags.sourceforge.net/ajaxtags/dependency-convergence.html" />
 			<item name="Project Plugin Management" 
-				href="/plugin-management.html" />
-			<item name="Project License" href="/license.html" />
-			<item name="Project Plugins" href="/plugins.html" />
+				href="http://ajaxtags.sourceforge.net/plugin-management.html" />
+			<item name="Project License" href="http://ajaxtags.sourceforge.net/license.html" />
+			<item name="Project Plugins" href="http://ajaxtags.sourceforge.net/plugins.html" />
 			<item name="Project Summary" 
-				href="/project-summary.html" />
+				href="http://ajaxtags.sourceforge.net/project-summary.html" />
 		</menu>
 		
 		<menu name="Reports" >
-			<item name="Changes" href="/changes-report.html"/>
+			<item name="Changes" href="http://ajaxtags.sourceforge.net/changes-report.html"/>
 			<item name="Checkstyle" 
-				href="/ajaxtags/checkstyle.html"/>
-			<item name="FindBugs" href="/ajaxtags/findbugs.html"/>
-			<item name="CDP" href="/ajaxtags/cpd.html"/>
-			<item name="PMD" href="/ajaxtags/pmd.html"/>
+				href="http://ajaxtags.sourceforge.net/ajaxtags/checkstyle.html"/>
+			<item name="FindBugs" href="http://ajaxtags.sourceforge.net/ajaxtags/findbugs.html"/>
+			<item name="CDP" href="http://ajaxtags.sourceforge.net/ajaxtags/cpd.html"/>
+			<item name="PMD" href="http://ajaxtags.sourceforge.net/ajaxtags/pmd.html"/>
 			<item name="JUnit Test" 
-				href="/ajaxtags/surefire-report.html"/>
+				href="http://ajaxtags.sourceforge.net/ajaxtags/surefire-report.html"/>
 			<item name="Tag Library Documentation" 
-				href="/ajaxtags/tlddoc/index.html"/>
+				href="http://ajaxtags.sourceforge.net/ajaxtags/tlddoc/index.html"/>
 			<item name="Tag Library Validation" 
-				href="/ajaxtags/taglibvalidation.html"/>
+				href="http://ajaxtags.sourceforge.net/ajaxtags/taglibvalidation.html"/>
 			<item name="Tag Reference" 
-				href="/ajaxtags/tagreference.html"/>
+				href="http://ajaxtags.sourceforge.net/ajaxtags/tagreference.html"/>
 			<item name="JavaDocs" 
-				href="/apidocs/index.html"/>
+				href="http://ajaxtags.sourceforge.net/apidocs/index.html"/>
 			<item name="JavaDocs (TEST)" 
-				href="/testapidocs/index.html"/>
+				href="http://ajaxtags.sourceforge.net/testapidocs/index.html"/>
 		</menu>
 		
 		<menu name="People Using AjaxTags">

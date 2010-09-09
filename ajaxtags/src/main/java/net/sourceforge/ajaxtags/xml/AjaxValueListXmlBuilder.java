@@ -20,9 +20,6 @@ import net.sourceforge.ajaxtags.helpers.ValueItem;
 
 /**
  * Helper class to build valid XML for ajax with more than one value.
- *
- * @author Jens Kapitza
- * @version $Revision: 86 $ $Date: 2007/07/22 16:29:16 $ $Author: jenskapitza $
  */
 public abstract class AjaxValueListXmlBuilder extends BaseXmlBuilder<ValueItem> {
 

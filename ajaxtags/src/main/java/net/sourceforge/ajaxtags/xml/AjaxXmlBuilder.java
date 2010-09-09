@@ -20,10 +20,6 @@ import java.util.Collection;
 
 /**
  * Helper class to build valid XML typically returned in a response to the client.
- *
- * @author Darren Spurgeon
- * @author Jens Kapitza
- * @version $Revision: 86 $ $Date: 2007/07/22 16:29:16 $ $Author: jenskapitza $
  */
 public final class AjaxXmlBuilder extends AjaxValueListXmlBuilder {
 

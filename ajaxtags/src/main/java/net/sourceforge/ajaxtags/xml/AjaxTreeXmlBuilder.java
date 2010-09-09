@@ -27,10 +27,6 @@ import net.sourceforge.ajaxtags.helpers.TreeItem.TreeAttribute;
 /**
  * Helper class to build valid XML, for the AjaxTreeTag, typically returned in a response to the
  * client.
- *
- * @author Musachy Barroso
- * @author Jens Kapitza
- * @version $Revision: 86 $ $Date: 2007/07/24 12:21:13 $ $Author: jenskapitza $
  */
 public final class AjaxTreeXmlBuilder extends BaseXmlBuilder<TreeItem> {
 

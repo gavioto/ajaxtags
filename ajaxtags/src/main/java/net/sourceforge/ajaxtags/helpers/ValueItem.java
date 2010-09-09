@@ -22,8 +22,6 @@ import java.util.List;
 
 /**
  * Holding the data for ValueListXmlBuilder.
- * 
- * @author Jens Kapitza
  */
 public class ValueItem extends AbstractItem {
 
@@ -35,7 +33,7 @@ public class ValueItem extends AbstractItem {
      * @param tagName
      *            name
      * @param asCData
-     *            true if is cdate or false otherwise
+     *            true if is CDATA or false otherwise
      */
     public ValueItem(final String tagName, final boolean asCData) {
         this(tagName, null, asCData);
@@ -83,17 +81,17 @@ public class ValueItem extends AbstractItem {
     }
 
     /**
-     * Add values to this valueitem.
+     * Add values to this ValueItem.
      * 
      * @param values
-     *            the value
+     *            the valuevalueitem
      */
     public void addValue(String... values) {
         getValue().addAll(Arrays.asList(values));
     }
 
     /**
-     * Add values to this valueitem.
+     * Add values to this ValueItem.
      * 
      * @param values
      *            the value
@@ -103,7 +101,7 @@ public class ValueItem extends AbstractItem {
     }
 
     /**
-     * Add a value to this valueitem.
+     * Add a value to this ValueItem.
      * 
      * @param value
      *            the value
