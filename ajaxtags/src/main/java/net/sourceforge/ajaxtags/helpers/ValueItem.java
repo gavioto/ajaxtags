@@ -29,7 +29,7 @@ public class ValueItem extends AbstractItem {
 
     /**
      * Build a SimpleNode.
-     * 
+     *
      * @param tagName
      *            name
      * @param asCData
@@ -41,7 +41,7 @@ public class ValueItem extends AbstractItem {
 
     /**
      * Build a SimpleNode.
-     * 
+     *
      * @param tagName
      *            name
      * @param value
@@ -55,7 +55,7 @@ public class ValueItem extends AbstractItem {
 
     /**
      * Build a SimpleNode.
-     * 
+     *
      * @param tagName
      *            name
      * @param asCData
@@ -70,7 +70,7 @@ public class ValueItem extends AbstractItem {
 
     /**
      * Try to find the index of value.
-     * 
+     *
      * @param value
      *            the value to find
      * @return the index of this value
@@ -82,9 +82,9 @@ public class ValueItem extends AbstractItem {
 
     /**
      * Add values to this ValueItem.
-     * 
+     *
      * @param values
-     *            the valuevalueitem
+     *            the value
      */
     public void addValue(String... values) {
         getValue().addAll(Arrays.asList(values));
@@ -92,7 +92,7 @@ public class ValueItem extends AbstractItem {
 
     /**
      * Add values to this ValueItem.
-     * 
+     *
      * @param values
      *            the value
      */
@@ -102,7 +102,7 @@ public class ValueItem extends AbstractItem {
 
     /**
      * Add a value to this ValueItem.
-     * 
+     *
      * @param value
      *            the value
      */
@@ -112,7 +112,7 @@ public class ValueItem extends AbstractItem {
 
     /**
      * Removes an item at specified index.
-     * 
+     *
      * @param index
      *            the index to remove
      * @return the removed item
@@ -123,7 +123,7 @@ public class ValueItem extends AbstractItem {
 
     /**
      * The list of values.
-     * 
+     *
      * @return the list of values
      */
     @SuppressWarnings("unchecked")
