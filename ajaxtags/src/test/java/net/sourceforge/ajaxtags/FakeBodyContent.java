@@ -25,8 +25,6 @@ import javax.servlet.jsp.tagext.BodyContent;
 
 /**
  * Fake BodyContent to test tags.
- *
- * @author В.Хомяков
  */
 public class FakeBodyContent extends BodyContent {
 

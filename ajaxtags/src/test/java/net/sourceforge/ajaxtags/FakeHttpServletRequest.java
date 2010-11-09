@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * @author В.Хомяков
+ * Fake HttpServletRequest to test tags.
  */
 public class FakeHttpServletRequest implements HttpServletRequest {
 
