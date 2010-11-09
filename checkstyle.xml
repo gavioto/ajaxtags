@@ -33,9 +33,8 @@
             <property name="tokens" value="INSTANCE_INIT, STATIC_INIT, METHOD_DEF, CTOR_DEF"/>
         </module>
         <module name="ExplicitInitialization"/>
-<!--
-        <module name="FileLength"/>
--->
+
+        <!--<module name="FileLength"/>-->
         <module name="FinalLocalVariable"/>
         <module name="FinalParameters">
             <property name="severity" value="info"/>
@@ -118,10 +117,6 @@
         <module name="ReturnCount">
             <property name="max" value="3"/>
         </module>
-        <module name="RightCurly">
-            <property name="option" value="alone"/>
-            <property name="tokens" value="LITERAL_TRY,LITERAL_CATCH,LITERAL_ELSE"/>
-        </module>
 
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
@@ -135,7 +130,9 @@
         </module>
 
         <module name="UncommentedMain"/>
+        <module name="UnnecessaryParentheses"/>
         <module name="UnusedImports"/>
+        <module name="UpperEll"/>
 
         <module name="VisibilityModifier">
             <property name="packageAllowed" value="true"/>
