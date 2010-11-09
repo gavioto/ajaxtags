@@ -45,6 +45,15 @@
 				<role>Developer</role>
 			</roles>
 		</developer>
+		<developer>
+			<id>victor-homyakov</id>
+			<name>Victor Homyakov</name>
+			<url>http://sourceforge.net/users/victor-homyakov</url>
+			<email>victor-homyakov [at] users.sourceforge.net</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
 	</developers>
 
 	<contributors>
@@ -131,7 +140,6 @@
 	<scm>
 		<connection>scm:hg:file:///home/jens/open/ajaxtags</connection>
 		<url>file:///home/jens/open/ajaxtags</url>
-
 	</scm>
 	<description>
 		The ajaxtags tag library is an open source suite of custom tags that provide high-level web presentation patterns which will work in an MVC model. The library provides a significant amount of functionality while still being easy to use.
