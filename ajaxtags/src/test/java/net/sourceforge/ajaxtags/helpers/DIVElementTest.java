@@ -26,7 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author В.Хомяков
+ * Unit tests for DIVElement.
  */
 public class DIVElementTest {
 

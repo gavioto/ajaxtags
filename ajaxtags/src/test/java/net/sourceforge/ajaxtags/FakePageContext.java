@@ -35,8 +35,6 @@ import javax.servlet.jsp.tagext.BodyContent;
 
 /**
  * Fake PageContext to test tags.
- *
- * @author В.Хомяков
  */
 public class FakePageContext extends PageContext {
 
