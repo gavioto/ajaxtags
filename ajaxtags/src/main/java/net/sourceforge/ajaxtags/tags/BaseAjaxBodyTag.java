@@ -31,7 +31,7 @@ import net.sourceforge.ajaxtags.servlets.AjaxActionHelper.HTMLAjaxHeader;
 import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
- * This is a base class that will help to make a development of any tag really easy
+ * This is a base class that will help to make a development of any tag really easy.
  */
 public abstract class BaseAjaxBodyTag extends BodyTagSupport {
 
@@ -216,6 +216,7 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
      * @return String with left side of assignment to variable "var foo = " or field "object.foo = "
      */
     public final String getJSVariable() {
+        // TODO inverse if clause: if(var==null){return "";}
         final StringBuilder script = new StringBuilder();
         if (this.var != null) {
             if (this.attachTo == null) {
@@ -401,9 +402,6 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
      */
     protected String getBody() {
         final BodyContent body = this.getBodyContent();
-        if (body != null){
-            return body.getString();
-        }
-        return null;
+        return body == null ? null : body.getString();
     }
 }
