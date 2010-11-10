@@ -478,8 +478,7 @@ var Draggable = Class.create({
 
     if (this.options.quiet) {
       Position.prepare();
-      var pointer = [Event.pointerX(event), Event.pointerY(event)];
-      Droppables.show(pointer, this.element);
+      Droppables.show([Event.pointerX(event), Event.pointerY(event)], this.element);
     }
 
     if (this.options.ghosting) {
