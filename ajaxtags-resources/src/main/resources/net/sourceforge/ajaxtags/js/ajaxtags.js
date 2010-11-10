@@ -278,20 +278,20 @@ AjaxJspTag.Base = Class.create({
         // override in descendants
     },
     resolveParameters: function () {
-        var o = this.options;
-        if (o.baseUrl === null || Object.isUndefined(o.baseUrl) || o.baseUrl.strip().length === 0) {
-            throw new Error("url is wrong/empty");
+        var o = this.options, url = o.baseUrl;
+        if (!Object.isString(url) || url.strip().length === 0) {
+            throw new Error("URL is empty or undefined");
         }
-        var qs = "";
-        var indexOf = o.baseUrl.indexOf('?');
-        if (indexOf >= 0) {
-            if (indexOf < (o.baseUrl.length - 1)) {
-                qs = o.baseUrl.substr(indexOf + 1);
-                qs = (qs.length > 0) ? qs.split('&').join(',') : "";
-            }
-            o.baseUrl = o.baseUrl.substr(0, indexOf);
+
+        var q = url.split('?'), p = [];
+        o.baseUrl = q[0];
+        if (o.parameters) {
+            p.push(o.parameters);
         }
-        o.parameters = (o.parameters) ? o.parameters + ',' + qs : qs;
+        if (q[1]) {
+            p.push(q[1].replace(/&/g, ','));
+        }
+        o.parameters = p.join(',');
     },
     getMethod: function () {
         return "post";
@@ -333,9 +333,8 @@ AjaxJspTag.Base = Class.create({
         if (!this.initRequest()) {
             return null;
         }
-        options = this.getRequestOptions(options, ajaxParam);
         return new Ajax.Updater(this.options.target,
-            this.options.baseUrl, options);
+            this.options.baseUrl, this.getRequestOptions(options, ajaxParam));
     },
     getPeriodicalUpdater: function (xoptions, ajaxParam) {
         if (!this.initRequest()) {
@@ -364,7 +363,6 @@ AjaxJspTag.Base = Class.create({
     },
     buildParameterString: function (ajaxParam) {
         var result = [], field, key, v;
-        var value = Form.Element.serialize; // BUG 016027
         var params = (this.replaceDefaultParam(ajaxParam) || '');
         params.split(',').each(function (pair) {
             if (pair.strip().length === 0) {
@@ -385,7 +383,8 @@ AjaxJspTag.Base = Class.create({
             if (!field) {
                 result.push(key + encodeURIComponent(pair));
             } else if (('select-multiple' === field.type) || ('checkbox' === field.type)) { // BUG 016027
-                if (v = value(field)) {
+                v = Form.Element.serialize(field);
+                if (v) {
                     result.push(v);
                 }
             } else if (/^(?:radio|text|textarea|password|hidden|select-one)$/i.test(field.type)) {
@@ -396,9 +395,9 @@ AjaxJspTag.Base = Class.create({
         });
         return result.join('&');
     },
-    replaceDefaultParam: function (elem) {
-        var o = this.options;
-        return (elem) ? o.parameters.replace(AjaxJspTag.DEFAULT_PARAMETER_REGEXP, (elem.type) ? $F(elem) : elem.innerHTML) : o.parameters;
+    replaceDefaultParam: function (element) {
+        var p = this.options.parameters;
+        return (element) ? p.replace(AjaxJspTag.DEFAULT_PARAMETER_REGEXP, element.type ? $F(element) : element.innerHTML) : p;
     }
 });
 
@@ -536,11 +535,7 @@ AjaxJspTag.HtmlContent = Class.create(AjaxJspTag.Base, {
     },
     execute: function (event) {
         // replace default parameter with value/content of source element
-        if (this.options.sourceClass) {
-            this.request = this.getAjaxUpdater(null, Event.element(event));
-        } else {
-            this.request = this.getAjaxUpdater();
-        }
+        this.request = this.getAjaxUpdater(null, this.options.sourceClass? Event.element(event) : null);
     }
 });
 
@@ -672,7 +667,7 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
 AjaxJspTag.XmlToHtmlAutocompleter = Class.create(Ajax.Autocompleter, {
     initialize: function (/*AjaxJspTag.Autocomplete*/ autocomplete) {
         this.autocompleteTag = autocomplete;
-        var o = this.autocompleteTag.options;
+        var o = autocomplete.options;
         this.baseInitialize(o.source, o.divElement, {
             minChars: o.minChars,
             tokens: o.appendSeparator,
@@ -756,8 +751,8 @@ AjaxJspTag.Autocomplete = Class.create(AjaxJspTag.Base, {
                 target.value = value;
             }
         }
-        this.options.selectedIndex = selectedItem.autocompleteIndex;
-        this.options.selectedObject = selectedItem;
+        o.selectedIndex = selectedItem.autocompleteIndex;
+        o.selectedObject = selectedItem;
         if (Object.isFunction(o.afterUpdate)) {
             o.afterUpdate(value);
         }
