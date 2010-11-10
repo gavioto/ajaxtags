@@ -76,26 +76,52 @@
     },
 
     testResolveParameters: function() {
-      tag.options.baseUrl = null;
+      var o = tag.options;
+
+      o.baseUrl = null;
       this.assertRaise("Error", tag.resolveParameters.bind(tag));
-      tag.options.baseUrl = "";
+      o.baseUrl = "";
       this.assertRaise("Error", tag.resolveParameters.bind(tag));
+      o.baseUrl = "  ";
+      this.assertRaise("Error", tag.resolveParameters.bind(tag));
+
+      o.baseUrl = "url";
+      o.parameters = undefined;
+      tag.resolveParameters();
+      this.assertEqual("url", o.baseUrl);
+      this.assertEqual("", o.parameters);
 
       var parameters = "param1=value1";
-      tag.options.baseUrl = "url";
-      tag.options.parameters = parameters;
-      tag.resolveParameters();
-      this.assertEqual("param1=value1,", tag.options.parameters);
 
-      tag.options.baseUrl = "url?param2=value2";
-      tag.options.parameters = parameters;
+      o.baseUrl = "url";
+      o.parameters = parameters;
       tag.resolveParameters();
-      this.assertEqual("param1=value1,param2=value2", tag.options.parameters);
+      this.assertEqual("url", o.baseUrl);
+      this.assertEqual("param1=value1", o.parameters);
 
-      tag.options.baseUrl = "url?param2=value2&param3=value3";
-      tag.options.parameters = parameters;
+      o.baseUrl = "url?";
+      o.parameters = parameters;
       tag.resolveParameters();
-      this.assertEqual("param1=value1,param2=value2,param3=value3", tag.options.parameters);
+      this.assertEqual("url", o.baseUrl);
+      this.assertEqual("param1=value1", o.parameters);
+
+      o.baseUrl = "url?param2";
+      o.parameters = parameters;
+      tag.resolveParameters();
+      this.assertEqual("url", o.baseUrl);
+      this.assertEqual("param1=value1,param2", o.parameters);
+
+      o.baseUrl = "url?param2=value2";
+      o.parameters = parameters;
+      tag.resolveParameters();
+      this.assertEqual("url", o.baseUrl);
+      this.assertEqual("param1=value1,param2=value2", o.parameters);
+
+      o.baseUrl = "url?param2=value2&param3=value3";
+      o.parameters = parameters;
+      tag.resolveParameters();
+      this.assertEqual("url", o.baseUrl);
+      this.assertEqual("param1=value1,param2=value2,param3=value3", o.parameters);
     },
     testGetMethod: function() {
       this.assertEqual("post", tag.getMethod());
@@ -171,13 +197,13 @@
       tag.options.parameters = "checkbox1={checkbox1},checkbox2={checkbox2},checkbox3={checkbox3},select1={select1},textarea1={textarea1}";
       this.assertEqual(Form.serialize("form1"), tag.buildParameterString());
     },
-    testReplaceAJAX_DEFAULT: function() {
+    testReplaceDefaultParam: function() {
       var parameters = "param={ajaxParameter}";
       tag.options.parameters = parameters;
 
-      this.assertEqual(parameters, tag.replaceAJAX_DEFAULT());
-      this.assertEqual("param=Text in input", tag.replaceAJAX_DEFAULT($("text1")));
-      this.assertEqual("param=Text in div", tag.replaceAJAX_DEFAULT($("div1")));
+      this.assertEqual(parameters, tag.replaceDefaultParam());
+      this.assertEqual("param=Text in input", tag.replaceDefaultParam($("text1")));
+      this.assertEqual("param=Text in div", tag.replaceDefaultParam($("div1")));
     }
   });
 </script>
