@@ -8,7 +8,7 @@
 //  Richard Livsey
 //  Rahul Bhargava
 //  Rob Wills
-// 
+//
 // script.aculo.us is freely distributable under the terms of an MIT-style license.
 // For details, see the script.aculo.us web site: http://script.aculo.us/
 
@@ -402,16 +402,11 @@ Ajax.Autocompleter = Class.create(Autocompleter.Base, {
 
   getUpdatedChoices: function() {
     this.startIndicator();
-
-    var entry = encodeURIComponent(this.options.paramName) + '=' +
-    encodeURIComponent(this.getToken());
-
+    var entry = encodeURIComponent(this.options.paramName) + '=' + encodeURIComponent(this.getToken());
     this.options.parameters = this.options.callback ? this.options.callback(this.element, entry) : entry;
-
     if (this.options.defaultParams) {
       this.options.parameters += '&' + this.options.defaultParams;
     }
-
     new Ajax.Request(this.url, this.options);
   },
 
@@ -440,7 +435,7 @@ Ajax.Autocompleter = Class.create(Autocompleter.Base, {
 //                    search anywhere in the string, additionally set
 //                    the option fullSearch to true (default: off).
 //
-// - fullSsearch - Search anywhere in autocomplete array strings.
+// - fullSearch - Search anywhere in autocomplete array strings.
 //
 // - partialChars - How many characters to enter before triggering
 //                   a partial match (unlike minChars, which defines
@@ -477,8 +472,7 @@ Autocompleter.Local = Class.create(Autocompleter.Base, {
         var partial = []; // Inside matches
         var entry = instance.getToken(), count = 0;
 
-        for (var i = 0; i < instance.options.array.length &&
-        ret.length < instance.options.choices; i++) {
+        for (var i = 0; i < instance.options.array.length && ret.length < instance.options.choices; i++) {
 
           var elem = instance.options.array[i];
           var foundPos = instance.options.ignoreCase ? elem.toLowerCase().indexOf(entry.toLowerCase()) : elem.indexOf(entry);
@@ -487,9 +481,7 @@ Autocompleter.Local = Class.create(Autocompleter.Base, {
             if (foundPos === 0 && elem.length != entry.length) {
               ret.push("<li><strong>" + elem.substr(0, entry.length) + "</strong>" + elem.substr(entry.length) + "</li>");
               break;
-            } else if (entry.length >= instance.options.partialChars &&
-            instance.options.partialSearch &&
-            foundPos != -1) {
+            } else if (entry.length >= instance.options.partialChars && instance.options.partialSearch && foundPos != -1) {
               if (instance.options.fullSearch || (/\s/.test(elem.substr(foundPos - 1, 1)))) {
                 partial.push("<li>" + elem.substr(0, foundPos) + "<strong>" + elem.substr(foundPos, entry.length) + "</strong>" + elem.substr(foundPos + entry.length) + "</li>");
                 break;
