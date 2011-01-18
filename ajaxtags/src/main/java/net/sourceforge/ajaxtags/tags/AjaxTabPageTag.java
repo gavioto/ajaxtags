@@ -49,6 +49,7 @@ public class AjaxTabPageTag extends BaseAjaxTag {
     @Override
     public String toString() {
         final OptionsBuilder options = getOptionsBuilder(true); // clean one
+        options.add("id", getId(), true);
         options.add("caption", getCaption(), true);
         options.add("baseUrl", getBaseUrl(), true);
         options.add("parameters", getParameters(), true);
@@ -66,7 +67,8 @@ public class AjaxTabPageTag extends BaseAjaxTag {
 
     @Override
     public void releaseTag() {
-        this.caption = null; // NOPMD
-        this.defaultTab = null; // NOPMD
+        id = null; // NOPMD
+        caption = null; // NOPMD
+        defaultTab = null; // NOPMD
     }
 }

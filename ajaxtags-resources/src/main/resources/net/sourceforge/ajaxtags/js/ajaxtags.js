@@ -535,7 +535,7 @@ AjaxJspTag.HtmlContent = Class.create(AjaxJspTag.Base, {
     },
     execute: function (event) {
         // replace default parameter with value/content of source element
-        this.request = this.getAjaxUpdater(null, this.options.sourceClass? Event.element(event) : null);
+        this.request = this.getAjaxUpdater(null, this.options.sourceClass ? Event.element(event) : null);
     }
 });
 
@@ -610,7 +610,7 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
             if (tab.defaultTab) {
                 f = f || a.onclick.bind(a);
             }
-            ul.appendChild(new Element("li").update(a));
+            ul.appendChild(new Element("li", tab.id ? {id: tab.id} : null).update(a));
         }, this);
         var nav = new Element("div", {className: "tabNavigation"}).update(ul);
 
@@ -622,17 +622,12 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
         }
     },
     createTab: function (tab) {
-        var e = new Element('a').update(tab.caption);
-        e.base = this;
-        e.baseUrl = tab.baseUrl;
-        e.href = AjaxJspTag.VOID_URL;
-        e.onclick = function () {
-            this.base.options.baseUrl = this.baseUrl;
-            this.base.options.parameters = this.parameters;
-            this.base.source = this;
-            this.base.execute();
-        };
-        e.parameters = tab.parameters;
+        var e = new Element('a', {
+            baseUrl: tab.baseUrl,
+            parameters: tab.parameters,
+            href: AjaxJspTag.VOID_URL
+        }).update(tab.caption);
+        e.onclick = this.execute.bind(this, e);
         return e;
     },
     createContent: function () {
@@ -648,16 +643,20 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
             return c.identify();
         }
     },
-    execute: function () {
+    execute: function (tab) {
+        tab = $(tab);
+        // remove class from any tab
+        this.panel.select(".ajaxCurrentTab").invoke("removeClassName", "ajaxCurrentTab");
+        // add class to selected tab
+        tab.addClassName("ajaxCurrentTab");
+        this.options.baseUrl = tab.readAttribute("baseUrl");
+        this.options.parameters = tab.readAttribute("parameters");
         this.request = this.getAjaxUpdater({
             onSuccess: this.handler.bind(this)
         });
     },
     handler: function () {
-        // remove class from any tab
-        this.panel.select(".ajaxCurrentTab").invoke("removeClassName", "ajaxCurrentTab");
-        // add class to selected tab
-        this.source.addClassName("ajaxCurrentTab");
+        // empty
     }
 });
 
@@ -722,6 +721,7 @@ AjaxJspTag.Autocomplete = Class.create(AjaxJspTag.Base, {
         this.options = Object.extend({
             divElement: "ajaxAuto_" + options.source,
             parser: new DefaultResponseParser("xmltohtmllist", true)
+            // TODO DefaultResponseParser is created every time; create parser only once
         }, options || {});
     },
     createElements: function () {
@@ -880,41 +880,38 @@ AjaxJspTag.Tree = Class.create(AjaxJspTag.Base, {
             nodeClass: ''
         }, options || {});
     },
-    execute: function (e) {
-        var o = this.options, t = $("div_" + o.target);
-        if (o.target) {
-            var imgElem = $("span_" + o.target);
-            if (imgElem) {
-                var expanded = this.toggle(imgElem);
-                if (!expanded) {
-                    t.hide().update("");
-                    return;
-                }
+    execute: function () {
+        var t = this.options.target, img;
+        if (t) {
+            img = $("span_" + t);
+            if (img && !this.toggle(img)) {
+                $("div_" + t).hide().update();
+                return;
             }
         }
-        var obj = this; // required because 'this' conflict with Ajax.Request
         this.request = this.getAjaxRequest({
-            onSuccess: function (request) {
-                obj.options.parser.load({
-                    responseXML: request.responseXML,
-                    collapsedClass: obj.options.collapsedClass,
-                    treeClass: obj.options.treeClass,
-                    nodeClass: obj.options.nodeClass
-                });
-                obj.handler();
-            }
+            onSuccess: this.processResponse.bind(this)
         }, {
-            innerHTML: this.options.target
-        }); // warp
+            innerHTML: t // request parameter
+        });
     },
     toggle: function (e) {
         var o = this.options, expanded = e.hasClassName(o.expandedClass);
         e.removeClassName(expanded ? o.expandedClass : o.collapsedClass).addClassName(expanded ? o.collapsedClass : o.expandedClass);
         return !expanded;
     },
+    processResponse: function (response) { // TODO refactor to use default onSuccess in getAjaxRequest?
+        var o = this.options;
+        o.parser.load({
+            responseXML: response.responseXML,
+            collapsedClass: o.collapsedClass,
+            treeClass: o.treeClass,
+            nodeClass: o.nodeClass
+        });
+        this.handler();
+    },
     handler: function () {
-        var o = this.options, parser = o.parser, target = $(o.target);
-        var displayValue = 'block';
+        var o = this.options, parser = o.parser, target = $(o.target), displayValue = 'block';
         if (!parser.content) {
             target.innerHTML = "";
             displayValue = 'none';
@@ -978,6 +975,11 @@ AjaxJspTag.Toggle = Class.create(AjaxJspTag.Base, {
         // attach events to anchors
         this.container.select('a').each(this.setEvent, this);
     },
+    setMessage: function (message) {
+        if (this.messageContainer) {
+            this.messageContainer.innerHTML = message;
+        }
+    },
     raterMouseOver: function (e) {
         // get list of all anchors
         var elements = this.container.select('a');
@@ -986,28 +988,20 @@ AjaxJspTag.Toggle = Class.create(AjaxJspTag.Base, {
         var selectedIndex = elements.indexOf(selectedObject);
         // find the index of the 'hovered' element
         var currentIndex = elements.indexOf(Event.element(e));
-        // set message
-        if (this.options.messageClass && this.messageContainer) {
-            this.messageContainer.innerHTML = elements[currentIndex].title;
-        }
+        this.setMessage(elements[currentIndex].title);
         // iterate over each anchor and apply styles
-        var element = null;
         for (var i = 0, len = elements.length; i < len; i++) {
-            element = elements[i];
             if (selectedIndex >= 0 && ! (i > selectedIndex && i <= currentIndex)) {
                 if (i <= selectedIndex) {
-                    element.addClassName((i <= currentIndex) ? this.options.selectedOverClass : this.options.selectedLessClass);
+                    elements[i].addClassName((i <= currentIndex) ? this.options.selectedOverClass : this.options.selectedLessClass);
                 }
             } else if (i <= currentIndex) {
-                element.addClassName(this.options.overClass);
+                elements[i].addClassName(this.options.overClass);
             }
         }
     },
     raterMouseOut: function (e) {
-        // clear message
-        if (this.options.messageClass && this.messageContainer) {
-            this.messageContainer.innerHTML = '';
-        }
+        this.setMessage(''); // clear message
         this.clearCSSClass(this.options.selectedClass);
     },
     clearCSSClass: function (ohne) {
@@ -1016,30 +1010,29 @@ AjaxJspTag.Toggle = Class.create(AjaxJspTag.Base, {
             li = li.without(ohne);
         }
         list.each(function (element) {
+            // TODO use regex to remove all class names in single step
             li.each(element.removeClassName, element);
         }, this);
         return list;
     },
     raterClick: function (e) {
         // get list of all anchors
-        var klickElement = Event.element(e);
         var selectedObject = this.container.select('.' + this.options.selectedClass).pop();
         var elements = this.clearCSSClass();
         var selectedIndex = elements.indexOf(selectedObject);
 
         // find the index of the 'hovered' element
-        var currentIndex = elements.indexOf(klickElement);
+        var currentIndex = elements.indexOf(Event.element(e));
         // update styles
-        var element = null;
+        var onoff = this.container.hasClassName('onoff');
         for (var i = 0; i <= currentIndex; i++) {
-            element = elements[i];
-            if (!this.container.hasClassName('onoff') || (i === currentIndex && selectedIndex  === -1)) {
-                element.addClassName(this.options.selectedClass);
+            if (!onoff || (i === currentIndex && selectedIndex === -1)) {
+                elements[i].addClassName(this.options.selectedClass);
             }
         }
         // send AJAX
         var ratingToSend = elements[currentIndex].title;
-        if (this.container.hasClassName('onoff')) {
+        if (onoff) {
             // send opposite of what was selected
             var ratings = this.options.ratings.split(',');
             ratingToSend = (ratings[0] == ratingToSend) ? ratings[1] : ratings[0];
@@ -1100,7 +1093,7 @@ AjaxJspTag.Submit = Class.create(AjaxJspTag.Base, {
         this.listener = this.execute.bind(this);
     },
     setListeners: function () {
-        var o = this.options, f = $(o.source);
+        var f = $(this.options.source);
         if (f) {
             f.onsubmit = this.listener;
         }
