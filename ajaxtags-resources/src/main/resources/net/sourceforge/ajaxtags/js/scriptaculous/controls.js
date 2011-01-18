@@ -82,7 +82,7 @@ Autocompleter.Base = Class.create({
     };
     this.options.onHide = this.options.onHide ||
     function(element, update) {
-      new Effect.Fade(update, {
+      Effect.Fade(update, {
         duration: 0
       });
     };
@@ -470,29 +470,28 @@ Autocompleter.Local = Class.create(Autocompleter.Base, {
       selector: function(instance) {
         var ret = []; // Beginning matches
         var partial = []; // Inside matches
-        var entry = instance.getToken(), count = 0;
+        var o = instance.options, entry = o.ignoreCase ? instance.getToken().toLowerCase() : instance.getToken(), entrylen = entry.length, count = 0;
 
-        for (var i = 0; i < instance.options.array.length && ret.length < instance.options.choices; i++) {
+        for (var i = 0; i < o.array.length && ret.length < o.choices; i++) {
 
-          var elem = instance.options.array[i];
-          var foundPos = instance.options.ignoreCase ? elem.toLowerCase().indexOf(entry.toLowerCase()) : elem.indexOf(entry);
+          var elem = o.array[i], foundPos = o.ignoreCase ? elem.toLowerCase().indexOf(entry) : elem.indexOf(entry);
 
           while (foundPos != -1) {
-            if (foundPos === 0 && elem.length != entry.length) {
-              ret.push("<li><strong>" + elem.substr(0, entry.length) + "</strong>" + elem.substr(entry.length) + "</li>");
+            if (foundPos === 0 && elem.length != entrylen) {
+              ret.push("<li><strong>" + elem.substr(0, entrylen) + "</strong>" + elem.substr(entrylen) + "</li>");
               break;
-            } else if (entry.length >= instance.options.partialChars && instance.options.partialSearch && foundPos != -1) {
-              if (instance.options.fullSearch || (/\s/.test(elem.substr(foundPos - 1, 1)))) {
-                partial.push("<li>" + elem.substr(0, foundPos) + "<strong>" + elem.substr(foundPos, entry.length) + "</strong>" + elem.substr(foundPos + entry.length) + "</li>");
+            } else if (entrylen >= o.partialChars && o.partialSearch && foundPos != -1) {
+              if (o.fullSearch || (/\s/.test(elem.substr(foundPos - 1, 1)))) {
+                partial.push("<li>" + elem.substr(0, foundPos) + "<strong>" + elem.substr(foundPos, entrylen) + "</strong>" + elem.substr(foundPos + entrylen) + "</li>");
                 break;
               }
             }
 
-            foundPos = instance.options.ignoreCase ? elem.toLowerCase().indexOf(entry.toLowerCase(), foundPos + 1) : elem.indexOf(entry, foundPos + 1);
+            foundPos = o.ignoreCase ? elem.toLowerCase().indexOf(entry, foundPos + 1) : elem.indexOf(entry, foundPos + 1);
           }
         }
         if (partial.length) {
-          ret = ret.concat(partial.slice(0, instance.options.choices - ret.length));
+          ret = ret.concat(partial.slice(0, o.choices - ret.length));
         }
         return "<ul>" + ret.join('') + "</ul>";
       }
