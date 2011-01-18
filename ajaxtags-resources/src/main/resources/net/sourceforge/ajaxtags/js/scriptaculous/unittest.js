@@ -27,23 +27,31 @@ Event.simulateMouse = function(element, eventName) {
     oEvent.initMouseEvent(eventName, true, true, document.defaultView, options.buttons, options.pointerX, options.pointerY, options.pointerX, options.pointerY, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, element);
   } else if (document.createEventObject && document.fireEvent) {
     oEvent = document.createEventObject();
-    Object.extend(oEvent, options);
+    Object.extend(oEvent, Object.extend(options, {
+      detail: 0,
+      screenX: options.pointerX,
+      screenY: options.pointerY,
+      clientX: options.pointerX,
+      clientY: options.pointerY,
+      button: options.buttons,
+      relatedTarget: element
+    }));
   }
 
   if (this.mark) {
     Element.remove(this.mark);
   }
-  if (!Prototype.Browser.IE) {
-    var style = 'position: absolute; width: 5px; height: 5px;' +
-    'top: #{pointerY}px; left: #{pointerX}px;'.interpolate(options) +
-    'border-top: 1px solid red; border-left: 1px solid red;';
-
-    this.mark = new Element('div', {
-      style: style
-    });
-    this.mark.appendChild(document.createTextNode(" "));
-    document.body.appendChild(this.mark);
-  }
+  this.mark = new Element("div").setStyle({
+    position: "absolute",
+    top: options.pointerY + "px",
+    left: options.pointerX + "px",
+    width: "5px",
+    height: "5px",
+    borderTop: "1px solid red",
+    borderLeft: "1px solid red"
+  });
+  this.mark.appendChild(document.createTextNode(" "));
+  document.body.appendChild(this.mark);
 
   if (this.step) {
     alert('[' + new Date().getTime().toString() + '] ' + eventName + '/' + Test.Unit.inspect(options));
@@ -79,11 +87,11 @@ Event.simulateKeys = function(element, command) {
   }
 };
 
-var Test = {};
-Test.Unit = {};
-
-// security exception workaround
-Test.Unit.inspect = Object.inspect;
+var Test = {
+  Unit: {
+    inspect: Object.inspect // security exception workaround
+  }
+};
 
 Test.Unit.Logger = Class.create({
   initialize: function(log) {
@@ -168,21 +176,19 @@ Test.Unit.Runner = Class.create({
           this.tests.push(new Test.Unit.Testcase(this.options.tests[i], testcases[this.options.tests[i]], testcases.setup, testcases.teardown));
         }
       }
+    } else if (this.options.test) {
+      this.tests = [new Test.Unit.Testcase(this.options.test, testcases[this.options.test], testcases.setup, testcases.teardown)];
     } else {
-      if (this.options.test) {
-        this.tests = [new Test.Unit.Testcase(this.options.test, testcases[this.options.test], testcases.setup, testcases.teardown)];
-      } else {
-        this.tests = [];
-        for (var testcase in testcases) {
-          if (/^test/.test(testcase)) {
-            this.tests.push(new Test.Unit.Testcase(this.options.context ? ' -> ' + this.options.titles[testcase] : testcase, testcases[testcase], testcases.setup, testcases.teardown));
-          }
+      this.tests = [];
+      for (var testcase in testcases) {
+        if (/^test/.test(testcase)) {
+          this.tests.push(new Test.Unit.Testcase(this.options.context ? ' -> ' + this.options.titles[testcase] : testcase, testcases[testcase], testcases.setup, testcases.teardown));
         }
       }
     }
     this.currentTest = 0;
     this.logger = new Test.Unit.Logger(this.options.testLog);
-    setTimeout(this.runTests.bind(this), 1000);
+    this.runTests.bind(this).delay(1);
   },
   parseResultsURLQueryParameter: function() {
     var query = window.location.search.parseQuery();
@@ -199,20 +205,15 @@ Test.Unit.Runner = Class.create({
   //  "FAILURE" if there was a failure, or
   //  "SUCCESS" if there was neither
   getResult: function() {
-    var hasFailure = false;
     for (var i = 0; i < this.tests.length; i++) {
       if (this.tests[i].errors > 0) {
         return "ERROR";
       }
       if (this.tests[i].failures > 0) {
-        hasFailure = true;
+        return "FAILURE";
       }
     }
-    if (hasFailure) {
-      return "FAILURE";
-    } else {
-      return "SUCCESS";
-    }
+    return "SUCCESS";
   },
   postResults: function() {
     if (this.options.resultsURL) {
@@ -281,32 +282,40 @@ Test.Unit.Assertions = Class.create({
   status: function() {
     return (this.failures > 0) ? 'failed' : ((this.errors > 0) ? 'error' : 'passed');
   },
-  assert: function(expression) {
-    var message = arguments[1] || 'assert: got "' + Test.Unit.inspect(expression) + '"';
+  assert: function(expression, message) {
+    message = message || 'assert: got "' + Test.Unit.inspect(expression) + '"';
     try {
       expression ? this.pass() : this.fail(message);
     } catch (e) {
       this.error(e);
     }
   },
-  assertEqual: function(expected, actual) {
-    var message = arguments[2] || "assertEqual";
+  assertEqual: function(expected, actual, message) {
+    message = message || "assertEqual";
     try {
       (expected == actual) ? this.pass() : this.fail(message + ': expected "' + Test.Unit.inspect(expected) + '", actual "' + Test.Unit.inspect(actual) + '"');
     } catch (e) {
       this.error(e);
     }
   },
-  assertInspect: function(expected, actual) {
-    var message = arguments[2] || "assertInspect";
+  assertNotEqual: function(expected, actual, message) {
+    message = message || "assertNotEqual";
+    try {
+      (expected != actual) ? this.pass() : this.fail(message + ': got "' + Test.Unit.inspect(actual) + '"');
+    } catch (e) {
+      this.error(e);
+    }
+  },
+  assertInspect: function(expected, actual, message) {
+    message = message || "assertInspect";
     try {
       (expected == actual.inspect()) ? this.pass() : this.fail(message + ': expected "' + Test.Unit.inspect(expected) + '", actual "' + Test.Unit.inspect(actual) + '"');
     } catch (e) {
       this.error(e);
     }
   },
-  assertEnumEqual: function(expected, actual) {
-    var message = arguments[2] || "assertEnumEqual";
+  assertEnumEqual: function(expected, actual, message) {
+    message = message || "assertEnumEqual";
     try {
       $A(expected).length == $A(actual).length &&
       expected.zip(actual).all(function(pair) {
@@ -316,96 +325,115 @@ Test.Unit.Assertions = Class.create({
       this.error(e);
     }
   },
-  assertNotEqual: function(expected, actual) {
-    var message = arguments[2] || "assertNotEqual";
+  assertPairEqual: function(pair) {
+    return pair.all(Object.isArray) ? pair[0].zip(pair[1]).all(this.assertPairEqual, this) : pair[0] == pair[1];
+  },
+  assertHashEqual: function(expected, actual, message) {
+    expected = $H(expected);
+    actual = $H(actual);
+    var expected_array = expected.toArray().sort(), actual_array = actual.toArray().sort();
+    message = message || "assertHashEqual";
+    // from now we recursively zip & compare nested arrays
     try {
-      (expected != actual) ? this.pass() : this.fail(message + ': got "' + Test.Unit.inspect(actual) + '"');
+      expected_array.length == actual_array.length &&
+      expected_array.zip(actual_array).all(this.assertPairEqual, this) ? this.pass() : this.fail(message + ': expected ' + Test.Unit.inspect(expected) + ', actual ' + Test.Unit.inspect(actual));
     } catch (e) {
       this.error(e);
     }
   },
-  assertIdentical: function(expected, actual) {
-    var message = arguments[2] || "assertIdentical";
+  assertIdentical: function(expected, actual, message) {
+    message = message || "assertIdentical";
     try {
       (expected === actual) ? this.pass() : this.fail(message + ': expected "' + Test.Unit.inspect(expected) + '", actual "' + Test.Unit.inspect(actual) + '"');
     } catch (e) {
       this.error(e);
     }
   },
-  assertNotIdentical: function(expected, actual) {
-    var message = arguments[2] || "assertNotIdentical";
+  assertNotIdentical: function(expected, actual, message) {
+    message = message || "assertNotIdentical";
     try {
       !(expected === actual) ? this.pass() : this.fail(message + ': expected "' + Test.Unit.inspect(expected) + '", actual "' + Test.Unit.inspect(actual) + '"');
     } catch (e) {
       this.error(e);
     }
   },
-  assertNull: function(obj) {
-    var message = arguments[1] || 'assertNull';
+  assertNull: function(object, message) {
+    message = message || 'assertNull';
     try {
-      (obj == null) ? this.pass() : this.fail(message + ': got "' + Test.Unit.inspect(obj) + '"');
+      (object === null) ? this.pass() : this.fail(message + ': expected null, got "' + Test.Unit.inspect(object) + '"');
     } catch (e) {
       this.error(e);
     }
   },
-  assertMatch: function(expected, actual) {
-    var message = arguments[2] || 'assertMatch', regex = new RegExp(expected);
+  assertNotNull: function(object, message) {
+    this.assert(object !== null, message || 'assertNotNull');
+  },
+  assertUndefined: function(object, message) {
+    this.assert(typeof object == "undefined", message || 'assertUndefined');
+  },
+  assertNotUndefined: function(object, message) {
+    this.assert(typeof object != "undefined", message || 'assertNotUndefined');
+  },
+  assertNullOrUndefined: function(object, message) {
+    this.assert(object == null, message || 'assertNullOrUndefined');
+  },
+  assertNotNullOrUndefined: function(object, message) {
+    this.assert(object != null, message || 'assertNotNullOrUndefined');
+  },
+  assertMatch: function(expected, actual, message) {
+    message = message || 'assertMatch';
+    var regex = new RegExp(expected);
     try {
       (regex.exec(actual)) ? this.pass() : this.fail(message + ' : regex: "' + Test.Unit.inspect(expected) + ' did not match: ' + Test.Unit.inspect(actual) + '"');
     } catch (e) {
       this.error(e);
     }
   },
-  assertHidden: function(element) {
-    var message = arguments[1] || 'assertHidden';
-    this.assertEqual("none", element.style.display, message);
+  assertHidden: function(element, message) {
+    this.assertEqual("none", element.style.display, message || 'assertHidden');
   },
-  assertNotNull: function(object) {
-    var message = arguments[1] || 'assertNotNull';
-    this.assert(object != null, message);
-  },
-  assertType: function(expected, actual) {
-    var message = arguments[2] || 'assertType';
+  assertType: function(expected, actual, message) {
+    message = message || 'assertType';
     try {
       (actual.constructor == expected) ? this.pass() : this.fail(message + ': expected "' + Test.Unit.inspect(expected) + '", actual "' + (actual.constructor) + '"');
     } catch (e) {
       this.error(e);
     }
   },
-  assertNotOfType: function(expected, actual) {
-    var message = arguments[2] || 'assertNotOfType';
+  assertNotOfType: function(expected, actual, message) {
+    message = message || 'assertNotOfType';
     try {
       (actual.constructor != expected) ? this.pass() : this.fail(message + ': expected "' + Test.Unit.inspect(expected) + '", actual "' + (actual.constructor) + '"');
     } catch (e) {
       this.error(e);
     }
   },
-  assertInstanceOf: function(expected, actual) {
-    var message = arguments[2] || 'assertInstanceOf';
+  assertInstanceOf: function(expected, actual, message) {
+    message = message || 'assertInstanceOf';
     try {
       (actual instanceof expected) ? this.pass() : this.fail(message + ": object was not an instance of the expected type");
     } catch (e) {
       this.error(e);
     }
   },
-  assertNotInstanceOf: function(expected, actual) {
-    var message = arguments[2] || 'assertNotInstanceOf';
+  assertNotInstanceOf: function(expected, actual, message) {
+    message = message || 'assertNotInstanceOf';
     try {
       !(actual instanceof expected) ? this.pass() : this.fail(message + ": object was an instance of the not expected type");
     } catch (e) {
       this.error(e);
     }
   },
-  assertRespondsTo: function(method, obj) {
-    var message = arguments[2] || 'assertRespondsTo';
+  assertRespondsTo: function(method, obj, message) {
+    message = message || 'assertRespondsTo';
     try {
       (obj[method] && typeof obj[method] == 'function') ? this.pass() : this.fail(message + ": object doesn't respond to [" + method + "]");
     } catch (e) {
       this.error(e);
     }
   },
-  assertReturnsTrue: function(method, obj) {
-    var message = arguments[2] || 'assertReturnsTrue';
+  assertReturnsTrue: function(method, obj, message) {
+    message = message || 'assertReturnsTrue';
     try {
       var m = obj[method];
       if (!m) {
@@ -416,8 +444,8 @@ Test.Unit.Assertions = Class.create({
       this.error(e);
     }
   },
-  assertReturnsFalse: function(method, obj) {
-    var message = arguments[2] || 'assertReturnsFalse';
+  assertReturnsFalse: function(method, obj, message) {
+    message = message || 'assertReturnsFalse';
     try {
       var m = obj[method];
       if (!m) {
@@ -428,13 +456,22 @@ Test.Unit.Assertions = Class.create({
       this.error(e);
     }
   },
-  assertRaise: function(exceptionName, method) {
-    var message = arguments[2] || 'assertRaise';
+  assertRaise: function(exceptionName, method, message) {
+    message = message || 'assertRaise';
     try {
       method();
       this.fail(message + ": exception expected but none was raised");
     } catch (e) {
       ((exceptionName == null) || (e.name == exceptionName)) ? this.pass() : this.error(e);
+    }
+  },
+  assertNothingRaised: function(method, message) {
+    message = message || 'assertNothingRaised';
+    try {
+      method();
+      this.pass();
+    } catch (e) {
+      this.fail(message + ": exception was thrown when nothing was expected");
     }
   },
   assertElementsMatch: function() {
@@ -466,17 +503,17 @@ Test.Unit.Assertions = Class.create({
     }
     return this._isVisible(element.parentNode);
   },
-  assertNotVisible: function(element) {
-    this.assert(!this._isVisible(element), Test.Unit.inspect(element) + " was not hidden and didn't have a hidden parent either. " + ("" || arguments[1]));
+  assertNotVisible: function(element, message) {
+    this.assert(!this._isVisible(element), Test.Unit.inspect(element) + " was not hidden and didn't have a hidden parent either. " + ("" || message));
   },
-  assertVisible: function(element) {
-    this.assert(this._isVisible(element), Test.Unit.inspect(element) + " was not visible. " + ("" || arguments[1]));
+  assertVisible: function(element, message) {
+    this.assert(this._isVisible(element), Test.Unit.inspect(element) + " was not visible. " + ("" || message));
   },
-  benchmark: function(operation, iterations) {
+  benchmark: function(operation, iterations, message) {
     var startAt = new Date();
     (iterations || 1).times(operation);
     var timeTaken = ((new Date()) - startAt);
-    this.info((arguments[2] || 'Operation') + ' finished ' + iterations + ' iterations in ' + (timeTaken / 1000) + 's');
+    this.info((message || 'Operation') + ' finished ' + iterations + ' iterations in ' + (timeTaken / 1000) + 's');
     return timeTaken;
   }
 });
