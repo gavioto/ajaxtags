@@ -24,6 +24,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.apache.commons.lang.StringUtils;
 
 import net.sourceforge.ajaxtags.helpers.JavaScript;
 import net.sourceforge.ajaxtags.servlets.AjaxActionHelper.HTMLAjaxHeader;
@@ -100,8 +101,7 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
     protected void out(final CharSequence csec) throws JspException {
         try {
             pageContext.getOut().append(csec);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new JspException(e);
         }
     }
@@ -130,23 +130,23 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
     public final void release() {
         setId(null);
 
-        this.target = null; // NOPMD
-        this.baseUrl = null; // NOPMD
-        this.parser = null; // NOPMD
+        target = null; // NOPMD
+        baseUrl = null; // NOPMD
+        parser = null; // NOPMD
 
-        this.preFunction = null; // NOPMD
-        this.postFunction = null; // NOPMD
-        this.errorFunction = null; // NOPMD
-        this.parameters = null; // NOPMD
+        preFunction = null; // NOPMD
+        postFunction = null; // NOPMD
+        errorFunction = null; // NOPMD
+        parameters = null; // NOPMD
 
-        this.var = null; // NOPMD
-        this.attachTo = null; // NOPMD
+        var = null; // NOPMD
+        attachTo = null; // NOPMD
 
-        this.source = null; // NOPMD
-        this.sourceClass = null; // NOPMD
-        this.eventType = null; // NOPMD
+        source = null; // NOPMD
+        sourceClass = null; // NOPMD
+        eventType = null; // NOPMD
 
-        this.styleClass = null; // NOPMD
+        styleClass = null; // NOPMD
 
         releaseTag();
     }
@@ -216,17 +216,11 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
      * @return String with left side of assignment to variable "var foo = " or field "object.foo = "
      */
     public final String getJSVariable() {
-        // TODO inverse if clause: if(var==null){return "";}
-        final StringBuilder script = new StringBuilder();
-        if (this.var != null) {
-            if (this.attachTo == null) {
-                script.append("var ");
-            } else {
-                script.append(this.attachTo).append(".");
-            }
-            script.append(this.var).append(" = ");
+        if (var == null) { // short-circuit
+            return StringUtils.EMPTY;
         }
-        return script.toString();
+        // compiler will use StringBuilder
+        return attachTo == null ? "var " + var + " = " : attachTo + "." + var + " = ";
     }
 
     /**
@@ -310,7 +304,7 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
      * @return Returns the target.
      */
     public final String getTarget() {
-        return this.target;
+        return target;
     }
 
     /**
@@ -361,9 +355,9 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
 
         builder.add("parameters", getParameters(), true);
 
-        builder.add("onCreate", this.preFunction, false);
-        builder.add("onComplete", this.postFunction, false);
-        builder.add("onFailure", this.errorFunction, false);
+        builder.add("onCreate", preFunction, false);
+        builder.add("onComplete", postFunction, false);
+        builder.add("onFailure", errorFunction, false);
 
         return builder;
     }
