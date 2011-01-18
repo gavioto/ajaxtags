@@ -1124,6 +1124,13 @@
         </attribute>
 
         <attribute>
+            <description>The ID of the created tab element.</description>
+            <name>id</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
             <description>
                 A comma-separated list of parameters to pass to the
                 server-side action or servlet.

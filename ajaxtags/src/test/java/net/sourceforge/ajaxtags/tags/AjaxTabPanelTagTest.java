@@ -28,8 +28,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Test for AjaxTabPanelTag.
- *
- * @author Victor Homyakov
  */
 public class AjaxTabPanelTagTest extends AbstractTagTest<AjaxTabPanelTag> {
 
