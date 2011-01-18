@@ -20,16 +20,14 @@ String.prototype.parseColor = function() {
     do {
       color += parseInt(cols[i], 10).toColorPart();
     } while (++i < 3);
-  } else {
-    if (this.slice(0, 1) == '#') {
-      if (this.length == 4) {
-        for (i = 1; i < 4; i++) {
-          color += (this.charAt(i) + this.charAt(i)).toLowerCase();
-        }
+  } else if (this.slice(0, 1) == '#') {
+    if (this.length == 4) {
+      for (i = 1; i < 4; i++) {
+        color += (this.charAt(i) + this.charAt(i)).toLowerCase();
       }
-      if (this.length == 7) {
-        color = this.toLowerCase();
-      }
+    }
+    if (this.length == 7) {
+      color = this.toLowerCase();
     }
   }
   return (color.length == 7 ? color : (arguments[0] || this));
@@ -1293,8 +1291,7 @@ if (document.defaultView && document.defaultView.getComputedStyle) {
 } else {
   Element.getStyles = function(element) {
     element = $(element);
-    var css = element.currentStyle, styles;
-    styles = Element.CSS_PROPERTIES.inject({}, function(results, property) {
+    var css = element.currentStyle, styles = Element.CSS_PROPERTIES.inject({}, function(results, property) {
       results[property] = css[property];
       return results;
     });
