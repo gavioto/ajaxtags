@@ -33,21 +33,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 --%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-
-<%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
+<%@page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1" import="java.util.Date"%>
+<%@taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
     prefix="ajax"%>
-<%@page import="java.util.Date"%>
 <jsp:useBean id="now" class="java.util.Date" />
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" ></meta>
-<link type="text/css" rel="stylesheet" href="css/ajaxtags.css" ></link>
-<link type="text/css" rel="stylesheet" href="css/displaytag.css" ></link>
-<link rel="stylesheet" type="text/css" href="css0/site.css" ></link>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta>
+<link type="text/css" rel="stylesheet" href="css/ajaxtags.css"></link>
+<link type="text/css" rel="stylesheet" href="css/displaytag.css"></link>
+<link rel="stylesheet" type="text/css" href="css0/site.css"></link>
 <title>AJAX JSP Tag Library Examples</title>
 
 <!-- der ie kann das dynamische laden nicht, es fehlen die informationen & es ist die falsche reihenfolge -->
@@ -70,12 +68,10 @@
     };
 
     window.reportError = function() {
-        $('errorMsg').innerHTML = "AjaxTag busted!";
-        Element.show('errorMsg');
-        setTimeout("Effect.DropOut('errorMsg')", 2500);
+        $("errorMsg").update("AjaxTags busted!").show();
+        Effect.DropOut.delay(2.5, "errorMsg");
     };
 </script>
-
 </head>
 
 <body>
@@ -105,7 +101,7 @@
 	<ajax:tab caption="In Place Editor" baseUrl="inplaceeditor.jsp"/>
 </ajax:tabPanel>
 
-<p>Page loaded at: <span id="datum"> ${now}</span></p>
+<p>Page loaded at: <span id="datum">${now}</span></p>
 </div>
 </body>
 </html>
