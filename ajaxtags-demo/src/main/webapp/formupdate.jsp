@@ -34,21 +34,19 @@ conversion tool.</p>
 	/*
 	 * USER DEFINED FUNCTIONS
 	 */
-	 
+
 	 window.isNumber = function(n) {
-		    return  (/^\d+$/g).test(n);
+		    return (/^\d+$/g).test(n);
 		 };
 
 	 window.addAgeToParameters = function() {
-		var name = $('name');
+		var name = $('name'), age = $('age');
 		name.value = prompt("enter your name", "");
-		var age = $('age');
 
 		if (age.value.length > 1 && age.value.charAt(0) == "$") {
-			var c = 0;
-			var n = age.value;
-			
-			while (! window.isNumber(n) && c < 5) {
+			var c = 0, n = age.value;
+
+			while (!window.isNumber(n) && c < 5) {
 				var text = c > 0 ? "enter your age, have to be a number try count = "
 						+ c
 						: "enter your age";
@@ -71,7 +69,7 @@ conversion tool.</p>
 			}
 		}
 	};
-	
+
 	 /// use window. XXX to make XXX visible!
 	 // eval function error?
 	window.initProgress2 = function () {
@@ -93,9 +91,9 @@ conversion tool.</p>
 
 			// display success message
 			Element.show('successMsg');
-			setTimeout("Effect.DropOut('successMsg');", 2000);
+	        Effect.DropOut.delay(2, 'successMsg');
 		}
-	}; 
+	};
 </script>
 
 <div style="width: 400px;">

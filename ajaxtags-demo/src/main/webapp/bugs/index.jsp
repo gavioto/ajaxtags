@@ -32,9 +32,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 --%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+<%@page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
+<%@taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
 	prefix="ajax"%>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -63,19 +63,17 @@
    * USER DEFINED FUNCTIONS
    */
 
-  window.initProgress=function(){
+  window.initProgress = function() {
     $('progressMsg').show();
   };
 
-  window.resetProgress=function(request){
+  window.resetProgress = function(request) {
     Effect.Fade('progressMsg');
   };
 
-  window.reportError=function(){
-    $('errorMsg').update("AjaxTag busted!").show();
-    //$('errorMsg').innerHTML = "AjaxTag busted!";
-    //$('errorMsg').show();
-    setTimeout("Effect.DropOut('errorMsg')",2500);
+  window.reportError = function() {
+    $("errorMsg").update("AjaxTags busted!").show();
+    Effect.DropOut.delay(2.5, "errorMsg");
   };
 </script>
 </head>
