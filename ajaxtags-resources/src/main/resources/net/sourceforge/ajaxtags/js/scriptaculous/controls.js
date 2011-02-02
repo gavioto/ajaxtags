@@ -1,9 +1,9 @@
 /*global $, $A, $F, $H, Ajax, Class, Effect, Element, Event, Field, Form, Prototype */
-// script.aculo.us controls.js v1.8.3 fixed, Thu Oct 08 11:23:33 +0200 2009
+// script.aculo.us controls.js v1.9.0 with fixes, Thu Dec 23 16:54:48 -0500 2010
 
-// Copyright (c) 2005-2007 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
-//           (c) 2005-2007 Ivan Krstic (http://blogs.law.harvard.edu/ivan)
-//           (c) 2005-2007 Jon Tirsen (http://www.tirsen.com)
+// Copyright (c) 2005-2010 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+//           (c) 2005-2010 Ivan Krstic (http://blogs.law.harvard.edu/ivan)
+//           (c) 2005-2010 Jon Tirsen (http://www.tirsen.com)
 // Contributors:
 //  Richard Livsey
 //  Rahul Bhargava
@@ -77,18 +77,18 @@ Autocompleter.Base = Class.create({
         }
       }
       Effect.Appear(update, {
-        duration: 0
+        duration: 0.15
       });
     };
     this.options.onHide = this.options.onHide ||
     function(element, update) {
       Effect.Fade(update, {
-        duration: 0
+        duration: 0.15
       });
     };
 
     if (typeof(this.options.tokens) == 'string') {
-      this.options.tokens = new Array(this.options.tokens);
+      this.options.tokens = [this.options.tokens];
     }
     // Force carriage returns as token delimiters anyway
     if (!this.options.tokens.include('\n')) {
@@ -109,15 +109,14 @@ Autocompleter.Base = Class.create({
     if (Element.getStyle(this.update, 'display') == 'none') {
       this.options.onShow(this.element, this.update);
     }
-    if (!this.iefix &&
-    (Prototype.Browser.IE) &&
-    (Element.getStyle(this.update, 'position') == 'absolute')) {
+    if (!this.iefix && Prototype.Browser.IE && (Element.getStyle(this.update, 'position') == 'absolute')) {
+      var id = this.update.id + '_iefix';
       Element.insert(this.update, {
-        after: '<iframe id="' + this.update.id + '_iefix" ' +
+        after: '<iframe id="' + id + '" ' +
         'style="display:none;position:absolute;filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);" ' +
         'src="javascript:false;" frameborder="0" scrolling="no"></iframe>'
       });
-      this.iefix = $(this.update.id + '_iefix');
+      this.iefix = $(id);
     }
     if (this.iefix) {
       setTimeout(this.fixIEOverlapping.bind(this), 50);
@@ -125,12 +124,16 @@ Autocompleter.Base = Class.create({
   },
 
   fixIEOverlapping: function() {
-    Element.clonePosition(this.iefix, this.update, {
-      setTop: (!this.update.style.height)
+    var s = this.update.style;
+    if (!s.zIndex) {
+      s.zIndex = 2;
+    }
+    this.iefix.clonePosition(this.update, {
+      setTop: (!s.height)
+    }).setStyle({
+      zIndex: s.zIndex - 1,
+      display: ''
     });
-    this.iefix.style.zIndex = 1;
-    this.update.style.zIndex = 2;
-    Element.show(this.iefix);
   },
 
   hide: function() {
@@ -245,7 +248,7 @@ Autocompleter.Base = Class.create({
     } else {
       this.index = this.entryCount - 1;
     }
-    this.getEntry(this.index).scrollIntoView(true);
+    this.getCurrentEntry().scrollIntoView(true);
   },
 
   markNext: function() {
@@ -254,11 +257,12 @@ Autocompleter.Base = Class.create({
     } else {
       this.index = 0;
     }
-    this.getEntry(this.index).scrollIntoView(false);
+    this.getCurrentEntry().scrollIntoView(false);
   },
 
   getEntry: function(index) {
-    return this.update.firstChild.childNodes[index];
+    var c = this.update.firstChild;
+    return c ? c.childNodes[index] : undefined;
   },
 
   getCurrentEntry: function() {
@@ -271,15 +275,16 @@ Autocompleter.Base = Class.create({
   },
 
   updateElement: function(selectedElement) {
-    if (this.options.updateElement) {
-      this.options.updateElement(selectedElement);
+    var o = this.options;
+    if (o.updateElement) {
+      o.updateElement(selectedElement);
       return;
     }
     var value = '';
-    if (this.options.select) {
-      var nodes = $(selectedElement).select('.' + this.options.select) || [];
+    if (o.select) {
+      var nodes = $(selectedElement).select('.' + o.select) || [];
       if (nodes.length > 0) {
-        value = Element.collectTextNodes(nodes[0], this.options.select);
+        value = Element.collectTextNodes(nodes[0], o.select);
       }
     } else {
       value = Element.collectTextNodesIgnoreClass(selectedElement, 'informal');
@@ -287,20 +292,20 @@ Autocompleter.Base = Class.create({
 
     var bounds = this.getTokenBounds();
     if (bounds[0] != -1) {
-      var newValue = this.element.value.substr(0, bounds[0]);
-      var whitespace = this.element.value.substr(bounds[0]).match(/^\s+/);
+      var v = this.element.value, newValue = v.substr(0, bounds[0]);
+      var whitespace = v.substr(bounds[0]).match(/^\s+/);
       if (whitespace) {
         newValue += whitespace[0];
       }
-      this.element.value = newValue + value + this.element.value.substr(bounds[1]);
+      this.element.value = newValue + value + v.substr(bounds[1]);
     } else {
       this.element.value = value;
     }
     this.oldElementValue = this.element.value;
     this.element.focus();
 
-    if (this.options.afterUpdateElement) {
-      this.options.afterUpdateElement(this.element, selectedElement);
+    if (o.afterUpdateElement) {
+      o.afterUpdateElement(this.element, selectedElement);
     }
   },
 
@@ -308,10 +313,11 @@ Autocompleter.Base = Class.create({
     if (!this.changed && this.hasFocus) {
       this.update.innerHTML = choices;
       Element.cleanWhitespace(this.update);
-      Element.cleanWhitespace(this.update.down());
 
-      if (this.update.firstChild && this.update.down().childNodes) {
-        this.entryCount = this.update.down().childNodes.length;
+      var child = Element.firstDescendant(this.update);
+      if (child && child.childNodes) {
+        Element.cleanWhitespace(child);
+        this.entryCount = child.childNodes.length;
         for (var i = 0; i < this.entryCount; i++) {
           var entry = this.getEntry(i);
           entry.autocompleteIndex = i;
