@@ -36,6 +36,7 @@ import javax.servlet.jsp.tagext.BodyContent;
 /**
  * Fake PageContext to test tags.
  */
+@SuppressWarnings("deprecation")
 public class FakePageContext extends PageContext {
 
     private final BodyContent content = new FakeBodyContent();
