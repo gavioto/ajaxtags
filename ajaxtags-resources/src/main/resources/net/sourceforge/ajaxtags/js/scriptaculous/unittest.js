@@ -1,9 +1,9 @@
 /*global $, $$, $A, $F, $H, $R, $w, Ajax, Class, Effect, Element, Enumerable, Event, Field, Form, Prototype, Test */
-// script.aculo.us unittest.js v1.8.3, Thu Oct 08 11:23:33 +0200 2009
+// script.aculo.us unittest.js v1.9.0, Thu Dec 23 16:54:48 -0500 2010
 
-// Copyright (c) 2005-2007 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
-//           (c) 2005-2007 Jon Tirsen (http://www.tirsen.com)
-//           (c) 2005-2007 Michael Schuerig (http://www.schuerig.de/michael/)
+// Copyright (c) 2005-2010 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+//           (c) 2005-2010 Jon Tirsen (http://www.tirsen.com)
+//           (c) 2005-2010 Michael Schuerig (http://www.schuerig.de/michael/)
 //
 // script.aculo.us is freely distributable under the terms of an MIT-style license.
 // For details, see the script.aculo.us web site: http://script.aculo.us/
@@ -65,6 +65,7 @@ Event.simulateMouse = function(element, eventName) {
 };
 
 Event.simulateKey = function(element, eventName) {
+  element = $(element);
   var options = Object.extend({
     ctrlKey: false,
     altKey: false,
@@ -74,9 +75,34 @@ Event.simulateKey = function(element, eventName) {
     charCode: 0
   }, arguments[2] || {});
 
-  var oEvent = document.createEvent("KeyEvents"); // "KeyboardEvent"
-  oEvent.initKeyEvent(eventName, true, true, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.keyCode, options.charCode);
-  $(element).dispatchEvent(oEvent);
+  var oEvent;
+  if (document.createEvent && document.dispatchEvent) {
+    try {
+      oEvent = document.createEvent("KeyEvents"); // "KeyboardEvent"
+      oEvent.initKeyEvent(eventName, true, true, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.keyCode, options.charCode);
+    } catch (e) {
+      try {
+        oEvent = document.createEvent("Events");
+      } catch (e2) {
+        oEvent = document.createEvent("UIEvents");
+      } finally {
+        oEvent.initEvent(eventName, true, true);
+        Object.extend(oEvent, options);
+      }
+    }
+    element.dispatchEvent(oEvent);
+  } else if (document.createEventObject && document.fireEvent) {
+    oEvent = document.createEventObject();
+    Object.extend(oEvent, options);
+    try {
+      window.event = oEvent;
+    } catch (e) {
+    }
+    // IE-specific sourceIndex makes sure element is in the document
+    if (element.sourceIndex > 0) {
+      element.fireEvent("on" + eventName, oEvent);
+    }
+  }
 };
 
 Event.simulateKeys = function(element, command) {
@@ -144,7 +170,7 @@ Test.Unit.Logger = Class.create({
     return txt.escapeHTML().replace(/\n/g, "<br/>");
   },
   addLinksToResults: function() {
-    $$("tr.failed .nameCell").each(function(td) { // todo: limit to children of this.log
+    $$("tr.failed .nameCell,tr.error .nameCell").each(function(td) { // todo: limit to children of this.log
       td.title = "Run only this test";
       Event.observe(td, 'click', function() {
         window.location.search = "?tests=" + td.innerHTML;
@@ -494,20 +520,20 @@ Test.Unit.Assertions = Class.create({
   },
   _isVisible: function(element) {
     element = $(element);
+    this.assertNotNull(element);
     if (!element.parentNode) {
       return true;
     }
-    this.assertNotNull(element);
-    if (element.style && Element.getStyle(element, 'display') == 'none') {
+    if (element.getStyle('display') === 'none' || element.getStyle('visibility') === 'hidden') {
       return false;
     }
     return this._isVisible(element.parentNode);
   },
   assertNotVisible: function(element, message) {
-    this.assert(!this._isVisible(element), Test.Unit.inspect(element) + " was not hidden and didn't have a hidden parent either. " + ("" || message));
+    this.assert(!this._isVisible(element), Test.Unit.inspect(element) + " was not hidden and didn't have a hidden parent either. " + (message || ""));
   },
   assertVisible: function(element, message) {
-    this.assert(this._isVisible(element), Test.Unit.inspect(element) + " was not visible. " + ("" || message));
+    this.assert(this._isVisible(element), Test.Unit.inspect(element) + " was not visible. " + (message || ""));
   },
   benchmark: function(operation, iterations, message) {
     var startAt = new Date();
@@ -535,9 +561,9 @@ Test.Unit.Testcase = Class.create(Test.Unit.Assertions, {
 
     this.setup = setup || Prototype.emptyFunction;
     this.teardown = teardown || Prototype.emptyFunction;
+    this.isWaiting = false;
+    this.timeToWait = 1000;
   },
-  isWaiting: false,
-  timeToWait: 1000,
   wait: function(time, nextPart) {
     this.isWaiting = true;
     this.test = nextPart;

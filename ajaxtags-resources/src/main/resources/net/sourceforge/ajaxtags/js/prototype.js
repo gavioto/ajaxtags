@@ -1,4 +1,4 @@
-/*  Prototype JavaScript framework, version 1.6.2.3
+/*  Prototype JavaScript framework, version 1.6.2.4
  *  (c) 2005-2010 Sam Stephenson
  *
  *  Prototype is freely distributable under the terms of an MIT-style license.
@@ -8,7 +8,7 @@
 
 var Prototype = {
 
-  Version: '1.6.2.3',
+  Version: '1.6.2.4',
 
   Browser: (function(){
     var ua = navigator.userAgent;
@@ -3365,7 +3365,6 @@ var Selector = Class.create({
   },
 
   shouldUseXPath: (function() {
-
     var IS_DESCENDANT_SELECTOR_BUGGY = (function(){
       var isBuggy = false;
       if (document.evaluate && window.XPathResult) {
@@ -3389,8 +3388,7 @@ var Selector = Class.create({
 
       var e = this.expression;
 
-      if (Prototype.Browser.WebKit &&
-       (e.include("-of-type") || e.include(":empty")))
+      if (Prototype.Browser.WebKit && (e.include("-of-type") || e.include(":empty")))
         return false;
 
       if ((/(\[[\w-]*?:|:checked)/).test(e))
@@ -3407,11 +3405,16 @@ var Selector = Class.create({
 
     if (Selector.CASE_INSENSITIVE_CLASS_NAMES) return false;
 
+    var e = this.expression;
+
+    if (Prototype.Browser.Opera && e.include(":enabled"))
+      return false;
+
     if (!Selector._div) Selector._div = new Element('div');
 
     try {
-      Selector._div.querySelector(this.expression);
-    } catch(e) {
+      Selector._div.querySelector(e);
+    } catch(ex) {
       return false;
     }
 
@@ -3476,10 +3479,10 @@ var Selector = Class.create({
 
   findElements: function(root) {
     root = root || document;
-    var e = this.expression, results;
 
     switch (this.mode) {
       case 'selectorsAPI':
+        var e = this.expression, results;
         if (root !== document) {
           var oldId = root.id, id = $(root).identify();
           id = id.replace(/([\.:])/g, "\\$1");
@@ -3570,8 +3573,7 @@ Object.extend(Selector, {
     pseudo: function(m) {
       var h = Selector.xpath.pseudos[m[1]];
       if (!h) return '';
-      if (Object.isFunction(h)) return h(m);
-      return new Template(Selector.xpath.pseudos[m[1]]).evaluate(m);
+      return Object.isFunction(h)? h(m) : new Template(h).evaluate(m);
     },
     operators: {
       '=':  "[@#{1}='#{3}']",
@@ -3588,8 +3590,8 @@ Object.extend(Selector, {
       'only-child':  '[not(preceding-sibling::* or following-sibling::*)]',
       'empty':       "[count(*) = 0 and (count(text()) = 0)]",
       'checked':     "[@checked]",
-      'disabled':    "[(@disabled) and (@type!='hidden')]",
-      'enabled':     "[not(@disabled) and (@type!='hidden')]",
+      'disabled':    "[(@disabled) and (not(@type) or @type!='hidden')]", // FIX for [(@disabled) and (@type!='hidden')]
+      'enabled':     "[not(@disabled) and (not(@type) or @type!='hidden')]", // FIX for [not(@disabled) and (@type!='hidden')]
       'not': function(m) {
         var e = m[6], p = Selector.patterns,
             x = Selector.xpath, le, v, len = p.length, name;
@@ -3720,7 +3722,6 @@ Object.extend(Selector, {
     },
 
     unmark: (function(){
-
       var PROPERTIES_ATTRIBUTES_MAP = (function(){
         var el = document.createElement('div'),
             isBuggy = false,

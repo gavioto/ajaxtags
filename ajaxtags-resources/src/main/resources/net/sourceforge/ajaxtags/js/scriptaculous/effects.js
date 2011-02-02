@@ -1,14 +1,14 @@
 /*global $, $$, $A, $F, $H, $R, $w, Ajax, Class, Effect, Element, Enumerable, Event, Field, Form, Prototype */
-// script.aculo.us effects.js v1.8.3, Thu Oct 08 11:23:33 +0200 2009
+// script.aculo.us effects.js v1.9.0, Thu Dec 23 16:54:48 -0500 2010
 
-// Copyright (c) 2005-2007 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+// Copyright (c) 2005-2010 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 // Contributors:
 //  Justin Palmer (http://encytemedia.com/)
 //  Mark Pilgrim (http://diveintomark.org/)
 //  Martin Bialasinki
-// 
+//
 // script.aculo.us is freely distributable under the terms of an MIT-style license.
-// For details, see the script.aculo.us web site: http://script.aculo.us/ 
+// For details, see the script.aculo.us web site: http://script.aculo.us/
 
 // converts rgb() and #xxx to #xxxxxx format,
 // returns self (or first argument) if not convertable
@@ -1256,29 +1256,54 @@ Element.CSS_PROPERTIES = $w('backgroundColor backgroundPosition borderBottomColo
 Element.CSS_LENGTH = /^(([\+\-]?[0-9\.]+)(em|ex|px|in|cm|mm|pt|pc|\%))|0$/;
 
 String.__parseStyleElement = document.createElement('div');
-String.prototype.parseStyle = function() {
-  var style, styleRules = $H();
-  if (Prototype.Browser.WebKit) {
+if (Prototype.Browser.WebKit) {
+  String.prototype.parseStyle = function() {
+    var style, styleRules = $H();
     style = new Element('div', {
       style: this
     }).style;
-  } else {
+
+    Element.CSS_PROPERTIES.each(function(property) {
+      if (style[property]) {
+        styleRules.set(property, style[property]);
+      }
+    });
+
+    return styleRules;
+  };
+} else if (Prototype.Browser.IE) {
+  String.prototype.parseStyle = function() {
+    var style, styleRules = $H();
     String.__parseStyleElement.innerHTML = '<div style="' + this + '"></div>';
     style = String.__parseStyleElement.childNodes[0].style;
-  }
 
-  Element.CSS_PROPERTIES.each(function(property) {
-    if (style[property]) {
-      styleRules.set(property, style[property]);
+    Element.CSS_PROPERTIES.each(function(property) {
+      if (style[property]) {
+        styleRules.set(property, style[property]);
+      }
+    });
+
+    if (this.include('opacity')) {
+      styleRules.set('opacity', this.match(/opacity:\s*((?:0|1)?(?:\.\d*)?)/)[1]);
     }
-  });
 
-  if (Prototype.Browser.IE && this.include('opacity')) {
-    styleRules.set('opacity', this.match(/opacity:\s*((?:0|1)?(?:\.\d*)?)/)[1]);
-  }
+    return styleRules;
+  };
+} else {
+  String.prototype.parseStyle = function() {
+    var style, styleRules = $H();
+    String.__parseStyleElement.innerHTML = '<div style="' + this + '"></div>';
+    style = String.__parseStyleElement.childNodes[0].style;
 
-  return styleRules;
-};
+    Element.CSS_PROPERTIES.each(function(property) {
+      if (style[property]) {
+        styleRules.set(property, style[property]);
+      }
+    });
+
+    return styleRules;
+  };
+}
 
 if (document.defaultView && document.defaultView.getComputedStyle) {
   Element.getStyles = function(element) {

@@ -1,8 +1,7 @@
 /*global $, $A, $F, $H, Ajax, Class, Effect, Element, Event, Field, Form, Prototype, Sortable */
-// script.aculo.us dragdrop.js v1.8.3, Thu Oct 08 11:23:33 +0200 2009
+// script.aculo.us dragdrop.js v1.9.0, Thu Dec 23 16:54:48 -0500 2010
 
-// Copyright (c) 2005-2007 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
-//           (c) 2005-2007 Sammi Williams (http://www.oriontransfer.co.nz, sammi@oriontransfer.co.nz)
+// Copyright (c) 2005-2010 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 // 
 // script.aculo.us is freely distributable under the terms of an MIT-style license.
 // For details, see the script.aculo.us web site: http://script.aculo.us/
@@ -80,7 +79,7 @@ var Droppables = {
     ((!drop._containers) ||
     this.isContained(element, drop)) &&
     ((!drop.accept) ||
-    (Element.classNames(element).detect(function(v) {
+    ($w(element.className).detect(function(v) {
       return drop.accept.include(v);
     }))) &&
     Position.within(drop.element, point[0], point[1]));
@@ -400,15 +399,13 @@ var Draggable = Class.create({
       this.element.parentNode.insertBefore(this._clone, this.element);
     }
 
-    if (this.options.scroll) {
-      if (this.options.scroll == window) {
-        var where = this._getWindowScroll(this.options.scroll);
-        this.originalScrollLeft = where.left;
-        this.originalScrollTop = where.top;
-      } else {
-        this.originalScrollLeft = this.options.scroll.scrollLeft;
-        this.originalScrollTop = this.options.scroll.scrollTop;
+    var s = this.options.scroll;
+    if (s) {
+      if (s == window) {
+        s = this._getWindowScroll();
       }
+      this.originalScrollLeft = s.scrollLeft;
+      this.originalScrollTop = s.scrollTop;
     }
 
     Draggables.notify('onStart', this, event);
@@ -435,33 +432,28 @@ var Draggable = Class.create({
       this.options.change(this);
     }
 
-    if (this.options.scroll) {
+    var s = this.options.scroll;
+    if (s) {
       this.stopScrolling();
 
-      var p;
-      if (this.options.scroll == window) {
-        var ws = this._getWindowScroll(this.options.scroll);
-        p = [ws.left, ws.top, ws.left + ws.width, ws.top + ws.height];
+      var p, sensitivity = this.options.scrollSensitivity;
+      if (s == window) {
+        s = this._getWindowScroll();
+        p = [s.scrollLeft, s.scrollTop];
       } else {
-        p = Element.viewportOffset(this.options.scroll);
-        p[0] += this.options.scroll.scrollLeft + Position.deltaX;
-        p[1] += this.options.scroll.scrollTop + Position.deltaY;
-        p.push(p[0] + this.options.scroll.offsetWidth);
-        p.push(p[1] + this.options.scroll.offsetHeight);
+        p = Element.viewportOffset(s).toArray();
+        p[0] += s.scrollLeft + Position.deltaX;
+        p[1] += s.scrollTop + Position.deltaY;
       }
-      var speed = [0, 0];
-      if (pointer[0] < (p[0] + this.options.scrollSensitivity)) {
-        speed[0] = pointer[0] - (p[0] + this.options.scrollSensitivity);
-      }
-      if (pointer[1] < (p[1] + this.options.scrollSensitivity)) {
-        speed[1] = pointer[1] - (p[1] + this.options.scrollSensitivity);
-      }
-      if (pointer[0] > (p[2] - this.options.scrollSensitivity)) {
-        speed[0] = pointer[0] - (p[2] - this.options.scrollSensitivity);
-      }
-      if (pointer[1] > (p[3] - this.options.scrollSensitivity)) {
-        speed[1] = pointer[1] - (p[3] - this.options.scrollSensitivity);
-      }
+      p.push(p[0] + s.offsetWidth);
+      p.push(p[1] + s.offsetHeight);
+
+      p[0] = pointer[0] - (p[0] + sensitivity);
+      p[1] = pointer[1] - (p[1] + sensitivity);
+      p[2] = pointer[0] - (p[2] - sensitivity);
+      p[3] = pointer[1] - (p[3] - sensitivity);
+
+      var speed = [(p[0] < 0) ? p[0] : ((p[2] > 0) ? p[2] : 0), (p[1] < 0) ? p[1] : ((p[3] > 0) ? p[3] : 0)];
       this.startScrolling(speed);
     }
 
@@ -547,8 +539,8 @@ var Draggable = Class.create({
   },
 
   draw: function(point) {
-    var pos = this.element.cumulativeOffset();
-    if (this.options.ghosting) {
+    var pos = this.element.cumulativeOffset(), o = this.options;
+    if (o.ghosting) {
       var r = Element.cumulativeScrollOffset(this.element);
       pos[0] += r[0] - Position.deltaX;
       pos[1] += r[1] - Position.deltaY;
@@ -558,34 +550,30 @@ var Draggable = Class.create({
     pos[0] -= d[0];
     pos[1] -= d[1];
 
-    if (this.options.scroll && (this.options.scroll != window && this._isScrollChild)) {
-      pos[0] -= this.options.scroll.scrollLeft - this.originalScrollLeft;
-      pos[1] -= this.options.scroll.scrollTop - this.originalScrollTop;
+    if (o.scroll && (o.scroll != window && this._isScrollChild)) {
+      pos[0] -= o.scroll.scrollLeft - this.originalScrollLeft;
+      pos[1] -= o.scroll.scrollTop - this.originalScrollTop;
     }
 
     var p = [point[0] - pos[0] - this.offset[0], point[1] - pos[1] - this.offset[1]];
 
-    if (this.options.snap) {
-      if (Object.isFunction(this.options.snap)) {
-        p = this.options.snap(p[0], p[1], this);
+    if (o.snap) {
+      if (Object.isFunction(o.snap)) {
+        p = o.snap(p[0], p[1], this);
+      } else if (Object.isArray(o.snap)) {
+        p[0] = (p[0] / o.snap[0]).round() * o.snap[0];
+        p[1] = (p[1] / o.snap[1]).round() * o.snap[1];
       } else {
-        if (Object.isArray(this.options.snap)) {
-          p = p.map(function(v, i) {
-            return (v / this.options.snap[i]).round() * this.options.snap[i];
-          }, this);
-        } else {
-          p = p.map(function(v) {
-            return (v / this.options.snap).round() * this.options.snap;
-          }, this);
-        }
+        p[0] = (p[0] / o.snap).round() * o.snap;
+        p[1] = (p[1] / o.snap).round() * o.snap;
       }
     }
 
     var style = this.element.style;
-    if ((!this.options.constraint) || (this.options.constraint == 'horizontal')) {
+    if ((!o.constraint) || (o.constraint == 'horizontal')) {
       style.left = p[0] + "px";
     }
-    if ((!this.options.constraint) || (this.options.constraint == 'vertical')) {
+    if ((!o.constraint) || (o.constraint == 'vertical')) {
       style.top = p[1] + "px";
     }
 
@@ -612,18 +600,16 @@ var Draggable = Class.create({
   },
 
   scroll: function() {
-    var current = new Date();
-    var delta = current - this.lastScrolled;
+    var current = new Date(), delta = (current - this.lastScrolled) / 1000, s = this.options.scroll;
     this.lastScrolled = current;
-    if (this.options.scroll == window) {
-      var ws = this._getWindowScroll(this.options.scroll);
+    if (s == window) {
       if (this.scrollSpeed[0] || this.scrollSpeed[1]) {
-        var d = delta / 1000;
-        this.options.scroll.scrollTo(ws.left + d * this.scrollSpeed[0], ws.top + d * this.scrollSpeed[1]);
+        s = this._getWindowScroll();
+        window.scrollTo(s.scrollLeft + delta * this.scrollSpeed[0], s.scrollTop + delta * this.scrollSpeed[1]);
       }
     } else {
-      this.options.scroll.scrollLeft += this.scrollSpeed[0] * delta / 1000;
-      this.options.scroll.scrollTop += this.scrollSpeed[1] * delta / 1000;
+      s.scrollLeft += this.scrollSpeed[0] * delta;
+      s.scrollTop += this.scrollSpeed[1] * delta;
     }
 
     Position.prepare();
@@ -631,8 +617,8 @@ var Draggable = Class.create({
     Draggables.notify('onDrag', this);
     if (this._isScrollChild) {
       Draggables._lastScrollPointer = Draggables._lastScrollPointer || $A(Draggables._lastPointer);
-      Draggables._lastScrollPointer[0] += this.scrollSpeed[0] * delta / 1000;
-      Draggables._lastScrollPointer[1] += this.scrollSpeed[1] * delta / 1000;
+      Draggables._lastScrollPointer[0] += this.scrollSpeed[0] * delta;
+      Draggables._lastScrollPointer[1] += this.scrollSpeed[1] * delta;
       if (Draggables._lastScrollPointer[0] < 0) {
         Draggables._lastScrollPointer[0] = 0;
       }
@@ -647,8 +633,8 @@ var Draggable = Class.create({
     }
   },
 
-  _getWindowScroll: function(w) {
-    var T, L, W, H, d = w.document;
+  _getWindowScroll: function() {
+    var T, L, W, H, w = window, d = w.document;
 
     if (d.documentElement && d.documentElement.scrollTop) {
       T = d.documentElement.scrollTop;
@@ -669,10 +655,10 @@ var Draggable = Class.create({
     }
 
     return {
-      top: T,
-      left: L,
-      width: W,
-      height: H
+      scrollTop: T,
+      scrollLeft: L,
+      offsetWidth: W,
+      offsetHeight: H
     };
   }
 });
