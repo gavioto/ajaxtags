@@ -19,7 +19,7 @@ package net.sourceforge.ajaxtags.tags;
 
 import javax.servlet.jsp.JspException;
 
-import net.sourceforge.ajaxtags.helpers.DIVElement;
+import net.sourceforge.ajaxtags.helpers.HTMLDivElement;
 
 import static org.apache.commons.lang.StringUtils.trimToNull;
 
@@ -169,7 +169,7 @@ public class AjaxToggleTag extends BaseAjaxTag {
     public int doEndTag() throws JspException {
         // final boolean xOnOff = Boolean.parseBoolean(onOff);
         // write opening div
-        final DIVElement div = new DIVElement(getSource());
+        final HTMLDivElement div = new HTMLDivElement(getSource());
         div.setClassName(getRatingDivClass(onOff, getContainerClass()));
 
         // TODO write this in javascript

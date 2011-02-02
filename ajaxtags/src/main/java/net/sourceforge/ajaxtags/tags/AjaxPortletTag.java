@@ -18,7 +18,7 @@ package net.sourceforge.ajaxtags.tags;
 
 import javax.servlet.jsp.JspException;
 
-import net.sourceforge.ajaxtags.helpers.DIVElement;
+import net.sourceforge.ajaxtags.helpers.HTMLDivElement;
 
 /**
  * Tag handler for the portlet AJAX tag.
@@ -139,7 +139,7 @@ public class AjaxPortletTag extends BaseAjaxTag {
 
     @Override
     public int doEndTag() throws JspException {
-        final DIVElement div = new DIVElement(getSource());
+        final HTMLDivElement div = new HTMLDivElement(getSource());
         div.setBody(buildScript());
         out(div);
         return EVAL_PAGE;

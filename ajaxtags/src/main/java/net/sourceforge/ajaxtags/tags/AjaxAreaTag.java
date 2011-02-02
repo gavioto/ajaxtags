@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import javax.servlet.jsp.JspException;
 
-import net.sourceforge.ajaxtags.helpers.DIVElement;
+import net.sourceforge.ajaxtags.helpers.HTMLDivElement;
 
 /**
  * Wraps any area on the page (with a DIV element) so that actions within that area refresh/load
@@ -92,7 +92,7 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
      */
     @Override
     public int doEndTag() throws JspException {
-        final DIVElement div = new DIVElement(getId());
+        final HTMLDivElement div = new HTMLDivElement(getId());
         div.append(processContent(getBody()));
         if (getStyleClass() != null) {
             div.setClassName(getStyleClass());
