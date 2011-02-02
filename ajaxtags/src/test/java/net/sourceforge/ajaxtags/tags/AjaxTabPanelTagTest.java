@@ -43,6 +43,7 @@ public class AjaxTabPanelTagTest extends AbstractTagTest<AjaxTabPanelTag> {
     @Before
     public void setUp() throws Exception {
         setUp(AjaxTabPanelTag.class);
+        tag.setId("idTabs");
     }
 
     /**
@@ -99,8 +100,10 @@ public class AjaxTabPanelTagTest extends AbstractTagTest<AjaxTabPanelTag> {
         assertAfterBody();
         assertEndTag();
 
-        final String expected = "<div>" + SCRIPT_START + "pages: [" + pageText(1) + ","
-                + pageText(2) + "]" + SCRIPT_END + "</div>";
+        final String expected = "<div class=\"tabPanel\" id=\"idTabs\">"
+                + "<div class=\"tabNavigation\"><ul></ul></div>" + SCRIPT_START
+                + "id: \"idTabs\", pages: [" + pageText(1) + "," + pageText(2) + "]" + SCRIPT_END
+                + "</div>";
 
         assertContent(expected);
     }
@@ -121,13 +124,13 @@ public class AjaxTabPanelTagTest extends AbstractTagTest<AjaxTabPanelTag> {
 
         tag.addPage(page(1));
         tag.addPage(page(2));
-        tag.setId("idTabs");
         tag.setContentId("idContent");
 
         assertAfterBody();
         assertEndTag();
 
-        final String expected = "<div id=\"idTabs\">" + SCRIPT_START
+        final String expected = "<div class=\"tabPanel\" id=\"idTabs\">"
+                + "<div class=\"tabNavigation\"><ul></ul></div>" + SCRIPT_START
                 + "contentId:\"idContent\",id:\"idTabs\",pages: [" + pageText(1) + ","
                 + pageText(2) + "]" + SCRIPT_END + "</div>";
 
@@ -155,8 +158,10 @@ public class AjaxTabPanelTagTest extends AbstractTagTest<AjaxTabPanelTag> {
         assertAfterBody();
         assertEndTag();
 
-        final String expected = "<div class=\"customPanelClass\">" + SCRIPT_START + "pages: ["
-                + pageText(1) + "," + pageText(2) + "]" + SCRIPT_END + "</div>";
+        final String expected = "<div class=\"customPanelClass tabPanel\" id=\"idTabs\">"
+                + "<div class=\"tabNavigation\"><ul></ul></div>" + SCRIPT_START
+                + "id: \"idTabs\", pages: [" + pageText(1) + "," + pageText(2) + "]" + SCRIPT_END
+                + "</div>";
 
         assertContent(expected);
     }

@@ -603,22 +603,22 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
             parser: new DefaultResponseParser("html")
         }, options || {});
     },
-    createElements: function () {
-        var o = this.options, ul = new Element("ul"), f = null, a = null;
+    createElements: function () { // TODO move creation into java code
+        var o = this.options, ul, a, defaultTab;
+        this.panel = $(o.id);
+        ul = this.panel.down("ul");
         o.pages.each(function (tab) {
             a = this.createTab(tab);
             if (tab.defaultTab) {
-                f = f || a.onclick.bind(a);
+                defaultTab = defaultTab || a;
             }
             ul.appendChild(new Element("li", tab.id ? {id: tab.id} : null).update(a));
         }, this);
-        var nav = new Element("div", {className: "tabNavigation"}).update(ul);
 
-        this.panel = $(o.id).addClassName("tabPanel").update(nav);
-        this.content = this.createContent();
+        this.content = o.contentId || this.createContent(); // XXX is this.content used anywhere?
         this.options.target = this.content;
-        if (Object.isFunction(f)) {
-            f(); // click on default tab to make it active
+        if (defaultTab) {
+            this.execute(defaultTab);
         }
     },
     createTab: function (tab) {
@@ -631,17 +631,12 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
         return e;
     },
     createContent: function () {
-        var o = this.options;
-        if (o.contentId) {
-            return o.contentId;
-        } else {
-            // create content
-            var c = new Element("div", {className: "tabContent"});
-            this.panel.insert({
-                after: c
-            });
-            return c.identify();
-        }
+        // create content holder
+        var c = new Element("div", {className: "tabContent"});
+        this.panel.insert({
+            after: c
+        });
+        return c.identify();
     },
     execute: function (tab) {
         tab = $(tab);
@@ -651,9 +646,9 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
         tab.addClassName("ajaxCurrentTab");
         this.options.baseUrl = tab.readAttribute("baseUrl");
         this.options.parameters = tab.readAttribute("parameters");
-        this.request = this.getAjaxUpdater({
+        this.request = this.getAjaxUpdater(/*{
             onSuccess: this.handler.bind(this)
-        });
+        }*/);
     },
     handler: function () {
         // empty
