@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import javax.servlet.jsp.JspException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -60,7 +61,7 @@ public class AjaxAutocompleteTagTest extends AbstractTagTest<AjaxAutocompleteTag
     @Test
     public void testOptions() {
         tag.setAfterUpdate("Object.method");
-        tag.setClassName("");
+        tag.setClassName(StringUtils.EMPTY);
         assertEquals("Options 1", "afterUpdate: Object.method", tag.getOptions().toString());
 
         tag.setAfterUpdate("function(value){alert('value: '+value);}");

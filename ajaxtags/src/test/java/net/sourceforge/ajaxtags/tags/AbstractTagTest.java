@@ -28,6 +28,7 @@ import net.sourceforge.ajaxtags.FakeBodyContent;
 import net.sourceforge.ajaxtags.FakePageContext;
 import net.sourceforge.ajaxtags.helpers.XMLUtils;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.xml.sax.SAXException;
 
@@ -149,9 +150,9 @@ public abstract class AbstractTagTest<T extends BaseAjaxBodyTag> {
     }
 
     protected String reformat(final String html) throws TransformerException, SAXException {
-        // .replaceAll("[\\s|\n|\r\n]","") dirty hack, problem with WS remove all! cause
-        // we just need to check the javascript here
-        return XMLUtils.format(html).replaceAll("[\\s\r\n]", "");
+        // .replaceAll("[\\s|\n|\r\n]",StringUtils.EMPTY) dirty hack, problem with WS remove all!
+        // cause we just need to check the javascript here
+        return XMLUtils.format(html).replaceAll("[\\s\r\n]", StringUtils.EMPTY);
     }
 
     /**

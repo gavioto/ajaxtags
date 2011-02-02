@@ -16,17 +16,20 @@
  */
 package net.sourceforge.ajaxtags.helpers;
 
-
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
+
 import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
- * This class should help to write HTML-Tags we will have a simple append operation and a easy use
+ * This class should help to write HTML tags. We will have a simple append operation and a easy use
  * in connection with strings.
+ *
+ * TODO HTMLAnchorElement (A), HTMLLIElement (LI), HTMLLinkElement (LINK)
  */
 public abstract class AbstractHTMLElement implements CharSequence, Appendable {
 
@@ -119,7 +122,7 @@ public abstract class AbstractHTMLElement implements CharSequence, Appendable {
      * @return the body content or empty string if body is null
      */
     public final String getBody() {
-        return body == null ? "" : body.toString();
+        return body == null ? StringUtils.EMPTY : body.toString();
     }
 
     /**
@@ -198,7 +201,8 @@ public abstract class AbstractHTMLElement implements CharSequence, Appendable {
     /**
      * Cleaning the attributes. This method does nothing by default.
      */
-    protected void cleanAttributes() {}
+    protected void cleanAttributes() {
+    }
 
     /**
      * @return the string representation of this HTML element
