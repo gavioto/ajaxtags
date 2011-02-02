@@ -29,6 +29,7 @@ import javax.xml.transform.TransformerException;
 import net.sourceforge.ajaxtags.FakeHttpServletRequest;
 import net.sourceforge.ajaxtags.helpers.XMLUtils;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -176,8 +177,8 @@ public class AjaxAreaTagTest extends AbstractTagTest<AjaxAreaTag> {
         String html = null, expected = null;
         assertEquals("null content", expected, tag.processContent(html));
 
-        html = "";
-        expected = "";
+        html = StringUtils.EMPTY;
+        expected = StringUtils.EMPTY;
         assertEquals("empty content", expected, tag.processContent(html));
 
         tag.setAjaxAnchors(true);

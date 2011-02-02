@@ -21,6 +21,7 @@ package net.sourceforge.ajaxtags.xml;
 
 import static org.junit.Assert.assertEquals;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,7 +60,7 @@ public class AjaxTreeXmlBuilderTest {
         assertEquals(AjaxTreeXmlBuilder.RESPONSE_START
                 + "<item><name>name1</name><value>value</value></item>"
                 + AjaxTreeXmlBuilder.RESPONSE_END, xml.getXMLString());
-        xml.addItem("name2", "");
+        xml.addItem("name2", StringUtils.EMPTY);
         assertEquals(AjaxTreeXmlBuilder.RESPONSE_START
                 + "<item><name>name1</name><value>value</value></item>"
                 + "<item><name>name2</name><value></value></item>"

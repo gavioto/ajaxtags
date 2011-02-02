@@ -21,18 +21,17 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
 /**
  * Test for AjaxAnchorsTag.
- *
- * @author Victor Homyakov
  */
 public class AjaxAnchorsTagTest extends AbstractTagTest<AjaxAnchorsTag> {
 
-    private static final String HEADER = "";
+    private static final String HEADER = StringUtils.EMPTY;
 
     private static final String BASE_URL = "http://localhost:8080/test/test.do";
 
