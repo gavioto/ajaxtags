@@ -14,31 +14,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- *
- */
 package net.sourceforge.ajaxtags.helpers;
 
 import static org.junit.Assert.assertEquals;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Unit tests for DIVElement.
+ * Unit tests for HTMLDivElement.
  */
-public class DIVElementTest {
+public class HTMLDivElementTest {
 
     private static final String EMPTY_DIV = "<div></div>";
-    private DIVElement div;
+    private HTMLDivElement div;
 
     /**
      * Set up.
      */
     @Before
     public void setUp() {
-        div = new DIVElement(null);
+        div = new HTMLDivElement(null);
     }
 
     /**
@@ -51,13 +49,13 @@ public class DIVElementTest {
 
     /**
      * Test method for
-     * {@link net.sourceforge.ajaxtags.helpers.DIVElement#DIVElement(java.lang.String)}.
+     * {@link net.sourceforge.ajaxtags.helpers.HTMLDivElement#DIVElement(java.lang.String)}.
      */
     @Test
     public void testDIVElement() {
         assertEquals("Empty div", EMPTY_DIV, div.toString());
 
-        div = new DIVElement("idDiv1");
+        div = new HTMLDivElement("idDiv1");
         assertEquals("Empty div with id", "<div id=\"idDiv1\"></div>", div.toString());
     }
 
@@ -69,7 +67,7 @@ public class DIVElementTest {
     public void testSetClassName() {
         div.setClassName("class1");
         assertEquals("Empty div with class", "<div class=\"class1\"></div>", div.toString());
-        div.setClassName("");
+        div.setClassName(StringUtils.EMPTY);
         assertEquals("Empty div without class", EMPTY_DIV, div.toString());
         div.setClassName("class1 class2");
         assertEquals("Empty div with classes", "<div class=\"class1 class2\"></div>", div
