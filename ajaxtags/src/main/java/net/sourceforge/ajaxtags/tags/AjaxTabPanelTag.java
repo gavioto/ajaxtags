@@ -18,7 +18,8 @@ package net.sourceforge.ajaxtags.tags;
 
 import javax.servlet.jsp.JspException;
 
-import net.sourceforge.ajaxtags.helpers.DIVElement;
+import net.sourceforge.ajaxtags.helpers.HTMLDivElement;
+import net.sourceforge.ajaxtags.helpers.HTMLUListElement;
 
 /**
  * Tag handler for AJAX tabbed panel.
@@ -77,30 +78,36 @@ public class AjaxTabPanelTag extends BaseAjaxBodyTag {
         }
 
         // div wrapper
-        final DIVElement div = new DIVElement(getId());
-        div.setClassName(getStyleClass());
-        div.append(buildScript());
-        out(div);
+        final HTMLDivElement tabPanel = new HTMLDivElement(getId());
+        tabPanel.setClassName(getStyleClass() == null ? "tabPanel" : getStyleClass() + " tabPanel");
+
+        HTMLDivElement tabNavigation = new HTMLDivElement();
+        tabNavigation.setClassName("tabNavigation");
+        tabPanel.append(tabNavigation.append(new HTMLUListElement()));
+
+        tabPanel.append(buildScript());
+
+        out(tabPanel);
         return EVAL_PAGE;
     }
 
     @Override
     public void releaseTag() {
-        this.pages = null; // NOPMD
+        pages = null; // NOPMD
     }
 
     /**
      * Add one tab to panel.
      *
-     * @param ajaxTabPageTag
+     * @param tabPage
      *            tab
      */
-    public final void addPage(final AjaxTabPageTag ajaxTabPageTag) {
+    public final void addPage(final AjaxTabPageTag tabPage) {
         if (pages.length() > 0) {
             // append delimiter after previous tabs
             pages.append(PAGES_DELIMITER);
         }
-        pages.append(ajaxTabPageTag.toString());
+        pages.append(tabPage.toString());
     }
 
     /**
@@ -109,9 +116,6 @@ public class AjaxTabPanelTag extends BaseAjaxBodyTag {
      * @return JSON string with array of tabs
      */
     protected String getPages() {
-        /*if (pages.length() > 0 && pages.charAt(pages.length() - 1) == PAGES_DELIMITER) {
-            pages.deleteCharAt(pages.length() - 1);
-        }*/
         return "[" + pages.toString() + "]";
     }
 }
