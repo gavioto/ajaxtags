@@ -53,7 +53,7 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
      * @return Returns the ajaxAnchors.
      */
     public final boolean isAjaxAnchors() {
-        return this.ajaxAnchors;
+        return ajaxAnchors;
     }
 
     /**
@@ -76,8 +76,7 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
         if (isAjaxRequest()) {
             try {
                 pageContext.getOut().clearBuffer();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 throw new JspException(e);
             }
         }
@@ -106,15 +105,17 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
      */
     @Override
     public void releaseTag() {
-        this.ajaxAnchors = false;
+        ajaxAnchors = false;
     }
 
     /**
      * Process content. Rewrite anchors to AJAX links if needed.
      *
-     * @param content XHTML source as string
+     * @param content
+     *            XHTML source as string
      * @return either content with rewritten anchors or unchanged content depending on flag
-     * @throws JspException when links rewriting failed
+     * @throws JspException
+     *             when links rewriting failed
      * @throws Exception
      */
     protected String processContent(final String content) throws JspException {

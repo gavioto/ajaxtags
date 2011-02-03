@@ -202,6 +202,7 @@ public abstract class AbstractHTMLElement implements CharSequence, Appendable {
      * Cleaning the attributes. This method does nothing by default.
      */
     protected void cleanAttributes() {
+        // empty
     }
 
     /**

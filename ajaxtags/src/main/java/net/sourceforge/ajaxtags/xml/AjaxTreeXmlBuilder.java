@@ -188,9 +188,8 @@ public final class AjaxTreeXmlBuilder extends BaseXmlBuilder<TreeItem> {
     }
 
     /**
-    * This interface is for reading properties 
-    * for an easy use with tree tag in ajax
-    **/
+     * This interface is for reading properties for an easy use with tree tag in ajax.
+     */
     public interface PropertyReader {
 
         String getName();
