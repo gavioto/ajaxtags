@@ -16,7 +16,6 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
-
 import javax.servlet.jsp.JspException;
 import javax.xml.transform.TransformerException;
 
@@ -57,15 +56,15 @@ public class AjaxDisplayTag extends AjaxAreaTag {
      * {@link #releaseTag()}.
      */
     private void init() {
-        this.pagelinksClass = "pagelinks";
-        this.columnClass = "sortable";
+        pagelinksClass = "pagelinks";
+        columnClass = "sortable";
     }
 
     /**
      * @return Returns the pagelinksClass.
      */
     public String getPagelinksClass() {
-        return this.pagelinksClass;
+        return pagelinksClass;
     }
 
     /**
@@ -80,7 +79,7 @@ public class AjaxDisplayTag extends AjaxAreaTag {
      * @return Returns the columnClass.
      */
     public String getColumnClass() {
-        return this.columnClass;
+        return columnClass;
     }
 
     /**
@@ -102,7 +101,7 @@ public class AjaxDisplayTag extends AjaxAreaTag {
 
     private void rewriteAnchors0(final Document document) {
         final NodeList links = document.getElementsByTagName("a");
-        for (int i = 0; i < links.getLength(); i+=1) {
+        for (int i = 0; i < links.getLength(); i++) {
             final Node link = links.item(i);
             final Node parent = link.getParentNode();
 
@@ -144,11 +143,9 @@ public class AjaxDisplayTag extends AjaxAreaTag {
             final Document doc = getDocument(content);
             rewriteAnchors0(doc);
             return XMLUtils.toString(doc);
-        }
-        catch (SAXException e) {
+        } catch (SAXException e) {
             throw new JspException(e);
-        }
-        catch (TransformerException e) {
+        } catch (TransformerException e) {
             throw new JspException(e);
         }
     }
