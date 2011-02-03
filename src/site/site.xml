@@ -32,12 +32,12 @@
 				href="http://ajaxtags.sourceforge.net/project-summary.html" />
 		</menu>
 		
-		<menu name="Reports" >
+		<menu name="Reports">
 			<item name="Changes" href="http://ajaxtags.sourceforge.net/changes-report.html"/>
 			<item name="Checkstyle" 
 				href="http://ajaxtags.sourceforge.net/ajaxtags/checkstyle.html"/>
 			<item name="FindBugs" href="http://ajaxtags.sourceforge.net/ajaxtags/findbugs.html"/>
-			<item name="CDP" href="http://ajaxtags.sourceforge.net/ajaxtags/cpd.html"/>
+			<item name="CPD" href="http://ajaxtags.sourceforge.net/ajaxtags/cpd.html"/>
 			<item name="PMD" href="http://ajaxtags.sourceforge.net/ajaxtags/pmd.html"/>
 			<item name="JUnit Test" 
 				href="http://ajaxtags.sourceforge.net/ajaxtags/surefire-report.html"/>
