@@ -30,16 +30,17 @@
       this.assertNotNull(nav);
       this.assertNotNull(nav.down("ul"));
       var content = e.down("div.tabContent");
+      this.assertNotNull(content);
     },
     testCreateElements2Pages: function() {
       tag = new AjaxJspTag.TabPanel({
         id: "TabPanel",
         pages: [{
-          caption: "Page 1",
-          baseUrl: "#"
+          baseUrl: "#",
+          caption: "Page 1"
         }, {
-          caption: "Page 2",
-          baseUrl: "#"
+          baseUrl: "#",
+          caption: "Page 2"
         }]
       });
       var e = $("TabPanel");
@@ -49,6 +50,46 @@
       this.assertNotNull(nav);
       this.assertNotNull(nav.down("ul"));
       this.assertEqual(2, $$("#TabPanel > div.tabNavigation > ul > li").length);
+    },
+    testCreateTab: function() {
+      tag = new AjaxJspTag.TabPanel({
+        id: "TabPanel",
+        pages: [{
+          baseUrl: "#",
+          caption: "Page 1",
+          id: "page_1"
+        }]
+      });
+      var tab = $$("#TabPanel > div.tabNavigation > ul > li > a:first-child").first();
+      this.assertEqual("page_1", tab.up().id);
+      this.assertEqual("Page 1", tab.innerHTML);
+      this.assertEqual("#", tab.readAttribute("baseUrl"));
+      this.assertEqual(AjaxJspTag.VOID_URL, tab.href);
+      this.assert(Object.isFunction(tab.onclick));
+    },
+    testCreateTabInternal: function() {
+      var x = {};
+      tag.execute = function(tab) {
+        Object.extend(x, {
+          innerHTML: tab.innerHTML,
+          baseUrl: tab.readAttribute("baseUrl"),
+          parameters: tab.readAttribute("parameters")
+        });
+      };
+      var tab = tag.createTab({
+        caption: "caption",
+        baseUrl: "baseUrl",
+        parameters: "parameters"
+      });
+      //this.assertEqual("caption", tab.innerHTML);
+      //this.assertEqual("baseUrl", tab.baseUrl);
+      //this.assertEqual("parameters", tab.parameters);
+      this.assertEqual(AjaxJspTag.VOID_URL, tab.href);
+      this.assert(Object.isFunction(tab.onclick));
+      tab.onclick();
+      this.assertEqual("caption", x.innerHTML);
+      this.assertEqual("baseUrl", x.baseUrl);
+      this.assertEqual("parameters", x.parameters);
     },
     testExistingContent: function() {
       var e = $("TabContent");
