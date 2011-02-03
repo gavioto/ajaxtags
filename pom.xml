@@ -13,6 +13,7 @@
 	<modules>
 		<module>ajaxtags</module>
 		<module>ajaxtags-resources</module>
+		<module>ajaxtags-struts</module>
 		<module>ajaxtags-demo</module>
 	</modules>
 	<url>http://ajaxtags.sourceforge.net/</url>
@@ -211,7 +212,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<version>2.1.1</version>
+				<!--<version>2.1.1</version>-->
 			</plugin>
 			<plugin>
 				<!-- package the stuff together -->
