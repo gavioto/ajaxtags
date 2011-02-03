@@ -28,7 +28,7 @@ public abstract class BaseAjaxAction extends Action implements BaseAjaxXmlAction
     public static final String ERROR_MESSAGE = "Cannot create XML response";
 
     /** Commons logging instance. */
-    private static final Log LOG = LogFactory.getLog(BaseAjaxAction.class);
+    protected final Log log = LogFactory.getLog(getClass());
 
     /** Form-bean. Filled in execute(). */
     private final ThreadLocal<ActionForm> form = new ThreadLocal<ActionForm>();
@@ -46,13 +46,13 @@ public abstract class BaseAjaxAction extends Action implements BaseAjaxXmlAction
                 writer.write(xml);
                 // IOUtils.closeQuietly(writer);
                 writer.close();
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(xml.length() + " characters written to XML response");
+                if (log.isDebugEnabled()) {
+                    log.debug(xml.length() + " characters written to XML response");
                 }
             }
         } catch (Exception e) {
             final String message = getErrorMessage(e);
-            LOG.error(message, e);
+            log.error(message, e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, StringEscapeUtils
                     .escapeHtml(message));
         }
