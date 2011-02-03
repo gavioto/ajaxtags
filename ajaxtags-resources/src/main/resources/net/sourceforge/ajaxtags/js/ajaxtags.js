@@ -86,8 +86,7 @@ var DefaultResponseParser = Class.create({
         this.parse();
     },
     parse: function (forceType) {
-        var cache = this.type;
-        var xdata = null;
+        var cache = this.type, xdata = null;
         if (arguments.length >= 1) {
             this.type = forceType;
         }
@@ -95,30 +94,24 @@ var DefaultResponseParser = Class.create({
             var root = this.contentXML.documentElement;
             var responseNodes = root.getElementsByTagName("response");
             xdata = [];
-            var i = 0, j = 0, k = 0, len1 = responseNodes.length, len2 = null, len3 = null;
-            var nameNodes = null, valueNodes = null, row = null, items = null;
-            var itemNode, nameNode, responseNode, valueNode;
+            var i, j, k, len1 = responseNodes.length, len2, len3;
+            var items, itemNode, nameNodes, valueNodes, nameNode, valueNode, row;
             for (i = 0; i < len1; i++) {
-                responseNode = responseNodes[i];
-                items = responseNode.getElementsByTagName("item");
-                len2 = items.length;
-                for (j = 0; j < len2; j++) {
+                items = responseNodes[i].getElementsByTagName("item");
+                for (j = 0, len2 = items.length; j < len2; j++) {
                     itemNode = items[j];
                     nameNodes = itemNode.getElementsByTagName("name");
                     valueNodes = itemNode.getElementsByTagName("value");
-                    row = [];
-                    len3 = nameNodes.length;
-                    for (k = 0; k < len3; k++) {
-                        nameNode = nameNodes[k];
-                        row.push(nameNode.firstChild ? nameNode.firstChild.nodeValue : "");
+                    for (k = 0, len3 = nameNodes.length, row = []; k < len3; k++) {
+                        nameNode = nameNodes[k].firstChild;
+                        row.push(nameNode ? nameNode.nodeValue : "");
                     }
                     if (row.length !== 1) {
                         throw new Error("XML is not supported");
                     }
-                    len3 = valueNodes.length;
-                    for (k = 0; k < len3; k++) {
-                        valueNode = valueNodes[k];
-                        row.push(valueNode.firstChild ? valueNode.firstChild.nodeValue : "");
+                    for (k = 0, len3 = valueNodes.length; k < len3; k++) {
+                        valueNode = valueNodes[k].firstChild;
+                        row.push(valueNode ? valueNode.nodeValue : "");
                     }
                     xdata.push(row);
                 }
@@ -161,8 +154,7 @@ var DefaultResponseParser = Class.create({
         } else if (this.type === "xmltohtmllist") {
             this.parse("xml");
             xdata = new Element("div");
-            var ul = new Element("ul");
-            var liElement = null;
+            var ul = new Element("ul"), liElement = null;
             this.content.each(function (row) {
                 liElement = new Element("li", {id: row[1]});
                 if (this.plaintext) {
@@ -196,10 +188,7 @@ var ResponseXmlToHtmlLinkListParser = Class.create(DefaultResponseParser, {
         var responseNodes = this.contentXML.documentElement.getElementsByTagName("response");
         if (responseNodes.length > 0) {
             var itemNodes = responseNodes[0].getElementsByTagName("item");
-            var ul = (itemNodes.length === 0) ? null : new Element('ul');
-            if (ul) {
-                ul.addClassName(this.treeClass);
-            }
+            var ul = (itemNodes.length === 0) ? null : new Element('ul', {className: this.treeClass});
             var nameNodes = null, valueNodes = null, urlNodes = null, collapsedNodes = null, leafnodes = null;
             var name = null, value = null, url = null, collapsed = false, leaf = false;
             var li = null, i = null, link = null, div = null, len = itemNodes.length;
@@ -210,7 +199,7 @@ var ResponseXmlToHtmlLinkListParser = Class.create(DefaultResponseParser, {
                 valueNodes = itemNode.getElementsByTagName("value");
                 urlNodes = itemNode.getElementsByTagName("url");
                 collapsedNodes = itemNode.getElementsByTagName("collapsed");
-                leafnodes = itemNodes[i].getElementsByTagName("leaf");
+                leafnodes = itemNode.getElementsByTagName("leaf");
                 if (nameNodes.length > 0 && valueNodes.length > 0) {
                     name = nameNodes[0].firstChild.nodeValue;
                     value = valueNodes[0].firstChild.nodeValue;
@@ -222,8 +211,7 @@ var ResponseXmlToHtmlLinkListParser = Class.create(DefaultResponseParser, {
                         li.appendChild(new Element("span", {id: "span_" + value, className: this.collapsedClass}));
                     }
                     link = new Element("a", {href: url, className: this.nodeClass}).update(name);
-                    div = new Element("div", {id: "div_" + value});
-                    div.hide();
+                    div = new Element("div", {id: "div_" + value}).hide();
                     if (!collapsed) {
                         this.expandedNodes.push(value);
                     }
@@ -430,17 +418,35 @@ AjaxJspTag.UpdateField = Class.create(AjaxJspTag.Base, {
         this.request = this.getAjaxRequest();
     },
     handler: function (tag) {
-        var targets = this.target.split(','), items = this.parser.content;
-        var i, len = Math.min(targets.length, items.length);
-        var helperFun = (function (item) {
-            if (targets[i] === item[0]) {
-                $(targets[i]).value = item[1];
+        var targets = this.target.split(','), items = this.parser.content, i, len;
+        if (this.valueUpdateByName) {
+            targets.sort(); // O(log n)
+            items = items.sortBy(function (item) {
+                return item[0];
+            });
+            var t = 0, j = 0; // O(n)
+            while (t < targets.length && j < items.length) {
+                var target = targets[t], item = items[j];
+                if (target === item[0]) {
+                    $(target).value = item[1];
+                    t++;
+                    j++;
+                } else if (target < item[0]) {
+                    t++;
+                } else {
+                    j++;
+                }
             }
-        });
-        for (i = 0; i < len; i++) {
-            if (this.valueUpdateByName) {
-                items.each(helperFun);
-            } else {
+            /*for (i = 0; i < targets.length; i++) { // O(n^2)
+                for (var j = 0; i < items.length; i++) {
+                    if (targets[i] === items[j][0]) {
+                        $(targets[i]).value = items[j][1];
+                        break; // next target
+                    }
+                }
+            }*/
+        } else {
+            for (i = 0, len = Math.min(targets.length, items.length); i < len; i++) {
                 $(targets[i]).value = items[i][1];
             }
         }
@@ -599,7 +605,7 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
     },
     setOptions: function (options) {
         this.options = Object.extend({
-            eventType: "click", // TODO unused?
+            eventType: "click", // XXX unused?
             parser: new DefaultResponseParser("html")
         }, options || {});
     },
@@ -615,8 +621,7 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
             ul.appendChild(new Element("li", tab.id ? {id: tab.id} : null).update(a));
         }, this);
 
-        this.content = o.contentId || this.createContent(); // XXX is this.content used anywhere?
-        this.options.target = this.content;
+        this.options.target = o.contentId || this.createContent();
         if (defaultTab) {
             this.execute(defaultTab);
         }
@@ -646,9 +651,7 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
         tab.addClassName("ajaxCurrentTab");
         this.options.baseUrl = tab.readAttribute("baseUrl");
         this.options.parameters = tab.readAttribute("parameters");
-        this.request = this.getAjaxUpdater(/*{
-            onSuccess: this.handler.bind(this)
-        }*/);
+        this.request = this.getAjaxUpdater(/*{onSuccess: this.handler.bind(this)}*/);
     },
     handler: function () {
         // empty
@@ -659,7 +662,7 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
  * Autocomplete tag.
  */
 AjaxJspTag.XmlToHtmlAutocompleter = Class.create(Ajax.Autocompleter, {
-    initialize: function (/*AjaxJspTag.Autocomplete*/ autocomplete) {
+    initialize: function (/*AjaxJspTag.Autocomplete*/autocomplete) {
         this.autocompleteTag = autocomplete;
         var o = autocomplete.options;
         this.baseInitialize(o.source, o.divElement, {
@@ -986,7 +989,7 @@ AjaxJspTag.Toggle = Class.create(AjaxJspTag.Base, {
         this.setMessage(elements[currentIndex].title);
         // iterate over each anchor and apply styles
         for (var i = 0, len = elements.length; i < len; i++) {
-            if (selectedIndex >= 0 && ! (i > selectedIndex && i <= currentIndex)) {
+            if (selectedIndex >= 0 && (i <= selectedIndex || i > currentIndex)) {
                 if (i <= selectedIndex) {
                     elements[i].addClassName((i <= currentIndex) ? this.options.selectedOverClass : this.options.selectedLessClass);
                 }
