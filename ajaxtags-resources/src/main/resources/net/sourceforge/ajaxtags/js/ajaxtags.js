@@ -23,7 +23,7 @@ if ((typeof Prototype === 'undefined') || (typeof Element === 'undefined') || (t
 }
 
 var AjaxJspTag = {
-    Version: '1.5.2',
+    Version: '1.5.6',
 
     DEFAULT_PARAMETER: "ajaxParameter",
     VOID_URL: "javascript://nop",
@@ -489,13 +489,12 @@ AjaxJspTag.Select = Class.create(AjaxJspTag.Base, {
         this.request = this.getAjaxRequest();
     },
     handler: function () {
-        var target = $(this.target);
+        var target = $(this.target), newOption = null;
         if (!target) {
             throw new Error("target lost");
         }
         target.options.length = 0;
         target.disabled = false;
-        var newOption = null;
         this.parser.content.each(function (line) {
             newOption = new Option(line[0], line[1]);
             newOption.selected = (line.length === 3 && ("true" === line[2].toLowerCase()) || (this.defaultOptions.indexOf(line[1]) != -1));
@@ -541,7 +540,9 @@ AjaxJspTag.HtmlContent = Class.create(AjaxJspTag.Base, {
     },
     execute: function (event) {
         // replace default parameter with value/content of source element
-        this.request = this.getAjaxUpdater(null, this.options.sourceClass ? Event.element(event) : null);
+        // event may be undefined if we call execute() manually
+        var ajaxParam = this.options.sourceClass ? (event ? Event.element(event) : null) : null;
+        this.request = this.getAjaxUpdater(null, ajaxParam);
     }
 });
 
