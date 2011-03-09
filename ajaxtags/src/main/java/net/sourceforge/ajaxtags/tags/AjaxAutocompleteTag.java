@@ -16,10 +16,9 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
+import static org.apache.commons.lang.StringUtils.trimToNull;
 
 import javax.servlet.jsp.JspException;
-
-import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
  * Tag handler for the autocomplete AJAX tag.
@@ -33,7 +32,7 @@ public class AjaxAutocompleteTag extends BaseAjaxTag {
     private String appendSeparator;
 
     /**
-     * CSS class name to apply to the popup autocomplete dropdown.
+     * CSS class name to apply to the popup autocomplete dropdown. Default: "autocomplete".
      */
     private String className = "autocomplete";
 
@@ -44,6 +43,12 @@ public class AjaxAutocompleteTag extends BaseAjaxTag {
      * updated with selected values.
      */
     private String afterUpdate;
+
+    /**
+     * True to automatically select entry and hide autocompleter if there is no choice (only one
+     * entry to display). Default: false.
+     */
+    private boolean autoSelect;
 
     public String getAppendSeparator() {
         return appendSeparator;
@@ -85,6 +90,14 @@ public class AjaxAutocompleteTag extends BaseAjaxTag {
         this.afterUpdate = trimToNull(afterUpdate);
     }
 
+    public boolean isAutoSelect() {
+        return autoSelect;
+    }
+
+    public void setAutoSelect(boolean autoSelect) {
+        this.autoSelect = autoSelect;
+    }
+
     @Override
     protected String getJsClass() {
         return JSCLASS_BASE + "Autocomplete";
@@ -98,6 +111,7 @@ public class AjaxAutocompleteTag extends BaseAjaxTag {
         options.add("minChars", minimumCharacters, true);
         options.add("appendSeparator", appendSeparator, true);
         options.add("afterUpdate", afterUpdate, false);
+        options.add("autoSelect", autoSelect);
         return options;
     }
 

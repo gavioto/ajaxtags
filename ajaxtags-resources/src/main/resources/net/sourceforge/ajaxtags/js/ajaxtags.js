@@ -670,6 +670,7 @@ AjaxJspTag.XmlToHtmlAutocompleter = Class.create(Ajax.Autocompleter, {
             minChars: o.minChars,
             tokens: o.appendSeparator,
             indicator: o.indicator,
+            autoSelect: o.autoSelect,
             evalScripts: true,
             asynchronous: true,
             onComplete: this.onComplete.bind(this),

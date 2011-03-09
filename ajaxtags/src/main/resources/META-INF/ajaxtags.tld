@@ -336,6 +336,17 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+
+        <attribute>
+            <description>
+                True to automatically select entry and hide autocompleter
+                if there is no choice (only one entry to display).
+                Default: false
+            </description>
+            <name>autoSelect</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <tag>
