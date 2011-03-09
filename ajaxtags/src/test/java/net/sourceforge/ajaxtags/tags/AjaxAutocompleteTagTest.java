@@ -28,8 +28,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Test for AjaxAutocompleteTag.
- *
- * @author Victor Homyakov
  */
 public class AjaxAutocompleteTagTest extends AbstractTagTest<AjaxAutocompleteTag> {
 
@@ -52,7 +50,8 @@ public class AjaxAutocompleteTagTest extends AbstractTagTest<AjaxAutocompleteTag
      */
     @Test
     public void testDefaultOptions() {
-        assertEquals("Default options", "className: \"autocomplete\"", tag.getOptions().toString());
+        assertEquals("Default options", "autoSelect: false, className: \"autocomplete\"", tag
+                .getOptions().toString());
     }
 
     /**
@@ -62,11 +61,14 @@ public class AjaxAutocompleteTagTest extends AbstractTagTest<AjaxAutocompleteTag
     public void testOptions() {
         tag.setAfterUpdate("Object.method");
         tag.setClassName(StringUtils.EMPTY);
-        assertEquals("Options 1", "afterUpdate: Object.method", tag.getOptions().toString());
+        assertEquals("Options 1", "afterUpdate: Object.method, autoSelect: false", tag.getOptions()
+                .toString());
 
         tag.setAfterUpdate("function(value){alert('value: '+value);}");
-        assertEquals("Options 2", "afterUpdate: function(value){alert('value: '+value);}", tag
-                .getOptions().toString());
+        tag.setAutoSelect(true);
+        assertEquals("Options 2",
+                "afterUpdate: function(value){alert('value: '+value);}, autoSelect: true", tag
+                        .getOptions().toString());
     }
 
     /**
@@ -89,6 +91,7 @@ public class AjaxAutocompleteTagTest extends AbstractTagTest<AjaxAutocompleteTag
         assertAfterBody();
         assertEndTag();
         assertContent(SCRIPT_START + "afterUpdate:AddressAutocompleter.fillFields, "
+                + "autoSelect: false, "
                 + "baseUrl:\"address.do\", className:\"autocomplete\", source:\"addressId\""
                 + SCRIPT_END);
     }
