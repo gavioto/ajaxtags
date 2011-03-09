@@ -40,13 +40,9 @@ panels themselves. The output is generated as an unordered list
 <%@page import="java.util.Date"%>
 <jsp:useBean id="now" class="java.util.Date" />
 
-<div id="tabPanelWrapper"><ajax:tabPanel 
-	id="tabPanel${now}">
+<div id="tabPanelWrapper"><ajax:tabPanel id="tabPanel${now.time}">
 	<ajax:tab caption="Ford" baseUrl="htmlcontent.view?make=ford" />
-	<ajax:tab caption="Honda" baseUrl="htmlcontent.view"
-		parameters="make=honda" />
-	<ajax:tab caption="Mazda" baseUrl="htmlcontent.view" defaultTab="true"
-		parameters="make=mazda" />
+	<ajax:tab caption="Honda" baseUrl="htmlcontent.view" parameters="make=honda" />
+	<ajax:tab caption="Mazda" baseUrl="htmlcontent.view" defaultTab="true" parameters="make=mazda" />
 	<ajax:tab caption="chain" baseUrl="tabpanel.jsp" />
 </ajax:tabPanel></div>
-
