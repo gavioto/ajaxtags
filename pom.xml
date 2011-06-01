@@ -184,11 +184,12 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.1</version>
 				<configuration>
+					<debug>on</debug>
+					<deprecation>on</deprecation>
+					<encoding>utf-8</encoding>
+					<optimize>true</optimize>
 					<source>1.5</source>
 					<target>1.5</target>
-					<deprecation>on</deprecation>
-					<debug>on</debug>
-					<encoding>utf-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
