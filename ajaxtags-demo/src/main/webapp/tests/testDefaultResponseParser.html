@@ -1,0 +1,56 @@
+<h1>AjaxJspTag.DefaultResponseParser</h1>
+<!-- Log output -->
+<div id="testlog"> </div>
+<br/>
+<!-- Tests -->
+<script type="text/javascript">
+  var parser = null;
+
+  function parse(content, type) {
+    parser.contentText = content;
+    parser.parse(type);
+    return parser.content;
+  }
+
+  new Test.Unit.Runner({
+    setup: function() {
+      parser = new DefaultResponseParser();
+    },
+
+    teardown: function() {
+      parser = null;
+    },
+
+    testDefault: function() {
+      this.assertInstanceOf(DefaultResponseParser, parser);
+      this.assertEqual("xml", parser.type);
+    },
+
+    testParseText: function() {
+      var actual = parse("", "text"), expected = [['']], i;
+      this.assertEqual(expected.length, actual.length);
+      this.assertEnumEqual(expected[0], actual[0]);
+
+      actual = parse("\n\n", "text");
+      expected = [[''], [''], ['']];
+      this.assertEqual(expected.length, actual.length);
+      for (i = 0; i < actual.length; ++i) {
+        this.assertEnumEqual(expected[i], actual[i]);
+      }
+
+      actual = parse(",,", "text");
+      expected = [['', '', '']];
+      this.assertEqual(expected.length, actual.length);
+      for (i = 0; i < actual.length; ++i) {
+        this.assertEnumEqual(expected[i], actual[i]);
+      }
+
+      actual = parse("1,2,3\na,b,c", "text");
+      expected = [['1', '2', '3'], ['a', 'b', 'c']];
+      this.assertEqual(expected.length, actual.length);
+      for (i = 0; i < actual.length; ++i) {
+        this.assertEnumEqual(expected[i], actual[i]);
+      }
+    }
+  });
+</script>

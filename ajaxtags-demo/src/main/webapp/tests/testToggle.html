@@ -1,0 +1,70 @@
+<h1>AjaxJspTag.Toggle</h1>
+<!-- Log output -->
+<div id="testlog"> </div>
+<br/>
+<div class="star-rating" id="rater1">
+  <a href="javascript://nop" title="One"></a>
+  <a href="javascript://nop" title="Two" class=""></a>
+  <a href="javascript://nop" title="Three" class="test-class"></a>
+  <a href="javascript://nop" title="Four" class="test-1 test-2"></a>
+  <a href="javascript://nop" title="Five"></a>
+  <script type="text/javascript">
+    /*new AjaxJspTag.Toggle({
+     baseUrl: "toggle.view",
+     state: "raterField"
+     });*/
+  </script>
+</div>
+<!-- Tests -->
+<script type="text/javascript">
+  var tag = null;
+
+  new Test.Unit.Runner({
+    setup: function() {
+      tag = new AjaxJspTag.Toggle({
+        containerClass: "star-rating",
+        messageClass: "star-rating-message",
+        overClass: "over",
+        parameters: "rating={ajaxParameter}",
+        ratings: "One,Two,Three,Four,Five",
+        selectedClass: "selected",
+        selectedLessClass: "selectedless",
+        selectedOverClass: "selectedover",
+        source: "rater1"
+      });
+    },
+
+    teardown: function() {
+      tag = null;
+    },
+
+    testDefault: function() {
+      this.assertInstanceOf(AjaxJspTag.Toggle, tag);
+    },
+
+    testCreateElements: function() {
+      this.assertNotNull(tag.messageContainer);
+      this.assertEqual("rater1_message", $(tag.messageContainer).id);
+      this.assertNotNull($("rater1_message"));
+    },
+
+    testClearCSSAllClasses: function() {
+      var o = tag.options, addedClasses = o.selectedOverClass + ' ' + o.selectedLessClass + ' ' + o.overClass + ' ' + o.selectedClass;
+      var anchors = tag.getAnchors();
+      var classes = anchors.pluck("className");
+      anchors.invoke("addClassName", addedClasses);
+      tag.clearCSSClasses(tag.allClasses);
+      this.assertEnumEqual(classes, anchors.pluck("className"));
+    },
+
+    testClearCSSOverClasses: function() {
+      var o = tag.options, addedClasses = o.selectedOverClass + ' ' + o.selectedLessClass + ' ' + o.overClass;
+      var anchors = tag.getAnchors();
+      anchors[2].addClassName(tag.options.selectedClass);
+      var classes = anchors.pluck("className");
+      anchors.invoke("addClassName", addedClasses);
+      tag.clearCSSClasses(tag.overClasses);
+      this.assertEnumEqual(classes, anchors.pluck("className"));
+    }
+  });
+</script>

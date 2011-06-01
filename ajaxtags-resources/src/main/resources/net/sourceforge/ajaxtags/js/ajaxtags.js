@@ -621,12 +621,12 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
     createListeners: function () {
         this.listener = this.execute.bindAsEventListener(this);
     },
-    createElements: function () { // TODO move creation into java code
+    createElements: function () {
         var o = this.options, defaultTab, listener = this.listener;
 
         this.panel = $(o.id);
         this.panel.down("ul").select("a").zip(o.pages, function (pair) {
-            var a = pair[0], tab = pair[1];
+            var a = pair[0], tab = pair[1] || {};
 
             if (tab.parameters) {
                 a.parameters = tab.parameters;
