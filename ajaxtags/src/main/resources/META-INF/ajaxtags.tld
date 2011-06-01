@@ -627,8 +627,7 @@
 
         <attribute>
             <description>
-                Specifies the event type to attach to the source
-                field(s).
+                Specifies the event type to attach to the source field(s).
             </description>
             <name>eventType</name>
             <required>false</required>
@@ -878,8 +877,7 @@
 
         <attribute>
             <description>
-                Specifies the event type to attach to the source
-                field(s).
+                Specifies the event type to attach to the source field(s).
             </description>
             <name>eventType</name>
             <required>false</required>
@@ -1114,6 +1112,16 @@
                 Default: ResponseHtmlParser
             </description>
             <name>parser</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <description>
+                Specifies the event type that will activate the tab.
+                Default: "click". Possible values: "click", "mouseover".
+            </description>
+            <name>eventType</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
