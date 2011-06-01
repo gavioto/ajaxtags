@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,14 +37,14 @@ public abstract class AbstractHTMLElement implements CharSequence, Appendable {
      * A simple enumeration holding some HTML-Attributes we are using.
      */
     public static enum HTMLAttribute {
-        /**
-         * HTML class attribute.
-         */
+        /** HTML class attribute. */
         CLASS,
-        /**
-         * HTML id attribute.
-         */
-        ID;
+        /** HTML id attribute. */
+        ID,
+        /** HTML href attribute. */
+        HREF,
+        /** HTML title attribute. */
+        TITLE;
     }
 
     /**
