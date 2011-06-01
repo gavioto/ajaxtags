@@ -3,7 +3,18 @@
 <div id="testlog"> </div>
 <br/>
 <!-- Tests -->
-<div id="TabPanel"> </div>
+<div id="TabPanel" class="tabPanel">
+  <div class="tabNavigation">
+    <ul>
+      <li>
+        <a href="#tab1">Tab 1</a>
+      </li>
+      <li>
+        <a href="#tab2">Tab 2</a>
+      </li>
+    </ul>
+  </div>
+</div>
 <script type="text/javascript">
   var tag = null;
 
@@ -11,86 +22,30 @@
     setup: function() {
       tag = new AjaxJspTag.TabPanel({
         id: "TabPanel",
-        pages: []
+        pages: [{}, {}]
       });
     },
+
     teardown: function() {
-      $("TabPanel").update();
       tag = null;
     },
 
     testInitialize: function() {
       this.assertInstanceOf(AjaxJspTag.TabPanel, tag);
+      this.assert(Object.isFunction(tag.listener));
     },
-    testCreateElements0Pages: function() {
+
+    testElements: function() {
       var e = $("TabPanel");
-      this.assertEqual(e, tag.panel);
-      this.assert(e.hasClassName("tabPanel"));
-      var nav = e.down("div.tabNavigation");
-      this.assertNotNull(nav);
-      this.assertNotNull(nav.down("ul"));
+      this.assertEqual(e, tag.panel, "Reference to tab panel");
       var content = e.down("div.tabContent");
       this.assertNotNull(content);
+      var tabs = $$("#TabPanel > div.tabNavigation > ul > li > a");
+      this.assertEqual(2, tabs.length);
+      this.assertEqual(tag.listener, tabs[0].onclick);
+      this.assertEqual(tag.listener, tabs[1].onclick);
     },
-    testCreateElements2Pages: function() {
-      tag = new AjaxJspTag.TabPanel({
-        id: "TabPanel",
-        pages: [{
-          baseUrl: "#",
-          caption: "Page 1"
-        }, {
-          baseUrl: "#",
-          caption: "Page 2"
-        }]
-      });
-      var e = $("TabPanel");
-      this.assertEqual(e, tag.panel);
-      this.assert(e.hasClassName("tabPanel"));
-      var nav = e.down("div.tabNavigation");
-      this.assertNotNull(nav);
-      this.assertNotNull(nav.down("ul"));
-      this.assertEqual(2, $$("#TabPanel > div.tabNavigation > ul > li").length);
-    },
-    testCreateTab: function() {
-      tag = new AjaxJspTag.TabPanel({
-        id: "TabPanel",
-        pages: [{
-          baseUrl: "#",
-          caption: "Page 1",
-          id: "page_1"
-        }]
-      });
-      var tab = $$("#TabPanel > div.tabNavigation > ul > li > a:first-child").first();
-      this.assertEqual("page_1", tab.up().id);
-      this.assertEqual("Page 1", tab.innerHTML);
-      this.assertEqual("#", tab.readAttribute("baseUrl"));
-      this.assertEqual(AjaxJspTag.VOID_URL, tab.href);
-      this.assert(Object.isFunction(tab.onclick));
-    },
-    testCreateTabInternal: function() {
-      var x = {};
-      tag.execute = function(tab) {
-        Object.extend(x, {
-          innerHTML: tab.innerHTML,
-          baseUrl: tab.readAttribute("baseUrl"),
-          parameters: tab.readAttribute("parameters")
-        });
-      };
-      var tab = tag.createTab({
-        caption: "caption",
-        baseUrl: "baseUrl",
-        parameters: "parameters"
-      });
-      //this.assertEqual("caption", tab.innerHTML);
-      //this.assertEqual("baseUrl", tab.baseUrl);
-      //this.assertEqual("parameters", tab.parameters);
-      this.assertEqual(AjaxJspTag.VOID_URL, tab.href);
-      this.assert(Object.isFunction(tab.onclick));
-      tab.onclick();
-      this.assertEqual("caption", x.innerHTML);
-      this.assertEqual("baseUrl", x.baseUrl);
-      this.assertEqual("parameters", x.parameters);
-    },
+
     testExistingContent: function() {
       var e = $("TabContent");
       this.assertNull(e);
@@ -108,6 +63,7 @@
       this.assertNotNull(e);
       this.assert(e.hasClassName("existingTabContentClass"), "Existing class names should not change");
     },
+
     testNewContent: function() {
       tag = new AjaxJspTag.TabPanel({
         id: "TabPanel",

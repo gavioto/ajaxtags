@@ -1,6 +1,6 @@
 <%--
 
-    Copyright 2007-2010 AjaxTags-Team
+    Copyright 2007-2011 AjaxTags-Team
 
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -64,12 +64,14 @@ Documentation</a> | <a href="http://ajaxtags.sourceforge.net/"
 
 <ajax:tabPanel id="indexOfTests">
 	<ajax:tab caption="AjaxJspTag" baseUrl="testAjaxJspTag.html" defaultTab="true" />
+	<ajax:tab caption="DefaultResponseParser" baseUrl="testDefaultResponseParser.html" />
 	<ajax:tab caption="AjaxJspTag.Base" baseUrl="testBase.html" />
 	<ajax:tab caption="AjaxJspTag.UpdateField" baseUrl="testUpdateField.html" />
 	<ajax:tab caption="AjaxJspTag.Select" baseUrl="testSelect.html" />
 	<ajax:tab caption="AjaxJspTag.Portlet" baseUrl="testPortlet.html" />
 	<ajax:tab caption="AjaxJspTag.Callout" baseUrl="testCallout.html" />
 	<ajax:tab caption="AjaxJspTag.TabPanel" baseUrl="testTabPanel.html" />
+	<ajax:tab caption="AjaxJspTag.Toggle" baseUrl="testToggle.html" />
 </ajax:tabPanel></div>
 </body>
 </html>
