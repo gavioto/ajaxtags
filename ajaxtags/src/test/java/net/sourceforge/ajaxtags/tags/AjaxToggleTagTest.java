@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,6 +19,7 @@ package net.sourceforge.ajaxtags.tags;
 import javax.servlet.jsp.JspException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -152,7 +153,9 @@ public class AjaxToggleTagTest extends AbstractTagTest<AjaxToggleTag> {
     }
 
     private String toggle(final String rating) {
-        return "<a href=\"javascript://nop\" title=\"" + rating + "\"></a>";
+        return "<a href=\"javascript://nop\""
+                + (StringUtils.isEmpty(rating) ? StringUtils.EMPTY : " title=\"" + rating + "\"")
+                + "></a>";
     }
 
 }

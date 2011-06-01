@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,12 +16,12 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
+import static org.apache.commons.lang.StringUtils.trimToNull;
 
 import javax.servlet.jsp.JspException;
 
+import net.sourceforge.ajaxtags.helpers.HTMLAnchorElement;
 import net.sourceforge.ajaxtags.helpers.HTMLDivElement;
-
-import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
  * Tag handler for the toggle (on/off, true/false) AJAX tag.
@@ -29,9 +29,6 @@ import static org.apache.commons.lang.StringUtils.trimToNull;
 public class AjaxToggleTag extends BaseAjaxTag {
 
     private static final long serialVersionUID = 6877730352175914711L;
-
-    private static final String AVOID_URL_START = "<a href=\"" + AJAX_VOID_URL + "\" title=\"";
-    private static final String AVOID_URL_END = "\"></a>";
 
     private String ratings;
 
@@ -151,17 +148,17 @@ public class AjaxToggleTag extends BaseAjaxTag {
     @Override
     protected OptionsBuilder getOptions() {
         final OptionsBuilder options = getOptionsBuilder();
-        options.add("ratings", this.ratings, true);
-        options.add("containerClass", this.containerClass, true);
-        options.add("selectedClass", this.selectedClass, true);
-        options.add("selectedOverClass", this.selectedOverClass, true);
-        options.add("selectedLessClass", this.selectedLessClass, true);
-        options.add("overClass", this.overClass, true);
-        options.add("messageClass", this.messageClass, true);
-        options.add("state", this.state, true);
+        options.add("ratings", ratings, true);
+        options.add("containerClass", containerClass, true);
+        options.add("selectedClass", selectedClass, true);
+        options.add("selectedOverClass", selectedOverClass, true);
+        options.add("selectedLessClass", selectedLessClass, true);
+        options.add("overClass", overClass, true);
+        options.add("messageClass", messageClass, true);
+        options.add("state", state, true);
         // options.add("onOff", this.onOff, true);
-        options.add("defaultRating", this.defaultRating, true);
-        options.add("updateFunction", this.updateFunction, false);
+        options.add("defaultRating", defaultRating, true);
+        options.add("updateFunction", updateFunction, false);
         return options;
     }
 
@@ -172,28 +169,29 @@ public class AjaxToggleTag extends BaseAjaxTag {
         final HTMLDivElement div = new HTMLDivElement(getSource());
         div.setClassName(getRatingDivClass(onOff, getContainerClass()));
 
-        // TODO write this in javascript
-        // XXX write this in javascript!!!!
         // write links
         final String[] ratingValues = getRatingValues();
+        HTMLAnchorElement anchor;
         if (onOff) {
-            div.append(AVOID_URL_START);
+            anchor = new HTMLAnchorElement(AJAX_VOID_URL);
             if (ratingValues.length > 0) {
-                final String val = ratingValues[0];
-                if (defaultRating != null && defaultRating.equalsIgnoreCase(val)) {
-                    div.append(val).append("\" class=\"").append(selectedClass);
+                // TODO StringUtils.equalsIgnoreCase(defaultRating, ratingValues[0]);
+                if (defaultRating != null && defaultRating.equalsIgnoreCase(ratingValues[0])) {
+                    anchor.setTitle(ratingValues[0]);
+                    anchor.setClassName(selectedClass);
                 } else {
-                    div.append(ratingValues[1]);
+                    anchor.setTitle(ratingValues[1]);
                 }
             }
-            div.append(AVOID_URL_END);
+            div.append(anchor);
         } else {
             for (String val : ratingValues) {
-                div.append(AVOID_URL_START).append(val);
+                anchor = new HTMLAnchorElement(AJAX_VOID_URL);
+                anchor.setTitle(val);
                 if (val.equalsIgnoreCase(defaultRating)) {
-                    div.append("\" class=\"").append(selectedClass);
+                    anchor.setClassName(selectedClass);
                 }
-                div.append(AVOID_URL_END);
+                div.append(anchor);
             }
         }
 
@@ -213,15 +211,15 @@ public class AjaxToggleTag extends BaseAjaxTag {
 
     @Override
     public void releaseTag() {
-        this.ratings = null; // NOPMD
-        this.defaultRating = null; // NOPMD
-        this.state = null; // NOPMD
-        this.onOff = false;
-        this.containerClass = null; // NOPMD
-        this.messageClass = null; // NOPMD
-        this.selectedClass = null; // NOPMD
-        this.selectedOverClass = null; // NOPMD
-        this.selectedLessClass = null; // NOPMD
-        this.overClass = null; // NOPMD
+        ratings = null; // NOPMD
+        defaultRating = null; // NOPMD
+        state = null; // NOPMD
+        onOff = false;
+        containerClass = null; // NOPMD
+        messageClass = null; // NOPMD
+        selectedClass = null; // NOPMD
+        selectedOverClass = null; // NOPMD
+        selectedLessClass = null; // NOPMD
+        overClass = null; // NOPMD
     }
 }
