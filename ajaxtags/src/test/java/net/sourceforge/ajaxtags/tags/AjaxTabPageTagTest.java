@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -41,10 +41,11 @@ public class AjaxTabPageTagTest extends AbstractTagTest<AjaxTabPageTag> {
     public void testToString() {
         assertEquals("No options", "{}", tag.toString());
         tag.setId("id");
-        assertEquals("Id", "{id: \"id\"}", tag.toString());
-        tag.setId(null);
+        tag.setBaseUrl("page");
         tag.setCaption("test");
-        assertEquals("Caption", "{caption: \"test\"}", tag.toString());
+        tag.setParameters("save");
+        tag.setDefaultTab("true");
+        assertEquals("Caption", "{defaultTab: true, parameters: \"save\"}", tag.toString());
     }
 
 }

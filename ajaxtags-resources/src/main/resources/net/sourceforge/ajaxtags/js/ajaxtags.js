@@ -622,28 +622,27 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
         this.listener = this.execute.bindAsEventListener(this);
     },
     createElements: function () { // TODO move creation into java code
-        var o = this.options, panel = $(o.id), ul = panel.down("ul"), a, defaultTab;
-        this.panel = panel;
-        o.pages.each(function (tab) {
-            a = this.createTab(tab);
+        var o = this.options, defaultTab, listener = this.listener;
+
+        this.panel = $(o.id);
+        this.panel.down("ul").select("a").zip(o.pages, function (pair) {
+            var a = pair[0], tab = pair[1];
+
+            if (tab.parameters) {
+                a.parameters = tab.parameters;
+            }
             if (tab.defaultTab) {
                 defaultTab = defaultTab || a;
             }
-            ul.appendChild(new Element("li", tab.id ? {id: tab.id} : null).update(a));
-        }, this);
+            a["on" + o.eventType] = listener;
+
+            return a;
+        });
 
         this.options.target = o.contentId || this.createContent();
         if (defaultTab) {
             this.selectTab(defaultTab);
         }
-    },
-    createTab: function (tab) {
-        var a = new Element("a", {
-            parameters: tab.parameters,
-            href: tab.baseUrl
-        }).update(tab.caption);
-        a["on" + this.options.eventType] = this.listener;
-        return a;
     },
     createContent: function () {
         // create content holder

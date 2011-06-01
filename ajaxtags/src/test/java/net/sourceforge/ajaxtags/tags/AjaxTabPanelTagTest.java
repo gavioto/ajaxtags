@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -54,15 +54,14 @@ public class AjaxTabPanelTagTest extends AbstractTagTest<AjaxTabPanelTag> {
         assertEquals("No pages", "[]", tag.getPages());
 
         tag.addPage(page(1));
-        assertEquals("One page", '[' + pageText(1) + ']', tag.getPages());
+        assertEquals("One page", "[{}]", tag.getPages());
 
         tag.addPage(page(2));
-        assertEquals("Two pages", '[' + pageText(1) + ',' + pageText(2) + ']', tag.getPages());
+        assertEquals("Two pages", "[{},{}]", tag.getPages());
 
         final int page3 = 3;
         tag.addPage(page(page3));
-        assertEquals("Three pages", '[' + pageText(1) + ',' + pageText(2) + ',' + pageText(page3)
-                + ']', tag.getPages());
+        assertEquals("Three pages", "[{},{},{}]", tag.getPages());
     }
 
     /**
@@ -101,9 +100,9 @@ public class AjaxTabPanelTagTest extends AbstractTagTest<AjaxTabPanelTag> {
         assertEndTag();
 
         final String expected = "<div class=\"tabPanel\" id=\"idTabs\">"
-                + "<div class=\"tabNavigation\"><ul></ul></div>" + SCRIPT_START
-                + "id: \"idTabs\", pages: [" + pageText(1) + "," + pageText(2) + "]" + SCRIPT_END
-                + "</div>";
+                + "<div class=\"tabNavigation\"><ul>" + "<li><a href=\"b1\">c1</a></li>"
+                + "<li><a href=\"b2\">c2</a></li>" + "</ul></div>" + SCRIPT_START
+                + "id: \"idTabs\", pages: [{},{}]" + SCRIPT_END + "</div>";
 
         assertContent(expected);
     }
@@ -122,17 +121,17 @@ public class AjaxTabPanelTagTest extends AbstractTagTest<AjaxTabPanelTag> {
     public void testDoEndTagIds() throws JspException, TransformerException, SAXException {
         assertStartTagEvalBody();
 
-        tag.addPage(page(1));
-        tag.addPage(page(2));
+        tag.addPage(page(1, "l1"));
+        tag.addPage(page(2, "l2"));
         tag.setContentId("idContent");
 
         assertAfterBody();
         assertEndTag();
 
         final String expected = "<div class=\"tabPanel\" id=\"idTabs\">"
-                + "<div class=\"tabNavigation\"><ul></ul></div>" + SCRIPT_START
-                + "contentId:\"idContent\",id:\"idTabs\",pages: [" + pageText(1) + ","
-                + pageText(2) + "]" + SCRIPT_END + "</div>";
+                + "<div class=\"tabNavigation\"><ul>" + "<li id=\"l1\"><a href=\"b1\">c1</a></li>"
+                + "<li id=\"l2\"><a href=\"b2\">c2</a></li>" + "</ul></div>" + SCRIPT_START
+                + "contentId:\"idContent\",id:\"idTabs\",pages: [{},{}]" + SCRIPT_END + "</div>";
 
         assertContent(expected);
     }
@@ -159,11 +158,17 @@ public class AjaxTabPanelTagTest extends AbstractTagTest<AjaxTabPanelTag> {
         assertEndTag();
 
         final String expected = "<div class=\"customPanelClass tabPanel\" id=\"idTabs\">"
-                + "<div class=\"tabNavigation\"><ul></ul></div>" + SCRIPT_START
-                + "id: \"idTabs\", pages: [" + pageText(1) + "," + pageText(2) + "]" + SCRIPT_END
-                + "</div>";
+                + "<div class=\"tabNavigation\"><ul>" + "<li><a href=\"b1\">c1</a></li>"
+                + "<li><a href=\"b2\">c2</a></li>" + "</ul></div>" + SCRIPT_START
+                + "id: \"idTabs\", pages: [{},{}]" + SCRIPT_END + "</div>";
 
         assertContent(expected);
+    }
+
+    private AjaxTabPageTag page(final int pageNo, final String id) {
+        final AjaxTabPageTag page = page(pageNo);
+        page.setId(id);
+        return page;
     }
 
     private AjaxTabPageTag page(final int pageNo) {
@@ -171,10 +176,6 @@ public class AjaxTabPanelTagTest extends AbstractTagTest<AjaxTabPanelTag> {
         page.setCaption("c" + pageNo);
         page.setBaseUrl("b" + pageNo);
         return page;
-    }
-
-    private String pageText(final int pageNo) {
-        return "{baseUrl: \"b" + pageNo + "\", caption: \"c" + pageNo + "\"}";
     }
 
 }
