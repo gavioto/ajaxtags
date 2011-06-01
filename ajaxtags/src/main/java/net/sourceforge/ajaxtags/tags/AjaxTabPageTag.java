@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -49,9 +49,9 @@ public class AjaxTabPageTag extends BaseAjaxTag {
     @Override
     public String toString() {
         final OptionsBuilder options = getOptionsBuilder(true); // clean one
-        options.add("id", getId(), true);
-        options.add("caption", getCaption(), true);
-        options.add("baseUrl", getBaseUrl(), true);
+        // options.add("id", getId(), true);
+        // options.add("caption", getCaption(), true);
+        // options.add("baseUrl", getBaseUrl(), true);
         options.add("parameters", getParameters(), true);
         options.add("defaultTab", getDefaultTab(), false);
         return "{" + options.toString() + "}";

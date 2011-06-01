@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,9 +16,16 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.jsp.JspException;
 
+import org.apache.commons.lang.StringUtils;
+
+import net.sourceforge.ajaxtags.helpers.HTMLAnchorElement;
 import net.sourceforge.ajaxtags.helpers.HTMLDivElement;
+import net.sourceforge.ajaxtags.helpers.HTMLLIElement;
 import net.sourceforge.ajaxtags.helpers.HTMLUListElement;
 
 /**
@@ -32,8 +39,8 @@ public class AjaxTabPanelTag extends BaseAjaxBodyTag {
 
     private String contentId;
 
-    // TODO refactor with List?
-    private StringBuilder pages = new StringBuilder();
+    private List<String> pages = new ArrayList<String>();
+    private List<HTMLLIElement> listItems = new ArrayList<HTMLLIElement>();
 
     /**
      * @return the contentId
@@ -52,7 +59,8 @@ public class AjaxTabPanelTag extends BaseAjaxBodyTag {
 
     @Override
     protected void initParameters() throws JspException {
-        pages = new StringBuilder();
+        pages = new ArrayList<String>();
+        listItems = new ArrayList<HTMLLIElement>();
     }
 
     @Override
@@ -73,17 +81,21 @@ public class AjaxTabPanelTag extends BaseAjaxBodyTag {
     @Override
     public int doEndTag() throws JspException {
         // check for tabs presence
-        if (pages.length() == 0) {
+        if (pages.isEmpty()) {
             throw new JspException("No tabs added to tab panel.");
         }
 
-        // div wrapper
+        // wrapper
         final HTMLDivElement tabPanel = new HTMLDivElement(getId());
         tabPanel.setClassName(getStyleClass() == null ? "tabPanel" : getStyleClass() + " tabPanel");
 
         HTMLDivElement tabNavigation = new HTMLDivElement();
         tabNavigation.setClassName("tabNavigation");
-        tabPanel.append(tabNavigation.append(new HTMLUListElement()));
+
+        HTMLUListElement ul = new HTMLUListElement();
+        ul.setBody(getListItems());
+
+        tabPanel.append(tabNavigation.append(ul));
 
         tabPanel.append(buildScript());
 
@@ -94,6 +106,7 @@ public class AjaxTabPanelTag extends BaseAjaxBodyTag {
     @Override
     public void releaseTag() {
         pages = null; // NOPMD
+        listItems = null; // NOPMD
     }
 
     /**
@@ -103,11 +116,19 @@ public class AjaxTabPanelTag extends BaseAjaxBodyTag {
      *            tab
      */
     public final void addPage(final AjaxTabPageTag tabPage) {
-        if (pages.length() > 0) {
-            // append delimiter after previous tabs
-            pages.append(PAGES_DELIMITER);
-        }
-        pages.append(tabPage.toString());
+        pages.add(tabPage.toString());
+
+        HTMLAnchorElement a = new HTMLAnchorElement(tabPage.getBaseUrl());
+        a.setBody(tabPage.getCaption());
+
+        HTMLLIElement li = new HTMLLIElement();
+        li.setId(tabPage.getId());
+        li.append(a);
+        listItems.add(li);
+    }
+
+    protected String getListItems() {
+        return StringUtils.join(listItems, StringUtils.EMPTY);
     }
 
     /**
@@ -116,6 +137,6 @@ public class AjaxTabPanelTag extends BaseAjaxBodyTag {
      * @return JSON string with array of tabs
      */
     protected String getPages() {
-        return "[" + pages.toString() + "]";
+        return '[' + StringUtils.join(pages, PAGES_DELIMITER) + ']';
     }
 }
