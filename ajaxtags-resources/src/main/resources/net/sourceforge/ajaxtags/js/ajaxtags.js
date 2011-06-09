@@ -609,7 +609,6 @@ AjaxJspTag.Callout = Class.create(AjaxJspTag.Base, {
 AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
     initialize: function (options) {
         this.setOptions(options);
-        this.createListeners();
         this.createElements();
     },
     getDefaultOptions: function () {
@@ -618,11 +617,8 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
             parser: new DefaultResponseParser("html")
         };
     },
-    createListeners: function () {
-        this.listener = this.execute.bindAsEventListener(this);
-    },
     createElements: function () {
-        var o = this.options, defaultTab, listener = this.listener;
+        var o = this.options, defaultTab, that = this;
 
         this.panel = $(o.id);
         this.panel.down("ul").select("a").zip(o.pages, function (pair) {
@@ -634,14 +630,14 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
             if (tab.defaultTab) {
                 defaultTab = defaultTab || a;
             }
-            a["on" + o.eventType] = listener;
+            a["on" + o.eventType] = that.execute.bind(that, a);
 
             return a;
         });
 
-        this.options.target = o.contentId || this.createContent();
+        o.target = o.contentId || this.createContent();
         if (defaultTab) {
-            this.selectTab(defaultTab);
+            this.execute(defaultTab);
         }
     },
     createContent: function () {
@@ -652,17 +648,15 @@ AjaxJspTag.TabPanel = Class.create(AjaxJspTag.Base, {
         });
         return c.identify();
     },
-    selectTab: function (tab) {
+    execute: function (tab) {
         // remove class from any tab
         this.panel.select(".ajaxCurrentTab").invoke("removeClassName", "ajaxCurrentTab");
         // add class to selected tab
         tab.addClassName("ajaxCurrentTab");
+        // tab.href === web root path + tab.readAttribute("href")
         this.options.baseUrl = tab.readAttribute("href");
-        this.options.parameters = tab.readAttribute("parameters");
+        this.options.parameters = tab.parameters;
         this.request = this.getAjaxUpdater(/*{onSuccess: this.handler.bind(this)}*/);
-    },
-    execute: function (event) {
-        this.selectTab(Event.element(event));
         return false;
     },
     handler: function () {

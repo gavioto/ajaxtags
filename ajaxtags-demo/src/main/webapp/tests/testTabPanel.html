@@ -32,7 +32,9 @@
 
     testInitialize: function() {
       this.assertInstanceOf(AjaxJspTag.TabPanel, tag);
-      this.assert(Object.isFunction(tag.listener));
+      this.assertNotNull(tag.options.target, "options.target");
+      this.assert(tag.options.target.startsWith("anonymous_element_"), "options.target");
+      //this.assert(Object.isFunction(tag.listener));
     },
 
     testElements: function() {
@@ -42,8 +44,10 @@
       this.assertNotNull(content);
       var tabs = $$("#TabPanel > div.tabNavigation > ul > li > a");
       this.assertEqual(2, tabs.length);
-      this.assertEqual(tag.listener, tabs[0].onclick);
-      this.assertEqual(tag.listener, tabs[1].onclick);
+      this.assert(Object.isFunction(tabs[0].onclick));
+      this.assert(Object.isFunction(tabs[1].onclick));
+      //this.assertEqual(tag.listener, tabs[0].onclick);
+      //this.assertEqual(tag.listener, tabs[1].onclick);
     },
 
     testExistingContent: function() {
@@ -73,6 +77,29 @@
       e = $$("div.tabContent")[0];
       this.assertNotNull(e);
       this.assert(e.hasClassName("tabContent"), "Special class name for content should be added");
+    },
+
+    testParameters: function() {
+      tag = new AjaxJspTag.TabPanel({
+        id: "TabPanel",
+        pages: [{
+          parameters: "a=b"
+        }, {}]
+      });
+      var tabs = $$("#TabPanel > div.tabNavigation > ul > li > a"), params = [];
+      tag.getAjaxUpdater = function() {
+        //alert(Object.toJSON(this.options));
+        params.push(this.options.baseUrl);
+        params.push(this.options.parameters);
+      };
+      tabs[0].onclick();
+      this.assertEqual(2, params.length);
+      tabs[1].onclick();
+      this.assertEqual(4, params.length);
+      this.assertEqual("#tab1", params[0]);
+      this.assertEqual("a=b", params[1]);
+      this.assertEqual("#tab2", params[2]);
+      this.assertEqual(undefined, params[3]);
     }
   });
 </script>
