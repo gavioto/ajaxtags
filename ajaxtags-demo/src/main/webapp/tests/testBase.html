@@ -59,7 +59,8 @@
     <option selected="selected" value="NO">NO</option>
   </select>
   <br/>
-  <input name="TYPE-TEST" value="YES" type="bogus" /><input name="SEARCH" value="YES" type="search" /></form>
+  <input name="TYPE-TEST" value="YES" type="bogus" /><input name="SEARCH" value="YES" type="search" />
+</form>
 <br/>
 <!-- Tests -->
 <script type="text/javascript">
@@ -71,6 +72,7 @@
       tag.options = tag.options || {};
       tag.options.baseUrl = tag.options.baseUrl || location.href;
     },
+
     teardown: function() {
       tag = null;
     },
@@ -123,9 +125,11 @@
       this.assertEqual("url", o.baseUrl);
       this.assertEqual("param1=value1,param2=value2,param3=value3", o.parameters);
     },
+
     testGetMethod: function() {
       this.assertEqual("post", tag.getMethod());
     },
+
     testInitRequest: function() {
       tag.options.onCreate = "blah";
       this.assertEqual(true, tag.initRequest());
@@ -150,6 +154,7 @@
       this.assertEqual(true, tag.initRequest());
       this.assertEqual(4, called);
     },
+
     testGetRequestOptions: function() {
       var o = tag.getRequestOptions();
       this.assertEqual(true, o.asynchronous);
@@ -163,6 +168,7 @@
       this.assertEqual("get", o.method);
       this.assertEqual(true, o.evalScripts);
     },
+
     testGetAjaxRequest: function() {
       var result = "cancel", called = 0;
       tag.options.onCreate = function() {
@@ -177,19 +183,28 @@
       this.assertInstanceOf(Ajax.Request, r);
       this.assertEqual(2, called);
     },
+
     testGetAjaxUpdater: function() {
       tag.options.target = "non-existent-id";
       var r = tag.getAjaxUpdater();
       this.assertInstanceOf(Ajax.Updater, r);
     },
+
     testGetPeriodicalUpdater: function() {
       tag.options.target = "non-existent-id";
       var r = tag.getPeriodicalUpdater();
       this.assertInstanceOf(Ajax.PeriodicalUpdater, r);
     },
+
     testBuildParameterString: function() {
-      tag.options.parameters = " param =value";
-      this.assertEqual("param=value", tag.buildParameterString());
+      tag.options.parameters = " param = value ";
+      this.assertEqual("param=%20value%20", tag.buildParameterString(), "Spaces in parameter string");
+
+      tag.options.parameters = "p1={,p2=},p3={},p4={ }";
+      this.assertEqual(["p1=%7B", "p2=%7D", "p3=%7B%7D", "p4=%7B%20%7D"].join("&"), tag.buildParameterString(), "Malformed ids");
+
+      tag.options.parameters = ", = , =, ,,,";
+      this.assertEqual("", tag.buildParameterString(), "Malformed parameters");
 
       tag.options.parameters = "p0=,p1=value,p2={text1},p3={div1},p4={nonexistentid}";
       this.assertEqual(["p0=", "p1=value", "p2=Text%20in%20input", "p3=Text%20in%20div", "p4=%7Bnonexistentid%7D"].join("&"), tag.buildParameterString());
@@ -197,6 +212,7 @@
       tag.options.parameters = "checkbox1={checkbox1},checkbox2={checkbox2},checkbox3={checkbox3},select1={select1},textarea1={textarea1}";
       this.assertEqual(Form.serialize("form1"), tag.buildParameterString());
     },
+
     testReplaceDefaultParam: function() {
       var parameters = "param={ajaxParameter}";
       tag.options.parameters = parameters;
