@@ -41,6 +41,15 @@ if (typeof Effect == 'undefined') {
   throw ("controls.js requires including script.aculo.us' effects.js library");
 }
 
+/**
+ * IE6 sniffing.
+ */
+if (Object.isUndefined(Prototype.Browser.IE6)) {
+  // IE7+ may return "MSIE 6.0" but will have XMLHttpRequest
+  Prototype.Browser.IE6 = (navigator.appName.indexOf("Microsoft Internet Explorer") != -1 && navigator.appVersion.indexOf("MSIE 6.0") != -1 && !window.XMLHttpRequest);
+  //Prototype.Browser.IE6 = false /*@cc_on || @_jscript_version < 5.7 @*/;
+}
+
 var Autocompleter = {};
 Autocompleter.Base = Class.create({
   baseInitialize: function(element, update, options) {
@@ -61,7 +70,6 @@ Autocompleter.Base = Class.create({
     }
 
     this.options.paramName = this.options.paramName || this.element.name;
-    this.options.tokens = this.options.tokens || [];
     this.options.frequency = this.options.frequency || 0.4;
     this.options.minChars = this.options.minChars || 1;
     this.options.onShow = this.options.onShow ||
@@ -87,13 +95,15 @@ Autocompleter.Base = Class.create({
       });
     };
 
-    if (typeof(this.options.tokens) == 'string') {
-      this.options.tokens = [this.options.tokens];
+    var tokens = this.options.tokens || [];
+    if (typeof(tokens) == 'string') {
+      tokens = [tokens];
     }
     // Force carriage returns as token delimiters anyway
-    if (!this.options.tokens.include('\n')) {
-      this.options.tokens.push('\n');
+    if (!tokens.include('\n')) {
+      tokens.push('\n');
     }
+    this.options.tokens = tokens;
 
     this.observer = null;
 
@@ -102,14 +112,15 @@ Autocompleter.Base = Class.create({
     Element.hide(this.update);
 
     Event.observe(this.element, 'blur', this.onBlur.bindAsEventListener(this));
-    Event.observe(this.element, 'keydown', this.onKeyPress.bindAsEventListener(this));
+    Event.observe(this.element, 'keypress', this.onKeyPress.bindAsEventListener(this));
+    Event.observe(this.element, 'keydown', this.onKeyDown.bindAsEventListener(this));
   },
 
   show: function() {
     if (Element.getStyle(this.update, 'display') == 'none') {
       this.options.onShow(this.element, this.update);
     }
-    if (!this.iefix && Prototype.Browser.IE && (Element.getStyle(this.update, 'position') == 'absolute')) {
+    if (!this.iefix && Prototype.Browser.IE6 && (Element.getStyle(this.update, 'position') == 'absolute')) {
       var id = this.update.id + '_iefix';
       Element.insert(this.update, {
         after: '<iframe id="' + id + '" ' +
@@ -158,19 +169,43 @@ Autocompleter.Base = Class.create({
     }
   },
 
+  // KEY_RETURN, KEY_ESC in IE6-9 fires only keypress, keyup
   onKeyPress: function(event) {
-    if (this.active) {
-      switch (event.keyCode) {
-      case Event.KEY_TAB:
+    var keyCode = event.keyCode;
+    if (this.active && !event.stopped) {
+      switch (keyCode) {
       case Event.KEY_RETURN:
         this.selectEntry();
-        Event.stop(event);
         // fall through
       case Event.KEY_ESC:
         this.hide();
         this.active = false;
         Event.stop(event);
         return;
+      }
+    }
+  },
+
+  // KEY_ESC in WebKit (Chrome, Midori, Safari) fires only keydown, keyup
+  onKeyDown: function(event) {
+    var keyCode = event.keyCode;
+    if (this.active) {
+      switch (keyCode) {
+      case Event.KEY_RETURN:
+        // should be processed in onKeyPress
+        return;
+      case Event.KEY_TAB:
+        this.selectEntry();
+        // fall through
+      case Event.KEY_ESC:
+        this.hide();
+        this.active = false;
+        Event.stop(event);
+        return;
+      case Event.KEY_PAGEUP:
+      case Event.KEY_PAGEDOWN:
+      case Event.KEY_END:
+      case Event.KEY_HOME:
       case Event.KEY_LEFT:
       case Event.KEY_RIGHT:
         return;
@@ -185,7 +220,9 @@ Autocompleter.Base = Class.create({
         Event.stop(event);
         return;
       }
-    } else if (event.keyCode == Event.KEY_TAB || event.keyCode == Event.KEY_RETURN || (Prototype.Browser.WebKit && event.keyCode === 0)) {
+    } else if (keyCode == Event.KEY_TAB || keyCode == Event.KEY_RETURN ||
+        (keyCode >= Event.KEY_PAGEUP && keyCode <= Event.KEY_DOWN) ||
+        (Prototype.Browser.WebKit && keyCode === 0)) {
       return;
     }
 
@@ -290,28 +327,26 @@ Autocompleter.Base = Class.create({
       value = Element.collectTextNodesIgnoreClass(selectedElement, 'informal');
     }
 
-    var bounds = this.getTokenBounds();
+    var element = this.element, bounds = this.getTokenBounds(), newValue = value;
     if (bounds[0] != -1) {
-      var v = this.element.value, newValue = v.substr(0, bounds[0]);
+      var v = element.value, before = v.substr(0, bounds[0]), after = v.substr(bounds[1]);
       var whitespace = v.substr(bounds[0]).match(/^\s+/);
       if (whitespace) {
-        newValue += whitespace[0];
+        before += whitespace[0];
       }
-      this.element.value = newValue + value + v.substr(bounds[1]);
-    } else {
-      this.element.value = value;
+      newValue = before + value + after;
     }
-    this.oldElementValue = this.element.value;
-    this.element.focus();
+    element.value = this.oldElementValue = newValue;
+    element.focus();
 
     if (o.afterUpdateElement) {
-      o.afterUpdateElement(this.element, selectedElement);
+      o.afterUpdateElement(element, selectedElement);
     }
   },
 
   updateChoices: function(choices) {
     if (!this.changed && this.hasFocus) {
-      this.update.innerHTML = choices;
+      this.update.update(choices);
       Element.cleanWhitespace(this.update);
 
       var child = Element.firstDescendant(this.update);
@@ -334,6 +369,9 @@ Autocompleter.Base = Class.create({
         this.selectEntry();
         this.hide();
       } else {
+        if (this.entryCount > 0) {
+          this.getCurrentEntry().scrollIntoView();
+        }
         this.render();
       }
     }
@@ -346,7 +384,6 @@ Autocompleter.Base = Class.create({
 
   onObserverEvent: function() {
     this.changed = false;
-    this.tokenBounds = null;
     if (this.getToken().length >= this.options.minChars) {
       this.getUpdatedChoices();
     } else {
@@ -362,9 +399,6 @@ Autocompleter.Base = Class.create({
   },
 
   getTokenBounds: function() {
-    if (null != this.tokenBounds) {
-      return this.tokenBounds;
-    }
     var value = this.element.value;
     if (value.strip().empty()) {
       return [-1, 0];
@@ -372,18 +406,18 @@ Autocompleter.Base = Class.create({
     var diff = arguments.callee.getFirstDifferencePos(value, this.oldElementValue);
     var offset = (diff == this.oldElementValue.length ? 1 : 0);
     var prevTokenPos = -1, nextTokenPos = value.length;
-    var tp;
-    for (var index = 0, l = this.options.tokens.length; index < l; ++index) {
-      tp = value.lastIndexOf(this.options.tokens[index], diff + offset - 1);
+    var tp, tokens = this.options.tokens;
+    for (var index = 0, l = tokens.length; index < l; ++index) {
+      tp = value.lastIndexOf(tokens[index], diff + offset - 1);
       if (tp > prevTokenPos) {
         prevTokenPos = tp;
       }
-      tp = value.indexOf(this.options.tokens[index], diff + offset);
+      tp = value.indexOf(tokens[index], diff + offset);
       if (-1 != tp && tp < nextTokenPos) {
         nextTokenPos = tp;
       }
     }
-    return (this.tokenBounds = [prevTokenPos + 1, nextTokenPos]);
+    return [prevTokenPos + 1, nextTokenPos];
   }
 });
 
