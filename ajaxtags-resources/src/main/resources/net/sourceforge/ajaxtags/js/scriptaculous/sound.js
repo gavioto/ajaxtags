@@ -10,16 +10,16 @@
 
 var Sound = {
   tracks: {},
-  _enabled: true,
+  enabled: true,
   template: new Template('<embed style="height:0" id="sound_#{track}_#{id}" src="#{url}" loop="false" autostart="true" hidden="true"/>'),
   enable: function() {
-    Sound._enabled = true;
+    Sound.enabled = true;
   },
   disable: function() {
-    Sound._enabled = false;
+    Sound.enabled = false;
   },
   play: function(url) {
-    if (!Sound._enabled) {
+    if (!Sound.enabled) {
       return;
     }
     var options = Object.extend({
