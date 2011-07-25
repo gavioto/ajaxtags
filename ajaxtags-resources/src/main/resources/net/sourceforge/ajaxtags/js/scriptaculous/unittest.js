@@ -1,5 +1,5 @@
 /*global $, $$, $A, $F, $H, $R, $w, Ajax, Class, Effect, Element, Enumerable, Event, Field, Form, Prototype, Test */
-// script.aculo.us unittest.js v1.9.0, Thu Dec 23 16:54:48 -0500 2010
+// script.aculo.us unittest.js v1.9.0 with fixes, Thu Dec 23 16:54:48 -0500 2010
 
 // Copyright (c) 2005-2010 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 //           (c) 2005-2010 Jon Tirsen (http://www.tirsen.com)
@@ -14,7 +14,7 @@ Event.simulateMouse = function(element, eventName) {
   var options = Object.extend({
     pointerX: 0,
     pointerY: 0,
-    buttons: 0,
+    button: 0,
     ctrlKey: false,
     altKey: false,
     shiftKey: false,
@@ -24,7 +24,7 @@ Event.simulateMouse = function(element, eventName) {
   var oEvent;
   if (document.createEvent && document.dispatchEvent) {
     oEvent = document.createEvent("MouseEvents");
-    oEvent.initMouseEvent(eventName, true, true, document.defaultView, options.buttons, options.pointerX, options.pointerY, options.pointerX, options.pointerY, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, element);
+    oEvent.initMouseEvent(eventName, true, true, document.defaultView, options.button, options.pointerX, options.pointerY, options.pointerX, options.pointerY, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, 0, element);
   } else if (document.createEventObject && document.fireEvent) {
     oEvent = document.createEventObject();
     Object.extend(oEvent, Object.extend(options, {
@@ -33,7 +33,6 @@ Event.simulateMouse = function(element, eventName) {
       screenY: options.pointerY,
       clientX: options.pointerX,
       clientY: options.pointerY,
-      button: options.buttons,
       relatedTarget: element
     }));
   }
@@ -67,6 +66,7 @@ Event.simulateMouse = function(element, eventName) {
 Event.simulateKey = function(element, eventName) {
   element = $(element);
   var options = Object.extend({
+    //ctrlKey: null, altKey: null, shiftKey: null, metaKey: null
     ctrlKey: false,
     altKey: false,
     shiftKey: false,
@@ -273,7 +273,7 @@ Test.Unit.Runner = Class.create({
     }
   },
   summary: function() {
-    var assertions = 0, failures = 0, errors = 0, messages = [];
+    var assertions = 0, failures = 0, errors = 0;
     for (var i = 0; i < this.tests.length; i++) {
       assertions += this.tests[i].assertions;
       failures += this.tests[i].failures;
