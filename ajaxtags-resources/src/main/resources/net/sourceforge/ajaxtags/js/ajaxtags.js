@@ -15,7 +15,7 @@
  * the License.
  */
 /*jslint bitwise: true, browser: true, eqeqeq: true, immed: true, newcap: true, nomen: true, regexp: true, undef: true, white: true, maxerr: 50, indent: 4 */
-/*global $, $$, $F, Ajax, Autocompleter, Class, Element, Event, Form, Option, Prototype, overlib */
+/*global $, $$, $F, Ajax, Autocompleter, Class, Element, Event, Field, Form, Option, Prototype, overlib */
 
 // prototype and scriptaculous must be loaded before this script
 if ((typeof Prototype === 'undefined') || (typeof Element === 'undefined') || (typeof Element.Methods === 'undefined')) {
@@ -352,32 +352,34 @@ AjaxJspTag.Base = Class.create({
         return data._updater;
     },
     buildParameterString: function (ajaxParam) {
-        var result = [], field, key, v;
-        var params = (this.replaceDefaultParam(ajaxParam) || '');
+        var params = (this.replaceDefaultParam(ajaxParam) || ''), result = [], key, value, field;
         params.split(',').each(function (pair) {
-            if (pair.strip().length === 0) {
+            pair = pair.split('=');
+            key = pair[0].strip();
+            if (!key) {
                 return;
             }
-            pair = pair.split('=');
-            key = pair[0].strip() + '=';
-            pair = pair[1];
+            key = key + '=';
+            value = pair[1];
+
             field = null;
-            if (Object.isString(pair) && pair.strip().length > 0) {
+            if (value) {
                 // TODO use id regexp from Prototype ([\w\-\*]+)
-                field = pair.match(/\{[\w\.:\(\)\[\]]*\}/g);
-                if (field) {
-                    field = $(field[0].substring(1, field[0].length - 1));
+                field = value.match(/\{([\w\.:\(\)\[\]]+)\}/);
+                if (field && field[1]) {
+                    field = $(field[1]);
                 }
             }
 
             if (!field) {
-                result.push(key + encodeURIComponent(pair));
-            } else if (('select-multiple' === field.type) || ('checkbox' === field.type)) { // BUG 016027
-                v = Form.Element.serialize(field);
-                if (v) {
-                    result.push(v);
+                result.push(key + encodeURIComponent(value));
+            } else if (/^(?:checkbox|select-multiple)$/i.test(field.type)) { // BUG 016027
+                value = Field.serialize(field);
+                if (value) {
+                    result.push(value);
                 }
             } else if (/^(?:radio|text|textarea|password|hidden|select-one)$/i.test(field.type)) {
+                // TODO new HTML5 input types, default input w/o type
                 result.push(key + encodeURIComponent(field.value));
             } else {
                 result.push(key + encodeURIComponent(field.innerHTML));
