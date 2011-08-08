@@ -23,7 +23,7 @@ if ((typeof Prototype === 'undefined') || (typeof Element === 'undefined') || (t
 }
 
 var AjaxJspTag = {
-    Version: '1.5.6',
+    Version: '1.5.7',
 
     DEFAULT_PARAMETER: "ajaxParameter",
     VOID_URL: "javascript://nop",
@@ -184,7 +184,7 @@ var ResponseXmlToHtmlLinkListParser = Class.create(DefaultResponseParser, {
         var responseNodes = this.contentXML.documentElement.getElementsByTagName("response");
         if (responseNodes.length > 0) {
             var itemNodes = responseNodes[0].getElementsByTagName("item"), len = itemNodes.length;
-            var ul = (len === 0) ? null : new Element('ul', {className: this.treeClass});
+            var ul = (len === 0) ? null : new Element("ul", {className: this.treeClass});
             var itemNode, nameNodes, valueNodes, urlNodes, collapsedNodes, leafNodes;
             var name, value, url, leaf, collapsed, li, link, div, i;
             for (i = 0; i < len; i++) {
@@ -406,26 +406,32 @@ AjaxJspTag.UpdateField = Class.create(AjaxJspTag.Base, {
         };
     },
     setOptions: function (options) {
-        this.options = Object.extend(this.getDefaultOptions(), options || {});
+        options = Object.extend(this.getDefaultOptions(), options || {});
+        options.targets = options.target.split(',');
         // TODO don't use object
-        this.options.parser = new DefaultResponseParser(this.options.valueUpdateByName ? "xml" : "text");
+        if (options.valueUpdateByName) {
+            options.parser = new DefaultResponseParser("xml");
+            options.targets.sort(); // O(n log n)
+        } else {
+            options.parser = new DefaultResponseParser("text");
+        }
+        this.options = options;
     },
     createListeners: function () {
         this.listener = this.execute.bind(this);
     },
     setListeners: function () {
-        var o = this.options, a = $(o.action);
-        if (a) {
-            a["on" + o.eventType] = this.listener;
+        var o = this.options, s = $(o.source);
+        if (s) {
+            s["on" + o.eventType] = this.listener;
         }
     },
     execute: function () {
         this.request = this.getAjaxRequest();
     },
     handler: function (tag) {
-        var targets = this.target.split(','), items = this.parser.content, i, len;
+        var targets = this.targets, items = this.parser.content, i, len;
         if (this.valueUpdateByName) {
-            targets.sort(); // O(log n)
             items = items.sortBy(function (item) {
                 return item[0];
             });
@@ -436,9 +442,9 @@ AjaxJspTag.UpdateField = Class.create(AjaxJspTag.Base, {
                     $(target).value = item[1];
                     t++;
                     j++;
-                } else if (target < item[0]) {
+                } else if (target < item[0]) { // skip target
                     t++;
-                } else {
+                } else { // skip item
                     j++;
                 }
             }
@@ -452,7 +458,7 @@ AjaxJspTag.UpdateField = Class.create(AjaxJspTag.Base, {
             }*/
         } else {
             for (i = 0, len = Math.min(targets.length, items.length); i < len; i++) {
-                $(targets[i]).value = items[i][1];
+                $(targets[i]).value = items[i][0];
             }
         }
     }

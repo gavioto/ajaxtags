@@ -2,7 +2,7 @@
 <!-- Log output -->
 <div id="testlog"> </div>
 <br/>
-<input type="text" id="id1" value="text 1" /><input type="text" id="id2" value="text 2" /><input type="text" id="id3" value="text 3" />
+<input type="text" id="id1" value="text 1" /><input type="text" id="id2" value="text 2" /><input type="text" id="id3" value="text 3" /><input type="text" id="target1" value="target 1" />
 <br/>
 <!-- Tests -->
 <script type="text/javascript">
@@ -10,7 +10,9 @@
 
   new Test.Unit.Runner({
     setup: function() {
-      tag = new AjaxJspTag.UpdateField();
+      tag = new AjaxJspTag.UpdateField({
+        target: "target1"
+      });
       $("id1", "id2", "id3").invoke("setValue", "");
     },
     teardown: function() {
@@ -28,6 +30,7 @@
       this.assertEqual("click", tag.options.eventType);
       this.assertEqual(tag.handler, tag.options.handler);
       tag.setOptions({
+        target: "target1",
         valueUpdateByName: true
       });
       this.assertEqual(true, tag.options.valueUpdateByName);
@@ -35,7 +38,8 @@
     },
     testSetListeners: function() {
       tag.setOptions({
-        action: "id1"
+        source: "id1",
+        target: "target1"
       });
       var s = $("id1");
       this.assertNotNull(s);
@@ -48,7 +52,9 @@
         fired++;
         return "fired";
       };
-      tag = new AjaxJspTag.UpdateField();
+      tag = new AjaxJspTag.UpdateField({
+        target: "target1"
+      });
       tag.listener();
       this.assertEqual(1, fired);
       this.assertEqual("fired", tag.request);
@@ -56,8 +62,10 @@
     },
     testHandler1: function() {
       // 1. valueUpdateByName = false
-      tag.options.target = "id1,id2,id3";
-      tag.options.parser.content = [["id2", "value 1"], ["id1", "value 2"], ["", "value 3"], ["", "extra value"]];
+      tag.setOptions({
+        target: "id1,id2,id3"
+      });
+      tag.options.parser.content = [["value 1"], ["value 2"], ["value 3"], ["extra value"]];
       tag.options.handler(tag);
       this.assertEqual("value 1", $F("id1"));
       this.assertEqual("value 2", $F("id2"));
@@ -66,8 +74,8 @@
     testHandler2: function() {
       // 2. valueUpdateByName = true
       tag.setOptions({
-        valueUpdateByName: true,
-        target: "id1,id3,id2"
+        target: "id1,id3,id2",
+        valueUpdateByName: true
       });
       tag.options.parser.content = [["id2", "value 1"], ["id1", "value 2"], ["non-existent-id", "erroneous-value"], ["id3", "value 3"]];
       tag.options.handler(tag);

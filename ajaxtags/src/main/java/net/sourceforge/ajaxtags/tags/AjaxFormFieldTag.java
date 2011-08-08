@@ -25,17 +25,7 @@ public class AjaxFormFieldTag extends BaseAjaxTag {
 
     private static final long serialVersionUID = -7774526024294932262L;
 
-    private String action;
-
     private boolean valueUpdateByName;
-
-    public String getAction() {
-        return action;
-    }
-
-    public void setAction(final String action) {
-        this.action = action;
-    }
 
     @Override
     protected String getJsClass() {
@@ -45,8 +35,7 @@ public class AjaxFormFieldTag extends BaseAjaxTag {
     @Override
     protected OptionsBuilder getOptions() {
         final OptionsBuilder options = getOptionsBuilder();
-        options.add("action", this.action, true);
-        options.add("valueUpdateByName", String.valueOf(this.valueUpdateByName), false);
+        options.add("valueUpdateByName", String.valueOf(valueUpdateByName), false);
         return options;
     }
 
@@ -58,8 +47,7 @@ public class AjaxFormFieldTag extends BaseAjaxTag {
 
     @Override
     public void releaseTag() {
-        this.valueUpdateByName = false;
-        this.action = null; // NOPMD
+        valueUpdateByName = false;
     }
 
     public boolean getValueUpdateByName() {

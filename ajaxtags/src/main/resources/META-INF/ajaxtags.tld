@@ -551,7 +551,16 @@
         <tag-class>net.sourceforge.ajaxtags.tags.AjaxFormFieldTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
-            <description>Update response values by matching the name.</description>
+            <description>
+                Update response values by matching the ID of target elements
+                to the name given in response from server.
+                valueUpdateByName == true expects response in the
+                XML format with name and value tags for each target item
+                (uses XML response parser),
+                while valueUpdateByName == false expects plain text
+                with each value on single line (uses text response parser).
+                Default: false
+            </description>
             <name>valueUpdateByName</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -578,7 +587,8 @@
         <attribute>
             <description>
                 URL of server-side action or servlet that processes a
-                simple command.
+                simple command and returns list of values for target
+                fields.
             </description>
             <name>baseUrl</name>
             <required>true</required>
@@ -587,8 +597,19 @@
 
         <attribute>
             <description>
-                The form field that will hold the parameter passed to
-                the servlet.
+                A comma-separated list of parameters to pass to the
+                server-side action or servlet.
+            </description>
+            <name>parameters</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <description>
+                ID of element (form button or image tag) that will fire
+                the event ("click" by default) and initiate the AJAX
+                request.
             </description>
             <name>source</name>
             <required>true</required>
@@ -607,27 +628,9 @@
 
         <attribute>
             <description>
-                ID of form button or image tag that will fire the
-                onclick event.
-            </description>
-            <name>action</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-
-        <attribute>
-            <description>
-                A comma-separated list of parameters to pass to the
-                server-side action or servlet.
-            </description>
-            <name>parameters</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-
-        <attribute>
-            <description>
-                Specifies the event type to attach to the source field(s).
+                Specifies the event type to attach to the source element
+                Default: "click". Possible values: "click" (for buttons),
+                "blur", "change" (for input fields).
             </description>
             <name>eventType</name>
             <required>false</required>
@@ -666,8 +669,11 @@
 
         <attribute>
             <description>
-                The response parser to implement
-                Default: ResponseHtmlParser
+                The response parser to instantiate.
+                Default: new DefaultResponseParser("text") for
+                valueUpdateByName == false,
+                new DefaultResponseParser("xml") for
+                valueUpdateByName == true
             </description>
             <name>parser</name>
             <required>false</required>
