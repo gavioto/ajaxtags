@@ -27,8 +27,7 @@ BUG https://developer.berlios.de/bugs/?func=detailbug&bug_id=16027&group_id=1061
 <h1>AjaxJspTag.Base#buildParameterString</h1>
 <div>AjaxJspTag.Base#buildParameterString</div>
 
-<div id="errorMsg"
-	style="border: 1px solid #00e; background-color: #eef; padding: 2px; margin-top: 8px; font: normal 12px Arial; color: #009"></div>
+<div id="errorMsg" style="border: 1px solid #00e; background-color: #eef; color: #009;"></div>
 
 <script type="text/javascript">
 runTest=function(){

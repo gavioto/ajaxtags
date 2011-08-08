@@ -59,8 +59,7 @@ select field.</p>
 </div>
 <input type="button" value="Test callouts" id="calloutTest" />
 <div id="progressMsg" class="indicator" style="padding-top: 5px; display: none;">Loading...</div>
-<div id="errorMsg"
-  style="display: none; border: 1px solid #e00; background-color: #fee; padding: 2px; margin-top: 8px; width: 300px; font: normal 12px Arial; color: #900"></div>
+<div id="errorMsg" style="display: none; width: 300px;"></div>
 
 <ajax:htmlContent baseUrl="htmlcontent.view" sourceClass="contentLink" target="modelDescription"
   parameters="make={ajaxParameter}" />
