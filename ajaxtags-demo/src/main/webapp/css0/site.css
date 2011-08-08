@@ -87,7 +87,7 @@ h4 {
 }
 
 label {
-	font: bold 1em Verdana;
+	font: bold 0.8em Verdana;
 	display: block;
 	margin-top: 1em;
 	margin-bottom: 0.25em;
@@ -105,10 +105,6 @@ legend {
 	border-style: solid;
 	border-width: 1px;
 	background: #eee;
-}
-
-label {
-	font-size: 0.8em;
 }
 
 input[type=text] {
@@ -194,7 +190,6 @@ FORM.basicForm INPUT[type="text"]:focus {
 	width: 350px;
 }
 
-
 /* --- TAB PANEL CSS --- */
 #tabPanelWrapper {
 	width: 600px;
@@ -203,4 +198,13 @@ FORM.basicForm INPUT[type="text"]:focus {
 div.textArea {
 	background: #eee;
 	border: 1px dotted silver;
+}
+
+#errorMsg {
+	border: 1px solid #e00;
+	background-color: #fee;
+	padding: 2px;
+	margin-top: 8px;
+	font: normal 12px Arial;
+	color: #900;
 }

@@ -53,8 +53,7 @@ image of the car maker.</p>
 	<option value="">Select model</option>
 </select></fieldset>
 </form>
-<div id="errorMsg"
-	style="display: none; border: 1px solid #e00; background-color: #fee; padding: 2px; margin-top: 8px; width: 300px; font: normal 12px Arial; color: #900"></div>
+<div id="errorMsg" style="display: none; width: 300px;"></div>
 
 <script type="text/javascript">
 	window.resetProgress3 = function() {

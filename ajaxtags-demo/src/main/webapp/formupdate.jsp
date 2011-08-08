@@ -35,11 +35,11 @@ conversion tool.</p>
 	 * USER DEFINED FUNCTIONS
 	 */
 
-	 window.isNumber = function(n) {
-		    return (/^\d+$/g).test(n);
-		 };
+	window.isNumber = function(n) {
+		return (/^\d+$/g).test(n);
+	};
 
-	 window.addAgeToParameters = function() {
+	window.addAgeToParameters = function() {
 		var name = $('name'), age = $('age');
 		name.value = prompt("enter your name", "");
 
@@ -57,21 +57,18 @@ conversion tool.</p>
 			}
 			age.value = n;
 		}
-		this.parameters = "";
-		var i;
-		var eles = document.forms["updateForm2"].elements;
-		for (i = 0; i < eles.length; i++) {
-			if (eles[i].id && eles[i].type) {
-				if (this.parameters != "") {
-					this.parameters += ",";
-				}
-				this.parameters += eles[i].id + "={" + eles[i].id + "}";
+		var params = [];
+		$("updateForm2").getElements().each(function(element) {
+			if (element.id) {
+				params.push(element.id + "={" + element.id + "}");
 			}
-		}
+		});
+		this.parameters = params.join(",");
+		//alert("Parameters: " + this.parameters);
 	};
 
-	 /// use window. XXX to make XXX visible!
-	 // eval function error?
+	// use window. XXX to make XXX visible!
+	// eval function error?
 	window.initProgress2 = function () {
 		Element.addClassName('mph', 'progressMeterLoading');
 		$('kph').value = "";
@@ -83,7 +80,7 @@ conversion tool.</p>
 
 		if ($F('kph') != "") {
 			// clear error box
-			$('errorMsg').innerHTML = "";
+			$('errorMsg').update();
 
 			// do cool effect
 			new Effect.Highlight('kph');
@@ -102,35 +99,32 @@ conversion tool.</p>
 <p>Enter miles per hour and click Calculate</p>
 
 <label for="mph">Miles/Hour (mph)</label> <input type="text" id="mph" />
-<input id="action" type="button" value="Calculate" /> <label for="kph">Kilometers/Hour
-(kph)</label> <input type="text" id="kph" /> <label for="mps">Meters/Second
-(m/s)</label> <input type="text" id="mps" /></fieldset>
+<input id="action" type="button" value="Calculate" />
+<label for="kph">Kilometers/Hour (kph)</label> <input type="text" id="kph" />
+<label for="mps">Meters/Second (m/s)</label> <input type="text" id="mps" /></fieldset>
 </form>
 </div>
+
 <div id="successMsg"
 	style="display: none; border: 1px solid #0e0; background-color: #efe; padding: 2px; margin-top: 8px; width: 300px; font: normal 12px Arial; color: #090">Calculation
 complete</div>
-<div id="errorMsg"
-	style="display: none; border: 1px solid #e00; background-color: #fee; padding: 2px; margin-top: 8px; width: 300px; font: normal 12px Arial; color: #900"></div>
+<div id="errorMsg" style="display: none; width: 300px;"></div>
 
-<ajax:updateField baseUrl="formupdate.view" source="mph"
-	valueUpdateByName="true" target="mps,kph" action="action"
-	parameters="mph={mph}" parser="new DefaultResponseParser('xml')"
+<ajax:updateField baseUrl="formupdate.view" parameters="mph={mph}"
+	source="action" target="mps,kph" valueUpdateByName="true"
 	preFunction="initProgress2" postFunction="resetProgress2" />
-
-
 
 <div style="width: 400px;">
 <form action="." id="updateForm2">
 <fieldset><legend>age and name submit</legend>
 <p>Enter your age</p>
 
-<label for="age">Your age</label> <input type="text" id="age" /> <input
-	id="action2" type="button" value="Say Hello" /> <label for="name">Your
-Name is</label> <input type="text" id="name" /></fieldset>
+<label for="age">Your age</label> <input type="text" id="age" />
+<input id="action2" type="button" value="Say Hello" />
+<label for="name">Your Name is</label> <input type="text" id="name" /></fieldset>
 </form>
 </div>
-<ajax:updateField baseUrl="nameinput.view" source="age"
-	valueUpdateByName="true" target="name,age" action="action2"
-	parser="new DefaultResponseParser('xml')"
+
+<ajax:updateField baseUrl="nameinput.view" source="action2"
+	valueUpdateByName="true" target="name,age"
 	preFunction="addAgeToParameters" />
