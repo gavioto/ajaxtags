@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,13 +28,13 @@ import net.sourceforge.ajaxtags.xml.AjaxXmlBuilder;
 /**
  * An example servlet that responds to an ajax:updateField tag action. This servlet would be
  * referenced by the baseUrl attribute of the JSP tag.
- * 
+ *
  * @author Darren L. Spurgeon
  * @version $Revision: 28 $ $Date: 2008-11-09 23:12:33 +0100 (So, 09. Nov 2008) $
  */
 public class FormUpdateServlet extends BaseAjaxServlet {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -1034863168314672181L;
 
     private static final double MPH_TO_KPH = 1.609344;
 
@@ -46,11 +46,11 @@ public class FormUpdateServlet extends BaseAjaxServlet {
      */
     public String getXmlContent(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        double mph = 0, kph = 0, mps = 0;
+        double mph, kph, mps;
         try {
             mph = Double.parseDouble(request.getParameter("mph"));
         } catch (NumberFormatException e) {
-            mph = -1;
+            mph = 0;
         }
         kph = mph * FormUpdateServlet.MPH_TO_KPH;
         mps = mph * FormUpdateServlet.MPH_TO_MPS;
