@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>ajaxtags-doc</artifactId>
 		<groupId>net.sourceforge.ajaxtags</groupId>
-		<version>1.5.6-SNAPSHOT</version>
+		<version>1.5.7-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.ajaxtags</groupId>
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>net.sourceforge.ajaxtags</groupId>
 			<artifactId>ajaxtags</artifactId>
-			<version>1.5.6-SNAPSHOT</version>
+			<version>1.5.7-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>

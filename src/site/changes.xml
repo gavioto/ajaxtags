@@ -5,20 +5,20 @@
 <!ELEMENT title (#PCDATA)>
 <!ELEMENT author (#PCDATA)>
 <!ATTLIST author
-  email CDATA #IMPLIED
+      email CDATA #IMPLIED
 >
 
 <!ELEMENT body (release+)>
 <!ELEMENT release (action+)>
 <!ATTLIST release
-  version CDATA #REQUIRED
-  date CDATA #IMPLIED
-  description CDATA #IMPLIED
+      version CDATA #REQUIRED
+      date CDATA #IMPLIED
+      description CDATA #IMPLIED
 >
 <!ELEMENT action (#PCDATA)>
 <!ATTLIST action
-  type (add|remove|update|fix) #REQUIRED
-  dev CDATA #REQUIRED
+      type (add|remove|update|fix) #REQUIRED
+      dev CDATA #REQUIRED
 >
 ]>
 <document>
@@ -29,13 +29,18 @@
     <body>
         <release version="1.6.0" date="In Version-Control-System" description="">
             <action type="fix" dev="jenskapitza">Update ...</action>
-	</release>
+        </release>
+        <release version="1.5.7" date="In Version-Control-System" description="">
+            <action type="update" dev="victor-homyakov">Merged attributes 'source' and 'action'
+               on updateField tag.</action>
+        </release>
+        <release version="1.5.6" date="25.07.2011" description="">
+        </release>
         <release version="1.5.2" date="01.09.2010" description="">
             <action type="update" dev="jenskapitza">Move VersionControl back to sf.net</action>
             <action type="update" dev="jenskapitza">fix and change some pom stuff (e.g. namespace)</action>
             <action type="remove" dev="jenskapitza">StringUtilTest</action>
-
-	</release>
+        </release>
         <release version="1.5.1" date="30.11.2009" description="">
             <action type="add" dev="victor-homyakov">JavaScript Unit tests.</action>
             <action type="add" dev="victor-homyakov">More JUnit tests.</action>
