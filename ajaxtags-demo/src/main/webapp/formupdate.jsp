@@ -67,8 +67,6 @@ conversion tool.</p>
 		//alert("Parameters: " + this.parameters);
 	};
 
-	// use window. XXX to make XXX visible!
-	// eval function error?
 	window.initProgress2 = function () {
 		Element.addClassName('mph', 'progressMeterLoading');
 		$('kph').value = "";
@@ -113,6 +111,9 @@ complete</div>
 <ajax:updateField baseUrl="formupdate.view" parameters="mph={mph}"
 	source="action" target="mps,kph" valueUpdateByName="true"
 	preFunction="initProgress2" postFunction="resetProgress2" />
+
+<ajax:updateField baseUrl="formupdate.view" parameters="mph={mph}"
+	source="mph" eventType="keyup" target="mps,kph" valueUpdateByName="true" />
 
 <div style="width: 400px;">
 <form action="." id="updateForm2">
