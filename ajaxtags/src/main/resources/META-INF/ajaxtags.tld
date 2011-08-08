@@ -17,6 +17,7 @@
         <name>select</name>
         <tag-class>net.sourceforge.ajaxtags.tags.AjaxSelectTag</tag-class>
         <body-content>empty</body-content>
+
         <attribute>
             <description>
                 The value for the option when select target is not
@@ -164,8 +165,8 @@
 
         <attribute>
             <description>
-                The response parser to implement.
-                Default: ResponseHtmlParser
+                The response parser to instantiate.
+                Default: new DefaultResponseParser("xml")
             </description>
             <name>parser</name>
             <required>false</required>
@@ -181,6 +182,7 @@
         <name>autocomplete</name>
         <tag-class>net.sourceforge.ajaxtags.tags.AjaxAutocompleteTag</tag-class>
         <body-content>empty</body-content>
+
         <attribute>
             <description>
                 Name of the JavaScript object created.
@@ -329,8 +331,8 @@
 
         <attribute>
             <description>
-                The response parser to implement.
-                Default: ResponseHtmlParser
+                The response parser to instantiate.
+                Default: new DefaultResponseParser("xmltohtmllist", true)
             </description>
             <name>parser</name>
             <required>false</required>
@@ -356,6 +358,7 @@
         <name>toggle</name>
         <tag-class>net.sourceforge.ajaxtags.tags.AjaxToggleTag</tag-class>
         <body-content>empty</body-content>
+
         <attribute>
             <description>Handle the response from server.</description>
             <name>updateFunction</name>
@@ -395,7 +398,7 @@
             <description>
                 A comma-separated list of parameters to pass to the
                 server-side action or servlet.
-      </description>
+            </description>
             <name>parameters</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -533,8 +536,8 @@
 
         <attribute>
             <description>
-                The response parser to implement.
-                Default: ResponseTextParser
+                The response parser to instantiate.
+                Default: new DefaultResponseParser("text")
             </description>
             <name>parser</name>
             <required>false</required>
@@ -550,6 +553,7 @@
         <name>updateField</name>
         <tag-class>net.sourceforge.ajaxtags.tags.AjaxFormFieldTag</tag-class>
         <body-content>empty</body-content>
+
         <attribute>
             <description>
                 Update response values by matching the ID of target elements
@@ -670,10 +674,9 @@
         <attribute>
             <description>
                 The response parser to instantiate.
-                Default: new DefaultResponseParser("text") for
-                valueUpdateByName == false,
-                new DefaultResponseParser("xml") for
-                valueUpdateByName == true
+                Default:
+                new DefaultResponseParser("text") for valueUpdateByName == false,
+                new DefaultResponseParser("xml") for valueUpdateByName == true
             </description>
             <name>parser</name>
             <required>false</required>
@@ -690,6 +693,7 @@
         <name>callout</name>
         <tag-class>net.sourceforge.ajaxtags.tags.AjaxCalloutTag</tag-class>
         <body-content>empty</body-content>
+
         <attribute>
             <description>Name of the JavaScript object created.</description>
             <name>var</name>
@@ -926,6 +930,7 @@
         <name>tree</name>
         <tag-class>net.sourceforge.ajaxtags.tags.AjaxTreeTag</tag-class>
         <body-content>empty</body-content>
+
         <attribute>
             <description>The ID of the tree.</description>
             <name>id</name>
@@ -965,8 +970,8 @@
 
         <attribute>
             <description>
-                The response parser to implement.
-                Default: ResponseXmlToHtmlLinkListParser
+                The response parser to instantiate.
+                Default: new ResponseXmlToHtmlLinkListParser()
             </description>
             <name>parser</name>
             <required>false</required>
@@ -1052,6 +1057,7 @@
         <name>tabPanel</name>
         <tag-class>net.sourceforge.ajaxtags.tags.AjaxTabPanelTag</tag-class>
         <body-content>JSP</body-content>
+
         <attribute>
             <description>The ID of the created tab panel element.</description>
             <name>id</name>
@@ -1114,8 +1120,8 @@
 
         <attribute>
             <description>
-                The response parser to implement.
-                Default: ResponseHtmlParser
+                The response parser to instantiate.
+                Default: new DefaultResponseParser("html")
             </description>
             <name>parser</name>
             <required>false</required>
@@ -1138,6 +1144,7 @@
         <name>tab</name>
         <tag-class>net.sourceforge.ajaxtags.tags.AjaxTabPageTag</tag-class>
         <body-content>empty</body-content>
+
         <attribute>
             <description>
                 The URL to use for the AJAX action, which will return
@@ -1191,6 +1198,7 @@
         <name>portlet</name>
         <tag-class>net.sourceforge.ajaxtags.tags.AjaxPortletTag</tag-class>
         <body-content>empty</body-content>
+
         <attribute>
             <description>To start the Portlet minimized.</description>
             <name>startMinimize</name>
@@ -1350,8 +1358,8 @@
 
         <attribute>
             <description>
-                The response parser to implement.
-                Default: ResponseHtmlParser
+                The response parser to instantiate.
+                Default: new DefaultResponseParser("html")
             </description>
             <name>parser</name>
             <required>false</required>
@@ -1367,6 +1375,7 @@
         <name>area</name>
         <tag-class>net.sourceforge.ajaxtags.tags.AjaxAreaTag</tag-class>
         <body-content>JSP</body-content>
+
         <attribute>
             <description>
                 Name of ID used for enclosing DIV tag written by tag.
