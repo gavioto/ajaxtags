@@ -50,6 +50,8 @@ public class AjaxAutocompleteTag extends BaseAjaxTag {
      */
     private boolean autoSelect;
 
+    private String paramName;
+
     public String getAppendSeparator() {
         return appendSeparator;
     }
@@ -98,6 +100,14 @@ public class AjaxAutocompleteTag extends BaseAjaxTag {
         this.autoSelect = autoSelect;
     }
 
+    public String getParamName() {
+        return paramName;
+    }
+
+    public void setParamName(final String paramName) {
+        this.paramName = trimToNull(paramName);
+    }
+
     @Override
     protected String getJsClass() {
         return JSCLASS_BASE + "Autocomplete";
@@ -112,6 +122,7 @@ public class AjaxAutocompleteTag extends BaseAjaxTag {
         options.add("appendSeparator", appendSeparator, true);
         options.add("afterUpdate", afterUpdate, false);
         options.add("autoSelect", autoSelect);
+        options.add("paramName", paramName, true);
         return options;
     }
 
