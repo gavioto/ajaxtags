@@ -226,6 +226,17 @@
 
         <attribute>
             <description>
+                Name of the parameter for the string typed by the user on
+                the source field.
+                Default: the name attribute of the source element.
+            </description>
+            <name>paramName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <description>
                 Text field where value of autocomplete selection will be
                 populated; you may set this to the same value as the
                 source field.
@@ -258,8 +269,8 @@
 
         <attribute>
             <description>
-                Minimum number of characters needed before autocomplete
-                is executed.
+                The minimum number of characters that must be entered in the
+                input field before an Ajax request is made.
             </description>
             <name>minimumCharacters</name>
             <required>false</required>
@@ -268,8 +279,15 @@
 
         <attribute>
             <description>
-                ID of indicator region that will show during AJAX
-                request call.
+                The HTML id of an element to display (using Element.show)
+                while the Ajax request is in progress. This element will be
+                hidden with Element.hide when the request is completed. This
+                is useful for displaying an animated spinner during processing.
+
+                As with any element destined to work with Prototype’s
+                Element.toggle/show/hide, indicator element should use an
+                inline style attribute with a display property, here initially
+                set to none (e.g. style="display:none").
             </description>
             <name>indicator</name>
             <required>false</required>
@@ -320,9 +338,10 @@
 
         <attribute>
             <description>
-                Function to execute after user has selected some option
-                and source and target fields were updated with selected
-                values.
+                Function to execute after the source and/or target element
+                has been updated (i.e. when the user has selected an entry).
+                The function receives one parameter, the value of the
+                selected item.
             </description>
             <name>afterUpdate</name>
             <required>false</required>
