@@ -18,7 +18,7 @@
 --%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"
-	import="net.sourceforge.ajaxtags.demo.CarService,net.sourceforge.ajaxtags.demo.Car,java.util.Iterator,java.util.List,java.util.ArrayList"%>
+	import="java.util.Iterator"%>
 <jsp:useBean id="service"
 	class="net.sourceforge.ajaxtags.demo.CarService" />
 <%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"

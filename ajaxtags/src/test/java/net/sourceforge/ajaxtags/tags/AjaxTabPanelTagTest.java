@@ -165,13 +165,13 @@ public class AjaxTabPanelTagTest extends AbstractTagTest<AjaxTabPanelTag> {
         assertContent(expected);
     }
 
-    private AjaxTabPageTag page(final int pageNo, final String id) {
+    private static AjaxTabPageTag page(final int pageNo, final String id) {
         final AjaxTabPageTag page = page(pageNo);
         page.setId(id);
         return page;
     }
 
-    private AjaxTabPageTag page(final int pageNo) {
+    private static AjaxTabPageTag page(final int pageNo) {
         final AjaxTabPageTag page = new AjaxTabPageTag();
         page.setCaption("c" + pageNo);
         page.setBaseUrl("b" + pageNo);

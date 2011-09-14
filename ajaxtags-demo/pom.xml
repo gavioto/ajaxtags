@@ -6,7 +6,6 @@
 		<version>1.5.7-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.sourceforge.ajaxtags</groupId>
 	<artifactId>ajaxtags-demo</artifactId>
 	<packaging>war</packaging>
 	<name>Ajaxtags library examples</name>

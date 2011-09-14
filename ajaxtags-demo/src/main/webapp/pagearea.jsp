@@ -16,8 +16,8 @@
     the License.
 
 --%>
-<%@page language="java" import="java.util.Date"%>
-<%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags" prefix="ajax"%>
+<%@page language="java"%>
+<%@taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags" prefix="ajax"%>
 <jsp:useBean id="now" class="java.util.Date" />
 
 <h1>Area Tag Demo</h1>

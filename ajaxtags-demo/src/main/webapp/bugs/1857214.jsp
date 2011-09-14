@@ -20,13 +20,12 @@
 BUG http://sourceforge.net/tracker/index.php?func=detail&aid=1857214&group_id=140499&atid=746679
 --%>
 
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+<%@page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
+<%@taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
 	prefix="ajax"%>
-<%@ taglib uri="http://displaytag.sf.net" prefix="display"%>
+<%@taglib uri="http://displaytag.sf.net" prefix="display"%>
 
-<%@page import="net.sourceforge.ajaxtags.demo.CarService"%>
 <jsp:useBean id="service" class="net.sourceforge.ajaxtags.demo.CarService" />
 
 <ajax:displayTag id="BUG:1857214" parameters="selected={ajaxParameter}">
@@ -44,5 +43,3 @@ BUG http://sourceforge.net/tracker/index.php?func=detail&aid=1857214&group_id=14
     </display:column>
 </display:table>
 </ajax:displayTag>
-
-

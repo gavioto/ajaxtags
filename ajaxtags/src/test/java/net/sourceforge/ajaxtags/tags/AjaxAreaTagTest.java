@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,6 +25,7 @@ import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTag;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 import net.sourceforge.ajaxtags.FakeHttpServletRequest;
 import net.sourceforge.ajaxtags.helpers.XMLUtils;
@@ -36,8 +37,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Test for AjaxAreaTag.
- *
- * @author Victor Homyakov
  */
 public class AjaxAreaTagTest extends AbstractTagTest<AjaxAreaTag> {
 
@@ -80,11 +79,11 @@ public class AjaxAreaTagTest extends AbstractTagTest<AjaxAreaTag> {
         final String html = "<div>Text<br/>link to " + "<a href=\"pagearea.jsp\">itself</a>"
                 + "<br/>Text</div>";
         final String expected = "<div>before tag"
-                + "<div class=\"textArea\" id=\"ajaxFrame\"><div>"
-                + "<div>Text<br/>link to "
+                + "<div class=\"textArea\" id=\"ajaxFrame\"><div>" + "<div>Text<br/>link to "
                 + "<a href=\"javascript://nop/\" onclick=\"new AjaxJspTag.OnClick({"
-                + "baseUrl: &quot;pagearea.jsp&quot;, eventBase: this, requestHeaders: ['x-request-target', '"
-                + TAG_ID + "'], target: &quot;ajaxFrame&quot;}); return false;\">itself</a>"
+                + "baseUrl: &quot;pagearea.jsp&quot;, eventBase: this, requestHeaders: ['"
+                + BaseAjaxBodyTag.TARGET_HEADER + "', '" + TAG_ID
+                + "'], target: &quot;ajaxFrame&quot;}); return false;\">itself</a>"
                 + "<br/>Text</div>" + "</div></div>" + "after tag</div>";
 
         tag.getBodyContent().print(html);
@@ -110,8 +109,8 @@ public class AjaxAreaTagTest extends AbstractTagTest<AjaxAreaTag> {
      */
     @Test
     public void testTagAjax() throws JspException, IOException, TransformerException, SAXException {
-        ((FakeHttpServletRequest) context.getRequest())
-                .setHeader(AjaxAreaTag.TARGET_HEADER, TAG_ID);
+        ((FakeHttpServletRequest) context.getRequest()).setHeader(BaseAjaxBodyTag.TARGET_HEADER,
+                TAG_ID);
         ((FakeHttpServletRequest) context.getRequest()).setHeader(BaseAjaxBodyTag.HEADER_FLAG,
                 BaseAjaxBodyTag.HEADER_FLAG_VALUE);
 
@@ -125,11 +124,11 @@ public class AjaxAreaTagTest extends AbstractTagTest<AjaxAreaTag> {
 
         final String html = "<div>Text<br/>link to " + "<a href=\"pagearea.jsp\">itself</a>"
                 + "<br/>Text</div>";
-        final String expected = "<div>"
-                + "<div>Text<br/>link to "
+        final String expected = "<div>" + "<div>Text<br/>link to "
                 + "<a href=\"javascript://nop/\" onclick=\"new AjaxJspTag.OnClick({"
-                + "baseUrl: &quot;pagearea.jsp&quot;, eventBase: this, requestHeaders: ['x-request-target', '"
-                + TAG_ID + "'], target: &quot;ajaxFrame&quot;}); return false;\">itself</a>"
+                + "baseUrl: &quot;pagearea.jsp&quot;, eventBase: this, requestHeaders: ['"
+                + BaseAjaxBodyTag.TARGET_HEADER + "', '" + TAG_ID
+                + "'], target: &quot;ajaxFrame&quot;}); return false;\">itself</a>"
                 + "<br/>Text</div>" + "</div>";
         tag.getBodyContent().print(html);
 
@@ -148,31 +147,32 @@ public class AjaxAreaTagTest extends AbstractTagTest<AjaxAreaTag> {
 
         tag.setId(TAG_ID);
 
-        ((FakeHttpServletRequest) context.getRequest())
-                .setHeader(AjaxAreaTag.TARGET_HEADER, TAG_ID);
+        ((FakeHttpServletRequest) context.getRequest()).setHeader(BaseAjaxBodyTag.TARGET_HEADER,
+                TAG_ID);
         ((FakeHttpServletRequest) context.getRequest()).setHeader(BaseAjaxBodyTag.HEADER_FLAG,
                 BaseAjaxBodyTag.HEADER_FLAG_VALUE);
         assertTrue("Request with proper " + BaseAjaxBodyTag.HEADER_FLAG + " and "
-                + AjaxAreaTag.TARGET_HEADER + " headers", tag.isAjaxRequest());
+                + BaseAjaxBodyTag.TARGET_HEADER + " headers", tag.isAjaxRequest());
 
-        ((FakeHttpServletRequest) context.getRequest()).setHeader(AjaxAreaTag.TARGET_HEADER, TAG_ID
-                + "1");
+        ((FakeHttpServletRequest) context.getRequest()).setHeader(BaseAjaxBodyTag.TARGET_HEADER,
+                TAG_ID + "1");
         assertFalse("Request with proper " + BaseAjaxBodyTag.HEADER_FLAG + " header and invalid "
-                + AjaxAreaTag.TARGET_HEADER + " header", tag.isAjaxRequest());
+                + BaseAjaxBodyTag.TARGET_HEADER + " header", tag.isAjaxRequest());
     }
 
     /**
      * Test method for {@link AjaxAreaTag#processContent(String)}.
      *
-     * @throws JspException
-     *             on errors
      * @throws SAXException
      *             if any parse errors occur
      * @throws TransformerException
      *             if it is not possible to transform document to string
+     * @throws XPathExpressionException
+     *             on XPath errors
      */
     @Test
-    public void testProcessContent() throws JspException, TransformerException, SAXException {
+    public void testProcessContent() throws TransformerException, SAXException,
+            XPathExpressionException {
         tag.setAjaxAnchors(false);
         String html = null, expected = null;
         assertEquals("null content", expected, tag.processContent(html));
@@ -183,23 +183,23 @@ public class AjaxAreaTagTest extends AbstractTagTest<AjaxAreaTag> {
 
         tag.setAjaxAnchors(true);
         html = "content";
-        expected = "<div>content</div>";
+        expected = wrap(html);
         assertEquals("simple content", XMLUtils.format(expected), tag.processContent(html));
 
         html = " content ";
-        expected = "<div>content</div>";
+        expected = wrap(html.trim());
         assertEquals("trimming whitespace", XMLUtils.format(expected), tag.processContent(html));
 
         tag.setId(TAG_ID);
         tag.setStyleClass(TAG_CLASS);
         tag.setAjaxAnchors(true);
         html = "<div>Text<br/>link to " + "<a href=\"pagearea.jsp\">itself</a>" + "<br/>Text</div>";
-        expected = "<div>"
-                + "<div>Text<br/>link to "
+        expected = wrap("<div>Text<br/>link to "
                 + "<a href=\"javascript://nop/\" onclick=\"new AjaxJspTag.OnClick({"
-                + "baseUrl: &quot;pagearea.jsp&quot;, eventBase: this, requestHeaders: ['x-request-target', '"
-                + TAG_ID + "'], target: &quot;ajaxFrame&quot;}); return false;\">itself</a>"
-                + "<br/>Text</div>" + "</div>";
+                + "baseUrl: &quot;pagearea.jsp&quot;, eventBase: this, requestHeaders: ['"
+                + BaseAjaxBodyTag.TARGET_HEADER + "', '" + TAG_ID
+                + "'], target: &quot;ajaxFrame&quot;}); return false;\">itself</a>"
+                + "<br/>Text</div>");
         assertContent(expected, tag.processContent(html));
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,6 +20,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -37,6 +39,9 @@ import javax.servlet.http.HttpSession;
 public class FakeHttpServletRequest implements HttpServletRequest {
 
     private final Map<String, Object> headers = new HashMap<String, Object>();
+    private final Map<String, String> params = new HashMap<String, String>();
+    private final Locale locale = Locale.getDefault();
+    private String characterEncoding;
 
     public String getAuthType() {
         // TODO Auto-generated method stub
@@ -108,7 +113,7 @@ public class FakeHttpServletRequest implements HttpServletRequest {
 
     public String getRequestURI() {
         // TODO Auto-generated method stub
-        return null;
+        return "";
     }
 
     public StringBuffer getRequestURL() {
@@ -177,8 +182,7 @@ public class FakeHttpServletRequest implements HttpServletRequest {
     }
 
     public String getCharacterEncoding() {
-        // TODO Auto-generated method stub
-        return null;
+        return characterEncoding;
     }
 
     public int getContentLength() {
@@ -212,18 +216,19 @@ public class FakeHttpServletRequest implements HttpServletRequest {
     }
 
     public Locale getLocale() {
-        // TODO Auto-generated method stub
-        return null;
+        return locale;
     }
 
-    public Enumeration<?> getLocales() {
-        // TODO Auto-generated method stub
-        return null;
+    public Enumeration<Locale> getLocales() {
+        return Collections.enumeration(Arrays.asList(new Locale[] { locale }));
     }
 
     public String getParameter(final String name) {
-        // TODO Auto-generated method stub
-        return null;
+        return params.get(name);
+    }
+
+    public void setParameter(final String name, final String value) {
+        params.put(name, value);
     }
 
     public Map<?, ?> getParameterMap() {
@@ -231,12 +236,12 @@ public class FakeHttpServletRequest implements HttpServletRequest {
         return null;
     }
 
-    public Enumeration<?> getParameterNames() {
-        // TODO Auto-generated method stub
-        return null;
+    public Enumeration<String> getParameterNames() {
+        return Collections.enumeration(Collections.<String> emptySet());
     }
 
     public String[] getParameterValues(final String name) {
+        // TODO Auto-generated method stub
         return new String[] {};
     }
 
@@ -303,8 +308,8 @@ public class FakeHttpServletRequest implements HttpServletRequest {
         // TODO Auto-generated method stub
     }
 
-    public void setCharacterEncoding(final String env) throws UnsupportedEncodingException {
-        // TODO Auto-generated method stub
+    public void setCharacterEncoding(final String encoding) throws UnsupportedEncodingException {
+        characterEncoding = encoding;
     }
 
 }

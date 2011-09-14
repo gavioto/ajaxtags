@@ -1,6 +1,6 @@
 <%--
 
-    Copyright 2007-2010 AjaxTags-Team
+    Copyright 2007-2011 AjaxTags-Team
 
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,11 +16,11 @@
     the License.
 
 --%>
-<%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
+<%@taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
 	prefix="ajax"%>
-<%@ taglib uri="http://displaytag.sf.net" prefix="display"%>
+<%@taglib uri="http://displaytag.sf.net" prefix="display"%>
 
-<%@page import="java.util.Date"%>
+<%@page%>
 <jsp:useBean id="now" class="java.util.Date" />
 <jsp:useBean id="service"
 	class="net.sourceforge.ajaxtags.demo.CarService" />
