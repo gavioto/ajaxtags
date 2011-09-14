@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,8 @@
 package net.sourceforge.ajaxtags.tags;
 
 import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -37,10 +39,11 @@ import org.xml.sax.SAXException;
  *
  * @param <T>
  *            tag class
- *
- * @author Victor Homyakov
  */
 public abstract class AbstractTagTest<T extends BaseAjaxBodyTag> {
+
+    protected static final String DELIMITER = OptionsBuilder.getOptionsBuilder()
+                .getOptionsDelimiter();
 
     /**
      * Tag instance under tests.
@@ -104,8 +107,8 @@ public abstract class AbstractTagTest<T extends BaseAjaxBodyTag> {
      *             if an error occurred while processing this tag
      */
     public void assertAfterBody() throws JspException {
-        assertEquals("doAfterBody() must return BodyTag.SKIP_BODY", BodyTag.SKIP_BODY, tag
-                .doAfterBody());
+        assertEquals("doAfterBody() must return BodyTag.SKIP_BODY", BodyTag.SKIP_BODY,
+                tag.doAfterBody());
     }
 
     /**
@@ -160,6 +163,14 @@ public abstract class AbstractTagTest<T extends BaseAjaxBodyTag> {
      */
     protected String getContent() {
         return ((FakeBodyContent) context.getOut()).getString();
+    }
+
+    protected void setBodyContent(String html) throws IOException {
+        tag.getBodyContent().print(html);
+    }
+
+    protected static String wrap(String html) {
+        return "<div>" + html + "</div>";
     }
 
 }

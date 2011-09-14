@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,12 +30,13 @@ public class FakeBodyContent extends BodyContent {
 
     private static final String NEW_LINE = "\n";
 
-    private String content = "";
+    private StringBuilder content = new StringBuilder();
 
     protected FakeBodyContent(final JspWriter writer) {
         super(writer);
     }
 
+    /** Constructor. */
     public FakeBodyContent() {
         super(null);
     }
@@ -48,22 +49,22 @@ public class FakeBodyContent extends BodyContent {
 
     @Override
     public String getString() {
-        return content;
+        return content.toString();
     }
 
     @Override
     public void writeOut(final Writer out) throws IOException {
-        out.write(content);
+        out.write(content.toString());
     }
 
     @Override
     public void clear() throws IOException {
-        content = "";
+        content = new StringBuilder();
     }
 
     @Override
     public void clearBuffer() throws IOException {
-        content = "";
+        content = new StringBuilder();
     }
 
     @Override
@@ -79,113 +80,113 @@ public class FakeBodyContent extends BodyContent {
 
     @Override
     public void newLine() throws IOException {
-        this.content += NEW_LINE;
+        content.append(NEW_LINE);
     }
 
     @Override
     public Writer append(final CharSequence csq) throws IOException {
-        this.content += csq;
+        content.append(csq);
         return this;
     }
 
     @Override
-    public void print(final boolean b) throws IOException {
+    public void print(final boolean b) throws IOException { // NOPMD
         // TODO Auto-generated method stub
     }
 
     @Override
     public void print(final char c) throws IOException {
-        this.content += c;
+        content.append(c);
     }
 
     @Override
-    public void print(final int i) throws IOException {
+    public void print(final int i) throws IOException { // NOPMD
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void print(final long l) throws IOException {
+    public void print(final long l) throws IOException { // NOPMD
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void print(final float f) throws IOException {
+    public void print(final float f) throws IOException { // NOPMD
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void print(final double d) throws IOException {
+    public void print(final double d) throws IOException { // NOPMD
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void print(final char[] s) throws IOException {
-        // TODO Auto-generated method stub
+    public void print(final char[] str) throws IOException {
+        content.append(str);
     }
 
     @Override
-    public void print(final String s) throws IOException {
-        this.content += s;
+    public void print(final String str) throws IOException {
+        content.append(str);
     }
 
     @Override
     public void print(final Object obj) throws IOException {
-        this.content += obj;
+        content.append(obj);
     }
 
     @Override
     public void println() throws IOException {
-        this.content += NEW_LINE;
+        content.append(NEW_LINE);
     }
 
     @Override
-    public void println(final boolean x) throws IOException {
+    public void println(final boolean b) throws IOException { // NOPMD
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void println(final char x) throws IOException {
-        this.content += x + NEW_LINE;
+    public void println(final char c) throws IOException {
+        content.append(c).append(NEW_LINE);
     }
 
     @Override
-    public void println(final int x) throws IOException {
+    public void println(final int i) throws IOException { // NOPMD
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void println(final long x) throws IOException {
+    public void println(final long l) throws IOException { // NOPMD
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void println(final float x) throws IOException {
+    public void println(final float f) throws IOException { // NOPMD
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void println(final double x) throws IOException {
+    public void println(final double d) throws IOException { // NOPMD
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void println(final char[] x) throws IOException {
-        // TODO Auto-generated method stub
+    public void println(final char[] str) throws IOException {
+        content.append(str).append(NEW_LINE);
     }
 
     @Override
-    public void println(final String x) throws IOException {
-        this.content += x + NEW_LINE;
+    public void println(final String str) throws IOException {
+        content.append(str).append(NEW_LINE);
     }
 
     @Override
-    public void println(final Object x) throws IOException {
-        this.content += x + NEW_LINE;
+    public void println(final Object obj) throws IOException {
+        content.append(obj).append(NEW_LINE);
     }
 
     @Override
-    public void write(final char[] cbuf, final int off, final int len) throws IOException {
-        // TODO Auto-generated method stub
+    public void write(final char[] str, final int off, final int len) throws IOException {
+        content.append(str, off, len);
     }
 
 }

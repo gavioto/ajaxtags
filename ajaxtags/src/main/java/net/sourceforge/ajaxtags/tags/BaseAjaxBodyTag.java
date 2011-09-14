@@ -36,6 +36,14 @@ import static org.apache.commons.lang.StringUtils.trimToNull;
  */
 public abstract class BaseAjaxBodyTag extends BodyTagSupport {
 
+    /**
+     * The header with the target of the AJAX call. Value of this header should match the target
+     * attribute of the tag.
+     */
+    public static final String TARGET_HEADER = "X-Request-Target";
+    /**
+     * The header we are searching to detect the AJAX call.
+     */
     public static final String HEADER_FLAG = "X-Requested-With";
     public static final String HEADER_FLAG_VALUE = "XMLHttpRequest";
     public static final String AJAX_VOID_URL = "javascript://nop";
@@ -96,6 +104,10 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
      */
     protected boolean isAjaxRequest() {
         return isHttpRequestHeader(HEADER_FLAG, HEADER_FLAG_VALUE);
+    }
+
+    protected boolean isRequestTarget(final String target) {
+        return isHttpRequestHeader(TARGET_HEADER, target);
     }
 
     protected void out(final CharSequence csec) throws JspException {
@@ -381,8 +393,7 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
         options.add("baseUrl", href, true);
 
         options.add("eventBase", "this", false);
-        options.add("requestHeaders", "['" + AjaxAreaTag.TARGET_HEADER + "', '" + target + "']",
-                false);
+        options.add("requestHeaders", "['" + TARGET_HEADER + "', '" + target + "']", false);
 
         // TODO with JavaScript class
         final StringBuilder onclick = new StringBuilder("new AjaxJspTag.OnClick({");

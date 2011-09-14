@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -67,9 +67,8 @@ public class TreeServlet extends BaseAjaxServlet {
             item = new TreeItem("FordGT", "FordGT", false);
             item.setLeaf(true);
             treeBuilder.add(item);
-        } else if ("Ford".equals(node)) {
-            addItem(treeBuilder, "Mustang", false);
-            addItem(treeBuilder, "FordGT", false);
+            // addItem(treeBuilder, "Mustang", false);
+            // addItem(treeBuilder, "FordGT", false);
         } else if ("Japanese".equals(node)) {
             addItem(treeBuilder, "Honda", true);
         } else if ("Honda".equals(node)) {
@@ -79,7 +78,7 @@ public class TreeServlet extends BaseAjaxServlet {
         return treeBuilder.toString();
     }
 
-    private void addItem(AjaxTreeXmlBuilder treeBuilder, String value, boolean collapsed) {
+    private static void addItem(AjaxTreeXmlBuilder treeBuilder, String value, boolean collapsed) {
         treeBuilder.addItem(value, value, collapsed, "javascript://nop");
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,19 +16,16 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
-import javax.servlet.jsp.JspException;
+import static org.apache.commons.lang.StringUtils.trimToNull;
+
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 
 import net.sourceforge.ajaxtags.helpers.XMLUtils;
 
-import org.apache.commons.lang.StringUtils;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import static org.apache.commons.lang.StringUtils.trimToNull;
 
 /**
  * Wraps a DisplayTag (http://displaytag.org) table, enabling AJAX capabilities. In the process,
@@ -99,31 +96,6 @@ public class AjaxDisplayTag extends AjaxAreaTag {
         init();
     }
 
-    private void rewriteAnchors0(final Document document) {
-        final NodeList links = document.getElementsByTagName("a");
-        for (int i = 0; i < links.getLength(); i++) {
-            final Node link = links.item(i);
-            final Node parent = link.getParentNode();
-
-            final Attr parentClass = (Attr) parent.getAttributes().getNamedItem("class");
-            if (parentClass == null) {
-                continue;
-            }
-
-            boolean rewrite = false;
-            final String parentName = parent.getNodeName();
-            if ("span".equals(parentName)) {
-                rewrite = StringUtils.contains(parentClass.getNodeValue(), getPagelinksClass());
-            } else if ("th".equals(parentName)) {
-                rewrite = StringUtils.contains(parentClass.getNodeValue(), getColumnClass());
-            }
-
-            if (rewrite) {
-                rewriteLink(link, getId());
-            }
-        }
-    }
-
     /**
      * Rewrite anchors in content.
      *
@@ -133,20 +105,51 @@ public class AjaxDisplayTag extends AjaxAreaTag {
      * @param content
      *            XHTML source as string
      * @return content with rewritten anchors
-     * @throws JspException
-     *             when links rewriting failed
+     * @throws SAXException
+     *             if any parse errors occur
+     * @throws TransformerException
+     *             if it is not possible to transform document to string
+     * @throws XPathExpressionException
+     *             if XPath expression cannot be evaluated (wrong XPath expression)
      * @see net.sourceforge.ajaxtags.tags.AjaxAreaTag#processContent(java.lang.String)
      */
     @Override
-    protected String processContent(final String content) throws JspException {
-        try {
-            final Document doc = getDocument(content);
-            rewriteAnchors0(doc);
-            return XMLUtils.toString(doc);
-        } catch (SAXException e) {
-            throw new JspException(e);
-        } catch (TransformerException e) {
-            throw new JspException(e);
-        }
+    protected String processContent(final String content) throws TransformerException,
+            SAXException, XPathExpressionException {
+        return rewriteAnchors(content, getId());
     }
+
+    protected String rewriteAnchors(final String html, final String target)
+            throws TransformerException, SAXException, XPathExpressionException {
+        final Document document = getDocument(html);
+
+        final NodeList pagelinkAnchors = findRewritableLinksFor(document, "span",
+                getPagelinksClass());
+        rewriteLinks(pagelinkAnchors, target);
+
+        final NodeList columnAnchors = findRewritableLinksFor(document, "th", getColumnClass());
+        rewriteLinks(columnAnchors, target);
+
+        return XMLUtils.toString(document);
+    }
+
+    private static NodeList findRewritableLinksFor(final Document document, final String tagName,
+            final String className) throws XPathExpressionException {
+        return XMLUtils.evaluateXPathExpression(getAnchorXPath(tagName, className), document);
+    }
+
+    private static String getAnchorXPath(final String tagName, final String className) {
+        // contains(concat(' ', @class, ' '), ' class ')
+        // contains(concat(' ', normalize-space(@class), ' '), ' class ')
+        // contains(tokenize(@class, '\s'), "class")
+        return className == null ? "//" + tagName + "/a" : "//" + tagName + "[@class=\""
+                + className + "\" or contains(concat(' ',@class,' '),' " + className + " ')]/a";
+    }
+
+    @Override
+    protected String rewriteAnchors(String html, String target, String className) {
+        throw new UnsupportedOperationException(
+                "This method should never be called. Use rewriteAnchors(String, String) instead.");
+    }
+
 }

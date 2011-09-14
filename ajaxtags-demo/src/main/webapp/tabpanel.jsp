@@ -1,6 +1,6 @@
 <%--
 
-    Copyright 2007-2010 AjaxTags-Team
+    Copyright 2007-2011 AjaxTags-Team
 
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,9 +16,9 @@
     the License.
 
 --%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+<%@page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
+<%@taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
 	prefix="ajax"%>
 
 <h1>Tab Panel Tag Demo</h1>
@@ -37,7 +37,6 @@ panels themselves. The output is generated as an unordered list
 
 <h3>Tab Panel in Action</h3>
 
-<%@page import="java.util.Date"%>
 <jsp:useBean id="now" class="java.util.Date" />
 
 <div id="tabPanelWrapper"><ajax:tabPanel id="tabPanel${now.time}">

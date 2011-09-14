@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,6 +19,10 @@ package net.sourceforge.ajaxtags.tags;
 import java.io.IOException;
 
 import javax.servlet.jsp.JspException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+
+import org.xml.sax.SAXException;
 
 import net.sourceforge.ajaxtags.helpers.HTMLDivElement;
 
@@ -27,11 +31,6 @@ import net.sourceforge.ajaxtags.helpers.HTMLDivElement;
  * inside the defined DIV region rather than inside the whole browser window.
  */
 public class AjaxAreaTag extends AjaxAnchorsTag {
-
-    /**
-     * The header we are searching to detect the ajax call. This should match the id of this tag.
-     */
-    public static final String TARGET_HEADER = "x-request-target";
 
     private static final long serialVersionUID = -7940387487602588115L;
 
@@ -42,11 +41,11 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
 
     /**
      * @return Returns true if we answering to AJAX request: request has proper "X-Requested-With"
-     *         and "x-request-target" headers.
+     *         and "X-Request-Target" headers.
      */
     @Override
     public final boolean isAjaxRequest() {
-        return super.isAjaxRequest() && isHttpRequestHeader(TARGET_HEADER, getId());
+        return super.isAjaxRequest() && isRequestTarget(getId());
     }
 
     /**
@@ -92,12 +91,17 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
     @Override
     public int doEndTag() throws JspException {
         final HTMLDivElement div = new HTMLDivElement(getId());
-        div.append(processContent(getBody()));
+        div.append(processBody());
         if (getStyleClass() != null) {
             div.setClassName(getStyleClass());
         }
-        out(isAjaxRequest() ? div.getBody() : div);
-        return isAjaxRequest() ? SKIP_PAGE : EVAL_PAGE;
+        if (isAjaxRequest()) {
+            out(div.getBody());
+            return SKIP_PAGE;
+        } else {
+            out(div);
+            return EVAL_PAGE;
+        }
     }
 
     /**
@@ -114,12 +118,17 @@ public class AjaxAreaTag extends AjaxAnchorsTag {
      * @param content
      *            XHTML source as string
      * @return either content with rewritten anchors or unchanged content depending on flag
-     * @throws JspException
-     *             when links rewriting failed
-     * @throws Exception
+     * @throws SAXException
+     *             if any parse errors occur
+     * @throws TransformerException
+     *             if it is not possible to transform document to string
+     * @throws XPathExpressionException
+     *             if XPath expression cannot be evaluated (wrong XPath expression)
      */
-    protected String processContent(final String content) throws JspException {
-        return isAjaxAnchors() ? ajaxAnchors(content, getId(), getSourceClass()) : content;
+    @Override
+    protected String processContent(final String content) throws XPathExpressionException,
+            TransformerException, SAXException {
+        return isAjaxAnchors() ? rewriteAnchors(content, getId(), getSourceClass()) : content;
     }
 
 }

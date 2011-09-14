@@ -16,8 +16,6 @@
  */
 package net.sourceforge.ajaxtags.tags;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -76,7 +74,7 @@ public final class OptionsBuilder {
      *            the optionsDelimiter to set
      */
     public void setOptionsDelimiter(final String optionsDelimiter) {
-        this.optionsDelimiter = optionsDelimiter;
+        this.optionsDelimiter = StringUtils.defaultString(optionsDelimiter);
     }
 
     /**
@@ -162,16 +160,32 @@ public final class OptionsBuilder {
     }
 
     /**
-     * Create string representation of options (in JSON format).
+     * Create string representation of options (suitable to insert in JSON string).
      *
      * @return options as string
      */
     @Override
     public String toString() {
+        int size = parameters.size();
+        if (size < 1) {
+            return StringUtils.EMPTY;
+        }
+        StringBuilder result = new StringBuilder(size * 20);
+        for (Map.Entry<String, String> e : parameters.entrySet()) {
+            if (result.length() > 0) {
+                result.append(optionsDelimiter);
+            }
+            result.append(e.getKey()).append(": ").append(e.getValue());
+        }
+        return result.toString();
+
+        /*
         final List<String> options = new ArrayList<String>();
         for (Map.Entry<String, String> e : parameters.entrySet()) {
-            options.add(e.getKey() + ": " + e.getValue());
+            options.add(e.getKey() + ": " + e.getValue()); // implicit StringBuilder
         }
         return StringUtils.join(options, optionsDelimiter);
+        */
     }
+
 }

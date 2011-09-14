@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE project>
 <project>
 	<publishDate position="navigation-bottom" format="yyyy-dd-MM" />
 	<body>
@@ -18,41 +19,41 @@
 			<item name="Installation" href="http://ajaxtags.sourceforge.net/install.html" />
 			<item name="FAQ" href="http://ajaxtags.sourceforge.net/faq.html" />
 			<item name="Dependencies" href="http://ajaxtags.sourceforge.net/dependencies.html" />
-			<item name="Dependencies AjaxTags" 
+			<item name="Dependencies AjaxTags"
 				href="http://ajaxtags.sourceforge.net/ajaxtags/dependencies.html" />
-			<item name="Dependency Convergence" 
+			<item name="Dependency Convergence"
 				href="http://ajaxtags.sourceforge.net/dependency-convergence.html" />
-			<item name="Dependency Convergence AjaxTags" 
+			<item name="Dependency Convergence AjaxTags"
 				href="http://ajaxtags.sourceforge.net/ajaxtags/dependency-convergence.html" />
-			<item name="Project Plugin Management" 
+			<item name="Project Plugin Management"
 				href="http://ajaxtags.sourceforge.net/plugin-management.html" />
 			<item name="Project License" href="http://ajaxtags.sourceforge.net/license.html" />
 			<item name="Project Plugins" href="http://ajaxtags.sourceforge.net/plugins.html" />
-			<item name="Project Summary" 
+			<item name="Project Summary"
 				href="http://ajaxtags.sourceforge.net/project-summary.html" />
 		</menu>
-		
+
 		<menu name="Reports" >
 			<item name="Changes" href="http://ajaxtags.sourceforge.net/changes-report.html"/>
-			<item name="Checkstyle" 
+			<item name="Checkstyle"
 				href="http://ajaxtags.sourceforge.net/ajaxtags/checkstyle.html"/>
 			<item name="FindBugs" href="http://ajaxtags.sourceforge.net/ajaxtags/findbugs.html"/>
 			<item name="CDP" href="http://ajaxtags.sourceforge.net/ajaxtags/cpd.html"/>
 			<item name="PMD" href="http://ajaxtags.sourceforge.net/ajaxtags/pmd.html"/>
-			<item name="JUnit Test" 
+			<item name="JUnit Test"
 				href="http://ajaxtags.sourceforge.net/ajaxtags/surefire-report.html"/>
-			<item name="Tag Library Documentation" 
+			<item name="Tag Library Documentation"
 				href="http://ajaxtags.sourceforge.net/ajaxtags/tlddoc/index.html"/>
-			<item name="Tag Library Validation" 
+			<item name="Tag Library Validation"
 				href="http://ajaxtags.sourceforge.net/ajaxtags/taglibvalidation.html"/>
-			<item name="Tag Reference" 
+			<item name="Tag Reference"
 				href="http://ajaxtags.sourceforge.net/ajaxtags/tagreference.html"/>
-			<item name="JavaDocs" 
+			<item name="JavaDocs"
 				href="http://ajaxtags.sourceforge.net/apidocs/index.html"/>
-			<item name="JavaDocs (TEST)" 
+			<item name="JavaDocs (TEST)"
 				href="http://ajaxtags.sourceforge.net/testapidocs/index.html"/>
 		</menu>
-		
+
 		<menu name="People Using AjaxTags">
 			<item name="ART" href="http://art.sourceforge.net" />
 		</menu>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,8 +25,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Test for AjaxSubmitTag.
- *
- * @author Victor Homyakov
  */
 public class AjaxSubmitTagTest extends AbstractTagTest<AjaxSubmitTag> {
 

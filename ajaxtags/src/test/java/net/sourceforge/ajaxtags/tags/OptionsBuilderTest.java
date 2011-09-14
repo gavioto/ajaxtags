@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,22 +14,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- *
- */
 package net.sourceforge.ajaxtags.tags;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Arrays;
+
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author В.Хомяков
- * @version $Revision$ $Date$ $Author$
+ * Test for OptionsBuilder.
  */
 public class OptionsBuilderTest {
+
+    private static final String DELIMITER = OptionsBuilder.getOptionsBuilder()
+            .getOptionsDelimiter();
 
     private OptionsBuilder options;
 
@@ -42,7 +44,7 @@ public class OptionsBuilderTest {
     }
 
     /**
-     * Test method for {@link OptionsBuilder#getOptionsBuilder(OptionsBuilder)} .
+     * Test method for {@link OptionsBuilder#getOptionsBuilder(OptionsBuilder)}.
      */
     @Test
     public void testGetOptionsBuilder() {
@@ -59,8 +61,8 @@ public class OptionsBuilderTest {
     public void testAddStringBoolean() {
         options.add("parameter", true);
         options.add("parameter with space", false);
-        assertEquals("toString", "parameter: true" + options.getOptionsDelimiter()
-                + "parameter with space: false", options.toString());
+        assertEquals("toString", "parameter: true" + DELIMITER + "parameter with space: false",
+                options.toString());
     }
 
     /**
@@ -77,29 +79,27 @@ public class OptionsBuilderTest {
         assertEquals("int immutable option", expected1, options.toString());
 
         options.add("test1-param2", 0).add("test1-param3", 1);
-        assertEquals("int options", expected1 + options.getOptionsDelimiter() + "test1-param2: 0"
-                + options.getOptionsDelimiter() + "test1-param3: 1", options.toString());
+        assertEquals("int options", expected1 + DELIMITER + "test1-param2: 0" + DELIMITER
+                + "test1-param3: 1", options.toString());
     }
 
     /**
-     * Test method for {@link OptionsBuilder#add(String, String, boolean)} .
+     * Test method for {@link OptionsBuilder#add(String, String, boolean)}.
      */
     @Test
     public void testAddStringStringBoolean() {
-        final String param1 = "test2-param1";
-        final String expected1 = "test2-param1: ";
-
-        options.add(param1, "", false);
+        options.add("test2-param1", "", false);
         options.add("test2-param2", "", true);
         options.add("test2-param3", "string3", false);
         options.add("test2-param4", "string4", true);
-        assertEquals("string options", expected1 + options.getOptionsDelimiter()
-                + "test2-param2: \"\"" + options.getOptionsDelimiter() + "test2-param3: string3"
-                + options.getOptionsDelimiter() + "test2-param4: \"string4\"", options.toString());
+
+        assertEquals("string options", StringUtils.join(Arrays.asList("test2-param1: ",
+                "test2-param2: \"\"", "test2-param3: string3", "test2-param4: \"string4\""),
+                DELIMITER), options.toString());
     }
 
     /**
-     * Test method for {@link OptionsBuilder#remove(String)} .
+     * Test method for {@link OptionsBuilder#remove(String)}.
      */
     @Test
     public void testRemove() {

@@ -34,7 +34,7 @@
  * limitations under the License.
 --%>
 <%@page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1" import="java.util.Date"%>
+	pageEncoding="ISO-8859-1"%>
 <%@taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
     prefix="ajax"%>
 <jsp:useBean id="now" class="java.util.Date" />

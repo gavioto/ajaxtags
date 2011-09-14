@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,6 +25,7 @@ import java.util.List;
  */
 public class ValueItem extends AbstractItem {
 
+    // TODO implements Serializable && serialization tests
     private static final long serialVersionUID = -5641651833544439174L;
 
     /**

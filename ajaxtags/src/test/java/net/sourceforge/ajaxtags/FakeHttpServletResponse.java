@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,9 +16,15 @@
  */
 package net.sourceforge.ajaxtags;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
@@ -28,6 +34,21 @@ import javax.servlet.http.HttpServletResponse;
  * Fake HttpServletResponse to test tags.
  */
 public class FakeHttpServletResponse implements HttpServletResponse {
+
+    private String characterEncoding = "ISO-8859-1";
+    private String contentType;
+    private final Map<String, String> headers = new HashMap<String, String>();
+    private final ByteArrayOutputStream content = new ByteArrayOutputStream();
+    private final ServletOutputStream outputStream;
+    private int contentLength;
+    private PrintWriter writer;
+    private boolean committed;
+    private int bufferSize = 4096;
+    private Locale locale = Locale.getDefault();
+
+    public FakeHttpServletResponse() {
+        outputStream = new FakeServletOutputStream(this);
+    }
 
     public void addCookie(final Cookie cookie) {
         // TODO Auto-generated method stub
@@ -46,28 +67,29 @@ public class FakeHttpServletResponse implements HttpServletResponse {
     }
 
     public boolean containsHeader(final String name) {
-        // TODO Auto-generated method stub
-        return false;
+        return headers.containsKey(name);
+    }
+
+    public String getHeader(final String name) {
+        return headers.get(name);
     }
 
     public String encodeRedirectURL(final String url) {
         // TODO Auto-generated method stub
-        return null;
+        return url;
     }
 
     public String encodeRedirectUrl(final String url) {
-        // TODO Auto-generated method stub
-        return null;
+        return encodeRedirectURL(url);
     }
 
     public String encodeURL(final String url) {
         // TODO Auto-generated method stub
-        return null;
+        return url;
     }
 
     public String encodeUrl(final String url) {
-        // TODO Auto-generated method stub
-        return null;
+        return encodeURL(url);
     }
 
     public void sendError(final int sc) throws IOException {
@@ -87,7 +109,7 @@ public class FakeHttpServletResponse implements HttpServletResponse {
     }
 
     public void setHeader(final String name, final String value) {
-        // TODO Auto-generated method stub
+        headers.put(name, value);
     }
 
     public void setIntHeader(final String name, final int value) {
@@ -102,43 +124,70 @@ public class FakeHttpServletResponse implements HttpServletResponse {
         // TODO Auto-generated method stub
     }
 
-    public void flushBuffer() throws IOException {
-        // TODO Auto-generated method stub
+    public void flushBuffer() {
+        setCommitted(true);
     }
 
     public int getBufferSize() {
-        // TODO Auto-generated method stub
-        return 0;
+        return bufferSize;
     }
 
     public String getCharacterEncoding() {
-        // TODO Auto-generated method stub
-        return null;
+        return characterEncoding;
+    }
+
+    public int getContentLength() {
+        return contentLength;
     }
 
     public String getContentType() {
-        // TODO Auto-generated method stub
-        return null;
+        return contentType;
     }
 
     public Locale getLocale() {
-        // TODO Auto-generated method stub
-        return null;
+        return locale;
     }
 
     public ServletOutputStream getOutputStream() throws IOException {
-        // TODO Auto-generated method stub
-        return null;
+        return outputStream;
     }
 
     public PrintWriter getWriter() throws IOException {
-        // TODO Auto-generated method stub
-        return null;
+        if (writer == null) {
+            Writer targetWriter = characterEncoding != null ? new OutputStreamWriter(content,
+                    characterEncoding) : new OutputStreamWriter(content);
+            writer = new ResponsePrintWriter(targetWriter);
+        }
+        return writer;
+    }
+
+    ByteArrayOutputStream getContent() {
+        return content;
+    }
+
+    public byte[] getContentAsByteArray() {
+        flushBuffer();
+        return content.toByteArray();
+    }
+
+    public String getContentAsString() throws UnsupportedEncodingException {
+        flushBuffer();
+        return characterEncoding != null ? content.toString(characterEncoding) : content.toString();
+    }
+
+    void setCommittedIfBufferSizeExceeded() {
+        int bufSize = getBufferSize();
+        if (bufSize > 0 && content.size() > bufSize) {
+            setCommitted(true);
+        }
+    }
+
+    void setCommitted(final boolean committed) {
+        this.committed = committed;
     }
 
     public boolean isCommitted() {
-        // TODO Auto-generated method stub
-        return false;
+        return committed;
     }
 
     public void reset() {
@@ -146,26 +195,68 @@ public class FakeHttpServletResponse implements HttpServletResponse {
     }
 
     public void resetBuffer() {
-        // TODO Auto-generated method stub
+        if (isCommitted()) {
+            throw new IllegalStateException("Cannot reset buffer - response is already committed");
+        }
+        content.reset();
     }
 
     public void setBufferSize(final int size) {
-        // TODO Auto-generated method stub
+        bufferSize = size;
     }
 
     public void setCharacterEncoding(final String charset) {
-        // TODO Auto-generated method stub
+        characterEncoding = charset;
     }
 
     public void setContentLength(final int len) {
-        // TODO Auto-generated method stub
+        contentLength = len;
     }
 
     public void setContentType(final String type) {
-        // TODO Auto-generated method stub
+        contentType = type;
     }
 
     public void setLocale(final Locale loc) {
-        // TODO Auto-generated method stub
+        locale = loc;
     }
+
+    /**
+     * Inner class that adapts the PrintWriter to mark the response as committed once the buffer
+     * size is exceeded.
+     */
+    private class ResponsePrintWriter extends PrintWriter {
+
+        public ResponsePrintWriter(final Writer out) {
+            super(out, true);
+        }
+
+        @Override
+        public void write(final char buf[], final int off, final int len) {
+            super.write(buf, off, len);
+            super.flush();
+            setCommittedIfBufferSizeExceeded();
+        }
+
+        @Override
+        public void write(final String s, final int off, final int len) {
+            super.write(s, off, len);
+            super.flush();
+            setCommittedIfBufferSizeExceeded();
+        }
+
+        @Override
+        public void write(final int c) {
+            super.write(c);
+            super.flush();
+            setCommittedIfBufferSizeExceeded();
+        }
+
+        @Override
+        public void flush() {
+            super.flush();
+            setCommitted(true);
+        }
+    }
+
 }

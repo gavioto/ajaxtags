@@ -248,8 +248,8 @@
 
         <attribute>
             <description>
-                A comma-separated list of parameters to pass to the
-                server-side action or servlet.
+                A comma-separated list of additional parameters to pass to
+                the server-side action or servlet.
             </description>
             <name>parameters</name>
             <required>false</required>
@@ -298,7 +298,7 @@
             <description>
                 The separator to use for the target field when values
                 are appended.
-                Default: space
+                Default: single space (" ")
             </description>
             <name>appendSeparator</name>
             <required>false</required>

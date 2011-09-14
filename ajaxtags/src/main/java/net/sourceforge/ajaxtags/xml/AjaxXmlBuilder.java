@@ -176,7 +176,7 @@ public final class AjaxXmlBuilder extends AjaxValueListXmlBuilder {
          */
         public boolean isCData(final T item) { // NOPMD
             return false;
-        };
+        }
     }
 
     /**
@@ -194,6 +194,6 @@ public final class AjaxXmlBuilder extends AjaxValueListXmlBuilder {
          */
         public boolean isCData(final T item) { // NOPMD
             return true;
-        };
+        }
     }
 }

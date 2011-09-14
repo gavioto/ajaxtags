@@ -167,7 +167,7 @@ public class AjaxToggleTag extends BaseAjaxTag {
         // final boolean xOnOff = Boolean.parseBoolean(onOff);
         // write opening div
         final HTMLDivElement div = new HTMLDivElement(getSource());
-        div.setClassName(getRatingDivClass(onOff, getContainerClass()));
+        div.setClassName(getRatingDivClass(getContainerClass()));
 
         // write links
         final String[] ratingValues = getRatingValues();
@@ -205,7 +205,7 @@ public class AjaxToggleTag extends BaseAjaxTag {
         return ratings == null ? new String[0] : ratings.split(",");
     }
 
-    private String getRatingDivClass(final boolean onOff, final String containerClass) {
+    private String getRatingDivClass(final String containerClass) {
         return onOff ? containerClass + " onoff" : containerClass;
     }
 

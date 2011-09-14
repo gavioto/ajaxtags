@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,7 +34,7 @@ import javax.servlet.jsp.el.VariableResolver;
 import javax.servlet.jsp.tagext.BodyContent;
 
 /**
- * Fake PageContext to test tags.
+ * Fake PageContext to test tags. Based on Servlet 2.5 and JSP 2.1 specifications.
  */
 @SuppressWarnings("deprecation")
 public class FakePageContext extends PageContext {
@@ -153,8 +153,26 @@ public class FakePageContext extends PageContext {
     }
 
     @Override
+    public ELContext getELContext() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ExpressionEvaluator getExpressionEvaluator() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     public JspWriter getOut() {
         return content;
+    }
+
+    @Override
+    public VariableResolver getVariableResolver() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
@@ -175,23 +193,5 @@ public class FakePageContext extends PageContext {
     @Override
     public void setAttribute(final String name, final Object value, final int scope) {
         // TODO Auto-generated method stub
-    }
-
-    @Override
-    public ELContext getELContext() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public ExpressionEvaluator getExpressionEvaluator() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public VariableResolver getVariableResolver() {
-        // TODO Auto-generated method stub
-        return null;
     }
 }

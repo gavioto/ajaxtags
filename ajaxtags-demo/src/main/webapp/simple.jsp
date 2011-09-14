@@ -1,6 +1,6 @@
 <%--
 
-    Copyright 2007-2010 AjaxTags-Team
+    Copyright 2007-2011 AjaxTags-Team
 
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,13 +16,6 @@
     the License.
 
 --%>
-<%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags"
-    prefix="ajax"%>
-    
-<%@page import="java.util.Date" %>
-<%@page import="net.sourceforge.ajaxtags.demo.CarService"%>
+<%@page%>
 <jsp:useBean id="now" class="java.util.Date" />
-
-
 Here a simple flush test Last Time Table Refreshed: ${now}
-

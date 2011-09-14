@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2010 AjaxTags-Team
+ * Copyright 2007-2011 AjaxTags-Team
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -44,8 +44,8 @@ public class AjaxAnchorsTag extends BaseAjaxBodyTag {
     private static final String WARP1 = "</div>";
 
     /**
-     * Rewrite the body and make use of ajax. rewriting all &lt;a&gt; links to use javascript calls
-     * to prototype.
+     * Rewrite the body and make use of AJAX. Rewrite all &lt;a&gt; links to use javascript calls to
+     * Prototype.
      *
      * @return EVAL_PAGE
      * @throws JspException
@@ -53,8 +53,36 @@ public class AjaxAnchorsTag extends BaseAjaxBodyTag {
      */
     @Override
     public int doEndTag() throws JspException {
-        out(ajaxAnchors(getBody(), getTarget(), getSourceClass()));
+        out(processBody());
         return EVAL_PAGE;
+    }
+
+    /**
+     * Rewrite anchors in body content of the tag.
+     *
+     * @return rewritten and reformatted XHTML content
+     * @throws JspException
+     *             on errors
+     */
+    public String processBody() throws JspException {
+        final String content = getBody();
+        try {
+            return processContent(content);
+        } catch (XPathExpressionException e) {
+            throw new JspException(getClass().getSimpleName()
+                    + ": rewrite links failed (wrong XPath expression)\n" + content, e);
+        } catch (TransformerException e) {
+            throw new JspException(getClass().getSimpleName()
+                    + ": rewrite links failed (cannot transform XHTML to text)\n" + content, e);
+        } catch (SAXException e) {
+            throw new JspException(getClass().getSimpleName()
+                    + ": rewrite links failed (invalid XHTML content)\n" + content, e);
+        }
+    }
+
+    protected String processContent(final String content) throws XPathExpressionException,
+            TransformerException, SAXException {
+        return rewriteAnchors(content, getTarget(), getSourceClass());
     }
 
     /**
@@ -64,39 +92,33 @@ public class AjaxAnchorsTag extends BaseAjaxBodyTag {
      *            XHTML source
      * @param target
      *            target of request
-     * @param clazz
-     *            CSS class of anchors
+     * @param className
+     *            CSS class name of anchor elements
      * @return rewritten and reformatted XHTML text
-     * @throws JspException
-     *             on errors
+     * @throws SAXException
+     *             if any parse errors occur
+     * @throws TransformerException
+     *             if it is not possible to transform document to string
+     * @throws XPathExpressionException
+     *             if XPath expression cannot be evaluated (wrong XPath expression)
      */
-    public String ajaxAnchors(final String html, final String target, final String clazz)
-            throws JspException {
-        try {
-            return rewriteAnchors(getDocument(html), target, clazz);
-        } catch (XPathExpressionException e) {
-            throw new JspException("rewrite links failed (wrong XPath expression)\n" + html, e);
-        } catch (TransformerException e) {
-            throw new JspException(
-                    "rewrite links failed (cannot transform XHTML to text)\n" + html, e);
-        } catch (SAXException e) {
-            throw new JspException("rewrite links failed (is the content valid XHTML?)\n" + html, e);
-        }
-    }
-
-    private String rewriteAnchors(final Document document, final String target,
-            final String className) throws XPathExpressionException, TransformerException {
+    protected String rewriteAnchors(final String html, final String target, final String className)
+            throws XPathExpressionException, TransformerException, SAXException {
+        final Document document = getDocument(html);
         final NodeList links = XMLUtils
                 .evaluateXPathExpression(getAnchorXPath(className), document);
-        // document.getElementsByTagName("a");
-        for (int i = 0; i < links.getLength(); i++) {
-            rewriteLink(links.item(i), target);
-        }
+        rewriteLinks(links, target);
         return XMLUtils.toString(document);
     }
 
-    private String getAnchorXPath(final String className) {
+    private static String getAnchorXPath(final String className) {
         return className == null ? "//a" : "//a[@class=\"" + className + "\"]";
+    }
+
+    protected void rewriteLinks(final NodeList links, final String target) {
+        for (int i = 0, len = links.getLength(); i < len; i++) {
+            rewriteLink(links.item(i), target);
+        }
     }
 
     /**
@@ -127,9 +149,9 @@ public class AjaxAnchorsTag extends BaseAjaxBodyTag {
      *
      * @param html
      *            string with XHTML content
-     * @return parsed document or null
+     * @return parsed document (wrapped into DIV) or null
      * @throws SAXException
-     *             if string cannot be parsed
+     *             if any parse errors occur
      */
     protected static final Document getDocument(final String html) throws SAXException {
         final String xhtml = trimToNull(html); // .replaceAll("<br(.*?)>", "<br$1/>");

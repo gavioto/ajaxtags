@@ -26,8 +26,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Test for AjaxToggleTag.
- *
- * @author Victor Homyakov
  */
 public class AjaxToggleTagTest extends AbstractTagTest<AjaxToggleTag> {
 
@@ -152,7 +150,7 @@ public class AjaxToggleTagTest extends AbstractTagTest<AjaxToggleTag> {
         assertContent(expected);
     }
 
-    private String toggle(final String rating) {
+    private static String toggle(final String rating) {
         return "<a href=\"javascript://nop\""
                 + (StringUtils.isEmpty(rating) ? StringUtils.EMPTY : " title=\"" + rating + "\"")
                 + "></a>";

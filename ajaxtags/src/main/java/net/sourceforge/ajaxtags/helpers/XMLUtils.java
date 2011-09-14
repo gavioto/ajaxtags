@@ -66,7 +66,7 @@ public final class XMLUtils {
             dbf.setValidating(false);
             dbf.setIgnoringElementContentWhitespace(true);
             return dbf;
-        };
+        }
     };
 
     /** XPathFactory. */
@@ -198,7 +198,7 @@ public final class XMLUtils {
         final StreamResult streamResult = new StreamResult(stringWriter);
         final Transformer transformer = TRANSFORMER_FACTORY.get().newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, TRANSFORMER_YES);
-        // set ident for XML
+        // set indent for XML
         transformer.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "2");
         // not all JavaSE have the same implementation
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
