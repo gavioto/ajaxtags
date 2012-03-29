@@ -22,7 +22,7 @@
 		<site>
 			<id>sourceforge</id>
 			<name>SourceForge.net</name>
-			<url>sftp://web.sourceforge.net:/home/groups/a/aj/ajaxtags/htdocs/</url>
+			<url>sftp://web.sourceforge.net:/home/project-web/ajaxtags/htdocs/</url>
 		</site>
 		<repository>
 			<id>repository</id>
