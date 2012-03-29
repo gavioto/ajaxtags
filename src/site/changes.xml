@@ -30,7 +30,7 @@
         <release version="1.6.0" date="In Version-Control-System" description="">
             <action type="fix" dev="jenskapitza">Update ...</action>
         </release>
-        <release version="1.5.7" date="In Version-Control-System" description="">
+        <release version="1.5.7" date="29.03.2012" description="">
             <action type="update" dev="victor-homyakov">Merged attributes 'source' and 'action'
                on updateField tag.</action>
         </release>
