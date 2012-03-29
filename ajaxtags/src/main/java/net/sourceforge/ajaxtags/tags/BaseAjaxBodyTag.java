@@ -126,6 +126,14 @@ public abstract class BaseAjaxBodyTag extends BodyTagSupport {
     }
 
     @Override
+    public void setId(final String id) {
+        if (id != null) {
+            // TODO check for valid ID
+        }
+        super.setId(id);
+    }
+
+    @Override
     public final int doStartTag() throws JspException {
         initParameters(); // EVAL_BODY need to be flushed if it is nested!
         // we should set the no cache headers!
