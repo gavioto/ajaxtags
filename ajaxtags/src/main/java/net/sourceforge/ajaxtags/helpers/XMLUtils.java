@@ -211,4 +211,106 @@ public final class XMLUtils {
         transformer.transform(new DOMSource(document.getDocumentElement()), streamResult);
         return stringWriter.toString();
     }
+
+    protected static boolean isCharInRange(final int c, final int begin, final int end) {
+        return c >= begin && c <= end;
+    }
+
+    /**
+     * http://www.w3.org/TR/html4/types.html#type-name
+     *
+     * ID and NAME tokens must begin with a letter ([A-Za-z]).
+     *
+     * @param c
+     *            char
+     * @return true if HTML Name can start with that char
+     */
+    protected static boolean isValidHtmlNameStartChar(final int c) {
+        return isCharInRange(c, 'A', 'Z') || isCharInRange(c, 'a', 'z');
+    }
+
+    /**
+     * http://www.w3.org/TR/html4/types.html#type-name
+     *
+     * ID and NAME tokens must begin with a letter ([A-Za-z]) and may be followed by any number of
+     * letters, digits ([0-9]), hyphens ("-"), underscores ("_"), colons (":"), and periods (".").
+     *
+     * @param c
+     *            char
+     * @return true if HTML Name can continue with that char
+     */
+    protected static boolean isValidHtmlNameChar(final int c) {
+        return isValidXmlNameStartChar(c) || isCharInRange(c, '0', '9') || c == '-' || c == '_'
+                || c == ':' || c == '.';
+    }
+
+    /**
+     * http://www.w3.org/TR/REC-xml/#NT-Name
+     *
+     * NameStartChar ::= ":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] |
+     * [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] |
+     * [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
+     *
+     * @param c
+     *            char
+     * @return true if XML Name can start with that char
+     */
+    protected static boolean isValidXmlNameStartChar(final int c) {
+        return c == ':' || isCharInRange(c, 'A', 'Z') || c == '_' || isCharInRange(c, 'a', 'z')
+                || isCharInRange(c, 0xC0, 0xD6) || isCharInRange(c, 0xD8, 0xF6)
+                || isCharInRange(c, 0xF8, 0x2FF) || isCharInRange(c, 0x370, 0x37D)
+                || isCharInRange(c, 0x37F, 0x1FFF) || isCharInRange(c, 0x200C, 0x200D)
+                || isCharInRange(c, 0x2070, 0x218F) || isCharInRange(c, 0x2C00, 0x2FEF)
+                || isCharInRange(c, 0x3001, 0xD7FF) || isCharInRange(c, 0xF900, 0xFDCF)
+                || isCharInRange(c, 0xFDF0, 0xFFFD) || isCharInRange(c, 0x10000, 0xEFFFF);
+    }
+
+    /**
+     * http://www.w3.org/TR/REC-xml/#NT-Name
+     *
+     * NameChar ::= NameStartChar | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
+     *
+     * @param c
+     *            char
+     * @return true if XML Name can continue with that char
+     */
+    protected static boolean isValidXmlNameChar(final int c) {
+        return isValidXmlNameStartChar(c) || c == '-' || c == '.' || isCharInRange(c, '0', '9')
+                || c == 0xB7 || isCharInRange(c, 0x0300, 0x036F)
+                || isCharInRange(c, 0x203F, 0x2040);
+    }
+
+    public static boolean isValidHtmlName(final String name) {
+        if (name == null) {
+            return true;
+        }
+        if (!isValidHtmlNameStartChar(name.codePointAt(0))) {
+            return false;
+        }
+        for (int i = 1; i < name.length(); i++) {
+            if (!isValidHtmlNameChar(name.codePointAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Name ::= NameStartChar (NameChar)*
+     */
+    public static boolean isValidXmlName(final String name) {
+        if (name == null) {
+            return true;
+        }
+        if (!isValidXmlNameStartChar(name.codePointAt(0))) {
+            return false;
+        }
+        for (int i = 1; i < name.length(); i++) {
+            if (!isValidXmlNameChar(name.codePointAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
