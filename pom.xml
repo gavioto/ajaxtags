@@ -10,6 +10,12 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 	<modules>
 		<module>ajaxtags</module>
 		<module>ajaxtags-resources</module>
@@ -17,7 +23,8 @@
 		<module>ajaxtags-demo</module>
 	</modules>
 	<url>http://ajaxtags.sourceforge.net/</url>
-
+	
+	<!--
 	<distributionManagement>
 		<site>
 			<id>sourceforge</id>
@@ -29,8 +36,14 @@
 			<name>MyCo Internal repository</name>
 			<url>file:///home/jens/.m2/repository</url>
 		</repository>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Nexus Staging Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
 	</distributionManagement>
-
+        -->
+        
 	<issueManagement>
 		<system>SourceForge Tracker</system>
 		<url>http://sourceforge.net/tracker/?group_id=140499</url>
@@ -139,8 +152,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:hg:file:///home/jens/open/ajaxtags</connection>
-		<url>file:///home/jens/open/ajaxtags</url>
+		<connection>scm:hg:http://ajaxtags.hg.sourceforge.net:8000/hgroot/ajaxtags/ajaxtags</connection>
+                <developerConnection>scm:hg:ssh://ajaxtags.hg.sourceforge.net/hgroot/ajaxtags/ajaxtags</developerConnection>
+                <url>http://ajaxtags.sourceforge.net</url>
 	</scm>
 	<description>
 		The ajaxtags tag library is an open source suite of custom tags that provide high-level web presentation patterns which will work in an MVC model. The library provides a significant amount of functionality while still being easy to use.
@@ -249,7 +263,7 @@
 						<css>JAVADOC_STYLE</css>
 					</mapping>
 					<properties>
-						<year>2007-2010</year>
+						<year>2007-2012</year>
 					</properties>
 				</configuration>
 				<executions>
