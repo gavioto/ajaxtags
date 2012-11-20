@@ -176,11 +176,15 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.0</version><!--$NO-MVN-MAN-VER$-->
+				<version>2.3.2</version>
 				<configuration>
-					<!-- During release:perform, enable the "release" profile -->
+					<mavenExecutorId>forked-path</mavenExecutorId>
+					<useReleaseProfile>false</useReleaseProfile>
+					<arguments>-Psonatype-oss-release</arguments>
+					<!-- During release:perform, enable the "release" profile
 					<releaseProfiles>release</releaseProfiles>
 					<goals>deploy site:site assembly:assembly</goals>
+					-->
 				</configuration>
 			</plugin>
 
@@ -190,12 +194,12 @@
 				<!-- pack the ajaxtags jar file -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
+				<version>2.3.1</version><!-- TODO 2.4 -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.1</version>
+				<version>2.3.1</version><!-- TODO 2.5.1 -->
 				<configuration>
 					<debug>on</debug>
 					<deprecation>on</deprecation>
@@ -208,7 +212,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.2</version>
+				<version>2.1.2</version><!-- TODO 2.2.1 -->
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -221,18 +225,18 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.6</version>
+				<version>2.6</version><!-- TODO 2.12.4 -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<!--<version>2.1.1</version>-->
+				<!--<version>2.4</version>-->
 			</plugin>
 			<plugin>
 				<!-- package the stuff together -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.1</version><!--$NO-MVN-MAN-VER$-->
+				<version>2.1</version><!-- TODO 2.4 -->
 				<configuration>
 					<descriptors>
 						<descriptor>src/main/assembly/bin.xml</descriptor>
@@ -276,12 +280,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.6.1</version>
+				<version>2.9</version>
 				<configuration>
 					<sourceEncoding>UTF-8</sourceEncoding>
 					<quiet>true</quiet>
 					<aggregate>true</aggregate>
-
 					<code>javadoc:aggregate</code>
 					<code>javadoc:test-aggregate</code>
 					<doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
@@ -296,13 +299,12 @@
 						-postfixpackage -nodefontsize 9
 						-nodefontpackagesize 7
 					</additionalparam>
-
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.1</version><!-- TODO 2.3 -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -349,7 +351,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.7</version>
+				<version>2.9</version>
 				<configuration>
 					<sourceEncoding>UTF-8</sourceEncoding>
 					<quiet>true</quiet>
@@ -358,7 +360,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>2.5</version>
+				<version>2.5</version><!-- TODO 2.7.1 -->
 				<configuration>
 					<targetJdk>1.5</targetJdk>
 					<sourceEncoding>UTF-8</sourceEncoding>
@@ -367,7 +369,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changes-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.3</version><!-- TODO 2.8 -->
 				<configuration>
 					<inherited>false</inherited>
 					<link_template>%URL%/%ISSUE%</link_template>
@@ -377,12 +379,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.6</version>
+				<version>2.6</version><!-- TODO 2.12.4 -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.5</version>
+				<version>2.5</version><!-- TODO 2.9.1 -->
 				<configuration>
 					<configLocation>${basedir}/../checkstyle.xml</configLocation>
 					<enableRulesSummary>false</enableRulesSummary>
